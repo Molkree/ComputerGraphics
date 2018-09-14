@@ -40,17 +40,19 @@ namespace Lab2_task3
 				//	pictureBox1.Image(
 				}
 		}
-        
-		public static void ColorToHSV(Color color, out double hue, out double sat, out double val)
-		{
+
+        public static void ColorToHSV(Color color, out double hue, out double sat, out double val)
+        {
+            
             byte red = color.R;
             byte green = color.G;
             byte blue = color.B;
-           
+
             int max = Math.Max(red, Math.Max(green, blue));
             int min = Math.Min(red, Math.Min(green, blue));
 
             hue = 0;
+
             if (max == min)
                 hue = 0;
             else if (max == red)
@@ -63,61 +65,42 @@ namespace Lab2_task3
                 hue = 60 * (blue - red) / (max - min) + 120;
             else if (max == blue)
                 hue = 60 * (red - green) / (max - min) + 240;
-                
+
             if (max == 0)
                 sat = 0;
             else sat = 1 - ((double)min / max);
 
             val = (double)max / 255;
-		}
+        }
+        
         
         public static Color ColorFromHSV(double hue, double sat, double val)
 		{
-            int hi = Convert.ToInt32(Math.Floor(hue / 60)) % 6;
-            double f = hue / 60 - Math.Floor(hue / 60);
-
-            val = val * 255;
-            int v = Convert.ToInt32(val);
-            int p = Convert.ToInt32(val * (1 - sat));
-            int q = Convert.ToInt32(val * (1 - f * sat));
-            int t = Convert.ToInt32(val * (1 - (1 - f) * sat));
-
-            if (hi == 0)
-                return Color.FromArgb(255, v, t, p);
-            else if (hi == 1)
-                return Color.FromArgb(255, q, v, p);
-            else if (hi == 2)
-                return Color.FromArgb(255, p, v, t);
-            else if (hi == 3)
-                return Color.FromArgb(255, p, q, v);
-            else if (hi == 4)
-                return Color.FromArgb(255, t, p, v);
-            else
-                return Color.FromArgb(255, v, p, q);
-            /*		int h_i = Convert.ToInt32(Math.Floor(hue / 60)) % 6;
-
-                    int v_min = Convert.ToInt32((100 - sat) * val / 100);
-                    int a = Convert.ToInt32((val - v_min) * (hue % 6) / 60);
-                    int v_inc = v_min + a;
-                    int v_dec = Convert.ToInt32(val - a);
-
-                    int v = Convert.ToInt32(val); 
-
-                    if (h_i == 0)
-                        return Color.FromArgb(255, v, v_inc, v_min);
-                    else if(h_i == 1)
-                        return Color.FromArgb(255, v_dec, v, v_min);
-                    else if (h_i == 2)
-                        return Color.FromArgb(255, v_min, v, v_inc);
-                    else if (h_i == 3)
-                        return Color.FromArgb(255, v_min, v_dec, v);
-                    else if (h_i == 4)
-                        return Color.FromArgb(255, v_inc, v_min, v);
-                    else
-                        return Color.FromArgb(255, v, v_min, v_dec);        */
+            /* formulas from:
+             *  https://en.wikipedia.org/wiki/HSL_and_HSV#From_HSV
+             *  https://www.rapidtables.com/convert/color/hsv-to-rgb.html
+             */
+            double c = val * sat;
+            double h1 = hue / 60;
+            double x = c * (1 - Math.Abs(h1 % 2 - 1));
+            double m = val - c;
+            
+            if (0 <= h1 && h1 <= 1)
+                return Color.FromArgb(Convert.ToInt32((c + m) * 255), Convert.ToInt32((x + m) * 255), Convert.ToInt32((0 + m) * 255));
+            else if (1 <= h1 && h1 <= 2)
+                return Color.FromArgb(Convert.ToInt32((x + m) * 255), Convert.ToInt32((c + m) * 255), Convert.ToInt32((0 + m) * 255));
+            else if (2 <= h1 && h1 <= 3)
+                return Color.FromArgb(Convert.ToInt32((0 + m) * 255), Convert.ToInt32((c + m) * 255), Convert.ToInt32((x + m) * 255));
+            else if (3 <= h1 && h1 <= 4)
+                return Color.FromArgb(Convert.ToInt32((0 + m) * 255), Convert.ToInt32((x + m) * 255), Convert.ToInt32((c + m) * 255));
+            else if (4 <= h1 && h1 <= 5)
+                return Color.FromArgb(Convert.ToInt32((x + m) * 255), Convert.ToInt32((0 + m) * 255), Convert.ToInt32((c + m) * 255));
+            else if (5 <= h1 && h1 <= 6)
+                return Color.FromArgb(Convert.ToInt32((c + m) * 255), Convert.ToInt32((0 + m) * 255), Convert.ToInt32((x + m) * 255));
+            else return Color.FromArgb(Convert.ToInt32(m), Convert.ToInt32(m), Convert.ToInt32(m));
         }
 
-		private void showImage()
+        private void showImage()
 		{
             
             Bitmap bmp = pictureBox1.Image as Bitmap;
@@ -210,7 +193,7 @@ namespace Lab2_task3
             // Unlock the bits.
             bmp.UnlockBits(bmpData);
 
-            // vsave the original picture
+            // save the original picture
             orig_pic = bmp.Clone() as Bitmap;
 
             int i = 0;
@@ -235,8 +218,17 @@ namespace Lab2_task3
 		private void trackBar1_Scroll(object sender, EventArgs e)
 		{
 			pic_hue = trackBar1.Value;
-            showImage();
 		}
+
+        private void trackBar2_Scroll(object sender, EventArgs e)
+        {
+            pic_sat = trackBar2.Value;
+        }
+
+        private void trackBar3_Scroll(object sender, EventArgs e)
+        {
+            pic_val = trackBar3.Value;
+        }
 
         private void button3_Click(object sender, EventArgs e)
         {
@@ -249,21 +241,14 @@ namespace Lab2_task3
             showImage();
         }
 
-        private void trackBar2_Scroll(object sender, EventArgs e)
+        private void button4_Click(object sender, EventArgs e)
         {
-            pic_sat = trackBar2.Value;
-            showImage();
-        }
-
-        private void trackBar3_Scroll(object sender, EventArgs e)
-        {
-            pic_val = trackBar3.Value;
             showImage();
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
-            /* System.IO.Stream myStream;
+          /*   System.IO.Stream myStream;
              SaveFileDialog saveFileDialog1 = new SaveFileDialog();
 
              saveFileDialog1.Filter = "txt files (*.txt)|*.txt|All files (*.*)|*.*";
@@ -274,14 +259,29 @@ namespace Lab2_task3
              {
                  if ((myStream = saveFileDialog1.OpenFile()) != null)
                  {
-                     Image pic = pictureBox1.Image;*/
-            /* ??? */     /*        pic.Save(saveFileDialog1.FileName, System.Drawing.Imaging.ImageFormat.Png);
-                         myStream.Close();
-                     }
+                    Image pic = pictureBox1.Image;
+
+                    String path = saveFileDialog1.FileName;
+                    String p1 = path.Substring(0, 3);
+                    p1 = p1.Replace("\\", "//");
+                    String p2 = path.Substring(3);
+                    p2 = p2.Replace("\\", "/");
+                    path = p1 + p2;
+
+                    pic.Save("E://Images/bluefruits.png", System.Drawing.Imaging.ImageFormat.Png);
+                    myStream.Close();
                  }
-        */
+             }
+            */ 
             Image pic = pictureBox1.Image;
-            pic.Save("E://bluefruits.png", System.Drawing.Imaging.ImageFormat.Png);
+            pic.Save("../../newImage.png", System.Drawing.Imaging.ImageFormat.Png);
+
+
+            string message = "Image is saved in the folder 'Lab2_task3'";
+            string caption = "Saved";
+            MessageBoxButtons buttons = MessageBoxButtons.OK;
+            DialogResult result;
+            result = MessageBox.Show(message, caption, buttons);
 
         }
 

@@ -45,6 +45,7 @@
             this.label8 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
             this.button3 = new System.Windows.Forms.Button();
+            this.button4 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar3)).BeginInit();
@@ -55,7 +56,6 @@
             // 
             this.trackBar1.Location = new System.Drawing.Point(163, 84);
             this.trackBar1.Maximum = 360;
-            this.trackBar1.Minimum = -360;
             this.trackBar1.Name = "trackBar1";
             this.trackBar1.Size = new System.Drawing.Size(208, 45);
             this.trackBar1.TabIndex = 2;
@@ -125,7 +125,7 @@
             // 
             // pictureBox1
             // 
-            this.pictureBox1.Location = new System.Drawing.Point(424, 27);
+            this.pictureBox1.Location = new System.Drawing.Point(424, 60);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(375, 300);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -134,7 +134,7 @@
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(12, 298);
+            this.button2.Location = new System.Drawing.Point(12, 330);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(145, 30);
             this.button2.TabIndex = 10;
@@ -165,9 +165,9 @@
             this.label6.AutoSize = true;
             this.label6.Location = new System.Drawing.Point(129, 84);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(28, 13);
+            this.label6.Size = new System.Drawing.Size(13, 13);
             this.label6.TabIndex = 13;
-            this.label6.Text = "-360";
+            this.label6.Text = "0";
             // 
             // label7
             // 
@@ -198,19 +198,30 @@
             // 
             // button3
             // 
-            this.button3.Location = new System.Drawing.Point(193, 237);
+            this.button3.Location = new System.Drawing.Point(191, 266);
             this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(148, 23);
+            this.button3.Size = new System.Drawing.Size(150, 25);
             this.button3.TabIndex = 17;
             this.button3.Text = "Сбросить все изменения";
             this.button3.UseVisualStyleBackColor = true;
             this.button3.Click += new System.EventHandler(this.button3_Click);
             // 
+            // button4
+            // 
+            this.button4.Location = new System.Drawing.Point(191, 235);
+            this.button4.Name = "button4";
+            this.button4.Size = new System.Drawing.Size(150, 25);
+            this.button4.TabIndex = 18;
+            this.button4.Text = "Применить";
+            this.button4.UseVisualStyleBackColor = true;
+            this.button4.Click += new System.EventHandler(this.button4_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(811, 340);
+            this.ClientSize = new System.Drawing.Size(811, 372);
+            this.Controls.Add(this.button4);
             this.Controls.Add(this.button3);
             this.Controls.Add(this.label9);
             this.Controls.Add(this.label8);
@@ -256,6 +267,7 @@
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.Button button4;
     }
 }
 
