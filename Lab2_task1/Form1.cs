@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Forms.DataVisualization.Charting;
+using System.Collections;
 
 namespace Lab2_task1
 {
@@ -24,9 +25,12 @@ namespace Lab2_task1
 		}
 
 		byte[] rgbValues;
-		private void openFileDialog1_FileOk(object sender, CancelEventArgs e)
+        List<int> gray1 = new List<int>();
+        List<int> gray2 = new List<int>();
+
+        private void openFileDialog1_FileOk(object sender, CancelEventArgs e)
 		{
-			pictureBox1.Image = Bitmap.FromFile(openFileDialog1.FileName);
+            pictureBox1.Image = Bitmap.FromFile(openFileDialog1.FileName);
             pictureBox2.Image = Image.FromFile(openFileDialog1.FileName);
             pictureBox3.Image = Image.FromFile(openFileDialog1.FileName);
             pictureBox4.Image = Image.FromFile(openFileDialog1.FileName);
@@ -36,7 +40,6 @@ namespace Lab2_task1
             Bitmap bmp2 = pictureBox2.Image as Bitmap;
             Bitmap bmp3 = pictureBox3.Image as Bitmap;
             Bitmap bmp4 = pictureBox4.Image as Bitmap;
-
 
             // Lock the bitmap's bits.  
             Rectangle rect = new Rectangle(0, 0, bmp1.Width, bmp1.Height);
@@ -60,9 +63,16 @@ namespace Lab2_task1
 			// Unlock the bits.
 			bmp1.UnlockBits(bmpData);
 
-            
-			int i = 0;
+            //creating arrays for hist
+            for (int j = 0; j < 256; ++j)
+            {
+                gray1.Add(0);
+                gray2.Add(0);
+            }
+
+            int i = 0;
             int width = bmp1.Width;
+            int maxgray = 0;
             for (int counter = 0; counter < rgbValues.Length; counter += 3)
 			{
                 //исходный
@@ -81,17 +91,40 @@ namespace Lab2_task1
                 bmp3.SetPixel(i % width, i / width, c);
                 //разность
                 int NC3 = Math.Max(NC1, NC2) - Math.Min(NC1, NC2);
-                c = Color.FromArgb(NC3, NC3, NC3);
-                bmp4.SetPixel(i % width, i / width, c);
-                //гистограмма
-              
-                chart1.Series[0].Points.Add(NC1);
-                
+                if (NC3 > maxgray)
+                    maxgray = NC3;
+                //c = Color.FromArgb(NC3, NC3, NC3);
+                //bmp4.SetPixel(i % width, i / width, c);
                 i++;
-
 			}
-            // Set the PictureBox to display the image.
 
+            i = 0;
+            int k = 255 / maxgray;
+            for (int counter = 0; counter < rgbValues.Length; counter += 3)
+            {
+                int R = rgbValues[counter];
+                int G = rgbValues[counter + 1];
+                int B = rgbValues[counter + 2];
+                int NC1 = Convert.ToInt32(0.33 * R + 0.33 * G + 0.33 * B) % 256;
+                int NC2 = Convert.ToInt32(0.2126 * R + 0.7152 * G + 0.0722 * B) % 256;
+                //разность
+                int NC3 = Math.Max(NC1, NC2) - Math.Min(NC1, NC2);
+                NC3 *= k;
+                Color c = Color.FromArgb(NC3, NC3, NC3);
+                bmp4.SetPixel(i % width, i / width, c);
+                i++;
+                //гистограмма
+                gray1[NC1]++;
+                gray2[NC2]++;
+            }
+
+            for (int j = 0; j < 256; ++j)
+            {
+                chart1.Series[0].Points.Add(gray1[j]);
+                chart2.Series[0].Points.Add(gray2[j]);
+            }
+
+            // Set the PictureBox to display the image.
             pictureBox1.Refresh();
 			pictureBox2.Refresh();
 			pictureBox3.Refresh();
