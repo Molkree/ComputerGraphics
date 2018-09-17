@@ -24,13 +24,12 @@ namespace Lab2_task1
 			openFileDialog1.ShowDialog();
 		}
 
-		byte[] rgbValues;
-        List<int> gray1 = new List<int>();
-        List<int> gray2 = new List<int>();
-
         private void openFileDialog1_FileOk(object sender, CancelEventArgs e)
 		{
-            pictureBox1.Image = Bitmap.FromFile(openFileDialog1.FileName);
+            int[] gray1 = new int[256];
+            int[] gray2 = new int[256];
+
+            pictureBox1.Image = Image.FromFile(openFileDialog1.FileName);
             pictureBox2.Image = Image.FromFile(openFileDialog1.FileName);
             pictureBox3.Image = Image.FromFile(openFileDialog1.FileName);
             pictureBox4.Image = Image.FromFile(openFileDialog1.FileName);
@@ -46,29 +45,40 @@ namespace Lab2_task1
 			System.Drawing.Imaging.BitmapData bmpData =
 				bmp1.LockBits(rect, System.Drawing.Imaging.ImageLockMode.ReadWrite,
 				bmp1.PixelFormat);
+            System.Drawing.Imaging.BitmapData bmp2Data =
+                bmp2.LockBits(rect, System.Drawing.Imaging.ImageLockMode.ReadWrite,
+                bmp2.PixelFormat);
+            System.Drawing.Imaging.BitmapData bmp3Data =
+                bmp3.LockBits(rect, System.Drawing.Imaging.ImageLockMode.ReadWrite,
+                bmp3.PixelFormat);
+            System.Drawing.Imaging.BitmapData bmp4Data =
+                bmp4.LockBits(rect, System.Drawing.Imaging.ImageLockMode.ReadWrite,
+                bmp4.PixelFormat);
 
-			// Get the address of the first line.
-			IntPtr ptr = bmpData.Scan0;
-
+            var height = bmp1.Height;
+            // Get the address of the first line.
+            IntPtr ptr = bmpData.Scan0;
 			// Declare an array to hold the bytes of the bitmap.
-			int bytes = Math.Abs(bmpData.Stride) * bmp1.Height;
-			rgbValues = new byte[bytes];
-
+			int bytes = Math.Abs(bmpData.Stride) * height;
+			byte[] rgbValues = new byte[bytes];
 			// Copy the RGB values into the array.
 			System.Runtime.InteropServices.Marshal.Copy(ptr, rgbValues, 0, bytes);
 
-			// Copy the RGB values back to the bitmap
-			System.Runtime.InteropServices.Marshal.Copy(rgbValues, 0, ptr, bytes);
+            IntPtr ptr2 = bmp2Data.Scan0;
+            bytes = Math.Abs(bmp2Data.Stride) * height;
+            byte[] gray1Values = new byte[bytes];
+            System.Runtime.InteropServices.Marshal.Copy(ptr, gray1Values, 0, bytes);
 
-			// Unlock the bits.
-			bmp1.UnlockBits(bmpData);
+            IntPtr ptr3 = bmp3Data.Scan0;
+            bytes = Math.Abs(bmp3Data.Stride) * height;
+            byte[] gray2Values = new byte[bytes];
+            System.Runtime.InteropServices.Marshal.Copy(ptr, gray2Values, 0, bytes);
 
-            //creating arrays for hist
-            for (int j = 0; j < 256; ++j)
-            {
-                gray1.Add(0);
-                gray2.Add(0);
-            }
+            IntPtr ptr4 = bmp4Data.Scan0;
+            bytes = Math.Abs(bmp4Data.Stride) * height;
+            byte[] gray3Values = new byte[bytes];
+            System.Runtime.InteropServices.Marshal.Copy(ptr, gray3Values, 0, bytes);
+
 
             int i = 0;
             int width = bmp1.Width;
@@ -76,60 +86,56 @@ namespace Lab2_task1
             for (int counter = 0; counter < rgbValues.Length; counter += 3)
 			{
                 //исходный
-                int R = rgbValues[counter];
+                int R = rgbValues[counter + 2];
                 int G = rgbValues[counter + 1];
-                int B = rgbValues[counter + 2];
-                Color c = Color.FromArgb(B, G, R);
-				bmp1.SetPixel(i % width, i / width, c);
+                int B = rgbValues[counter];
                 //серый1
-                int NC1 = Convert.ToInt32(0.33 * R + 0.33 * G + 0.33 * B) % 256;
-                c = Color.FromArgb(NC1, NC1, NC1);
-                bmp2.SetPixel(i % width, i / width, c);
+                byte NC1 = Convert.ToByte(Convert.ToInt32(0.33 * R + 0.33 * G + 0.33 * B) % 256);
+                gray1Values[counter] = gray1Values[counter + 1] = gray1Values[counter + 2] = NC1;
                 //серый2
-                int NC2 = Convert.ToInt32(0.2126 * R + 0.7152 * G + 0.0722 * B) % 256;
-                c = Color.FromArgb(NC2, NC2, NC2);
-                bmp3.SetPixel(i % width, i / width, c);
+                byte NC2 = Convert.ToByte(Convert.ToInt32(0.2126 * R + 0.7152 * G + 0.0722 * B) % 256);
+                gray2Values[counter] = gray2Values[counter + 1] = gray2Values[counter + 2] = NC2;
                 //разность
-                int NC3 = Math.Max(NC1, NC2) - Math.Min(NC1, NC2);
+                byte NC3 = Convert.ToByte(Math.Max(NC1, NC2) - Math.Min(NC1, NC2));
+                gray3Values[counter] = gray3Values[counter + 1] = gray3Values[counter + 2] = NC3;
                 if (NC3 > maxgray)
                     maxgray = NC3;
-                //c = Color.FromArgb(NC3, NC3, NC3);
-                //bmp4.SetPixel(i % width, i / width, c);
-                i++;
-			}
-
-            i = 0;
-            int k = 255 / maxgray;
-            for (int counter = 0; counter < rgbValues.Length; counter += 3)
-            {
-                int R = rgbValues[counter];
-                int G = rgbValues[counter + 1];
-                int B = rgbValues[counter + 2];
-                int NC1 = Convert.ToInt32(0.33 * R + 0.33 * G + 0.33 * B) % 256;
-                int NC2 = Convert.ToInt32(0.2126 * R + 0.7152 * G + 0.0722 * B) % 256;
-                //разность
-                int NC3 = Math.Max(NC1, NC2) - Math.Min(NC1, NC2);
-                NC3 *= k;
-                Color c = Color.FromArgb(NC3, NC3, NC3);
-                bmp4.SetPixel(i % width, i / width, c);
                 i++;
                 //гистограмма
                 gray1[NC1]++;
                 gray2[NC2]++;
             }
 
-            for (int j = 0; j < 256; ++j)
+            i = 0;
+            byte k = Convert.ToByte(255 / maxgray);
+            for (int counter = 0; counter < rgbValues.Length; counter += 3)
             {
-                chart1.Series[0].Points.Add(gray1[j]);
-                chart2.Series[0].Points.Add(gray2[j]);
+                gray3Values[counter] = gray3Values[counter + 1] = gray3Values[counter + 2] = Convert.ToByte(gray3Values[counter + 2]*k);
+                i++;
             }
+
+
+            // Copy the RGB values back to the bitmap
+            System.Runtime.InteropServices.Marshal.Copy(rgbValues, 0, ptr, bytes);
+            System.Runtime.InteropServices.Marshal.Copy(gray1Values, 0, ptr2, bytes);
+            System.Runtime.InteropServices.Marshal.Copy(gray2Values, 0, ptr3, bytes);
+            System.Runtime.InteropServices.Marshal.Copy(gray3Values, 0, ptr4, bytes);
+
+            // Unlock the bits.
+            bmp1.UnlockBits(bmpData);
+            bmp2.UnlockBits(bmp2Data);
+            bmp3.UnlockBits(bmp3Data);
+            bmp4.UnlockBits(bmp4Data);
+
+            chart1.Series[0].Points.DataBindY(gray1);
+            chart2.Series[0].Points.DataBindY(gray2);
+
 
             // Set the PictureBox to display the image.
             pictureBox1.Refresh();
 			pictureBox2.Refresh();
 			pictureBox3.Refresh();
 			pictureBox4.Refresh();
-
 		}
 	}
 }
