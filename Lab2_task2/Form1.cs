@@ -58,6 +58,7 @@ namespace Lab2_task2
             int[] green_count = new int[256];
             int[] blue_count = new int[256];
 
+            int max = -1;
             // Set every third value to 255. A 24bpp bitmap will look red.  
             for (int counter = 0; counter < rgbValuesR.Length; counter += 3)
             {
@@ -73,6 +74,9 @@ namespace Lab2_task2
                 rgbValuesB[counter + 2] = 0;
 
             }
+
+            for (int i = 0; i < 255; ++i)
+                max = Math.Max(max, Math.Max(red_count[i], Math.Max(green_count[i], blue_count[i])));
             // Copy the RGB values back to the bitmap
             System.Runtime.InteropServices.Marshal.Copy(rgbValuesR, 0, ptrR, bytes);
             System.Runtime.InteropServices.Marshal.Copy(rgbValuesG, 0, ptrG, bytes);
@@ -91,6 +95,10 @@ namespace Lab2_task2
             chart1.Series[0].Points.DataBindY(red_count);
             chart2.Series[0].Points.DataBindY(green_count);
             chart3.Series[0].Points.DataBindY(blue_count);
+            
+            chart1.ChartAreas[0].AxisY.Maximum = max;
+            chart2.ChartAreas[0].AxisY.Maximum = max;
+            chart3.ChartAreas[0].AxisY.Maximum = max;
 
             chart1.Series[0].Color = Color.Red;
             chart2.Series[0].Color = Color.Green;
