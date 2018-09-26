@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Drawing.Imaging;
 using System.Windows.Forms;
 
 namespace Lab3_task1
@@ -38,7 +39,8 @@ namespace Lab3_task1
 
                     using (Graphics g = Graphics.FromImage(pictureBox1.Image))
                     {
-                        g.DrawLine(new Pen(Color.Black, 1), lastPoint, e.Location);
+                        using (Pen black_pen = new Pen(Color.Black, 1))
+                            g.DrawLine(black_pen, lastPoint, e.Location);
                         g.SmoothingMode = SmoothingMode.AntiAlias;
                     }
                     pictureBox1.Refresh();
@@ -62,43 +64,87 @@ namespace Lab3_task1
             }
         }
 
-        Bitmap bmp;
-        Graphics graphics;
-        void floodFill(int x, int y)
+        private byte[] getRGBValues(out Bitmap bmp, out BitmapData bmp_data,
+            out IntPtr ptr, out int bytes)
         {
-            Color col = bmp.GetPixel(x, y);
-            Color back = pictureBox1.BackColor;
-            if (bmp.GetPixel(x, y).ToArgb() == pictureBox1.BackColor.ToArgb())
-            {
-                int left = x;
-                int right = x;
-                while (0 < left && bmp.GetPixel(left - 1, y).ToArgb() == pictureBox1.BackColor.ToArgb())
-                    left -= 1;
-                while (right + 1 < pictureBox1.ClientSize.Width && bmp.GetPixel(right + 1, y).ToArgb() == pictureBox1.BackColor.ToArgb())
-                    right += 1;
-                graphics.DrawLine(new Pen(Color.Black, 1), left, y, right, y);
+            bmp = new Bitmap(pictureBox1.ClientSize.Width, pictureBox1.ClientSize.Height);
+            pictureBox1.DrawToBitmap(bmp, pictureBox1.ClientRectangle);
 
-                for (int i = left; i <= right; ++i)
+            // Lock the bitmap's bits.  
+            Rectangle rect = new Rectangle(0, 0, bmp.Width, bmp.Height);
+            bmp_data =
+                bmp.LockBits(rect, ImageLockMode.ReadWrite,
+                bmp.PixelFormat);
+
+            // Get the address of the first line.
+            ptr = bmp_data.Scan0;
+
+            // Declare an array to hold the bytes of the bitmap.
+            bytes = Math.Abs(bmp_data.Stride) * bmp.Height;
+            byte[] rgb_values = new byte[bytes];
+
+            // Copy the RGB values into the array.
+            System.Runtime.InteropServices.Marshal.Copy(ptr, rgb_values, 0, bytes);
+
+            return rgb_values;
+        }
+
+        BitmapData bmpData;
+        byte[] rgbValues;
+        void floodFill(int ind)
+        {
+            if (rgbValues[ind] == 255 && rgbValues[ind + 1] == 255 && rgbValues[ind + 2] == 255) // check if white
+            {
+                int left_edge = (ind / bmpData.Stride) * bmpData.Stride;
+                int right_edge = left_edge + bmpData.Stride;
+
+                // left search
+                int left_point = ind;
+                while (left_edge <= left_point && rgbValues[left_point] == 255 && rgbValues[left_point + 1] == 255 && rgbValues[left_point + 2] == 255)
                 {
-                    if (0 < y)
-                        floodFill(i, y - 1);
-                    if (y + 1 < pictureBox1.ClientSize.Height)
-                        floodFill(i, y + 1);
+                    rgbValues[left_point] = 0;
+                    rgbValues[left_point + 1] = 0;
+                    rgbValues[left_point + 2] = 0;
+                    rgbValues[left_point + 3] = 255;
+
+                    left_point -= 4;
+                }
+                left_point += 4;
+
+                // right search
+                int right_point = ind + 4;
+                while (right_point < right_edge && rgbValues[right_point] == 255 && rgbValues[right_point + 1] == 255 && rgbValues[right_point + 2] == 255)
+                {
+                    rgbValues[right_point] = 0;
+                    rgbValues[right_point + 1] = 0;
+                    rgbValues[right_point + 2] = 0;
+                    rgbValues[right_point + 3] = 255;
+
+                    right_point += 4;
+                }
+                right_point -= 4;
+
+                // recursion
+                for (int i = left_point; i <= right_point; i += 4)
+                {
+                    if (0 <= i - bmpData.Stride)
+                        floodFill(i - bmpData.Stride);
+                    if (i + bmpData.Stride < rgbValues.Length)
+                        floodFill(i + bmpData.Stride);
                 }
             }
         }
 
         private void pictureBox1_MouseClick(object sender, MouseEventArgs e)
         {
-            if (e.X >= 0 && e.X < pictureBox1.ClientSize.Width && e.Y >= 0 && e.Y < pictureBox1.ClientSize.Height)
-            {
-                bmp = new Bitmap(pictureBox1.ClientSize.Width, pictureBox1.ClientSize.Height);
-                pictureBox1.DrawToBitmap(bmp, pictureBox1.ClientRectangle);
-                graphics = Graphics.FromImage(bmp);
-                floodFill(e.X, e.Y);
-                pictureBox1.Image = bmp;
-                pictureBox1.Refresh();
-            }
+            rgbValues = getRGBValues(out Bitmap bmp, out bmpData, out IntPtr ptr, out int bytes);
+
+            floodFill(4 * e.X + e.Y * bmpData.Stride);
+
+            System.Runtime.InteropServices.Marshal.Copy(rgbValues, 0, ptr, bytes);
+            bmp.UnlockBits(bmpData);
+            pictureBox1.Image = bmp;
+            pictureBox1.Refresh();
         }
     }
 }
