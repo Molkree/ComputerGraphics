@@ -137,7 +137,11 @@ namespace Lab3_task1
 
         private void pictureBox1_MouseClick(object sender, MouseEventArgs e)
         {
-            rgbValues = getRGBValues(out Bitmap bmp, out bmpData, out IntPtr ptr, out int bytes);
+            Bitmap bmp;
+            IntPtr ptr;
+            int bytes;
+
+            rgbValues = getRGBValues(out bmp, out bmpData, out ptr, out bytes);
 
             floodFill(4 * e.X + e.Y * bmpData.Stride);
 
