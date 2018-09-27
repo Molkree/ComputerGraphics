@@ -68,19 +68,21 @@ namespace Lab3_task2
 
             Point pred_p = find_start_point();
             points.Add(pred_p);
-           /* label1.Text = pred_p.ToString();
-                   bmp.SetPixel(pred_p.X, pred_p.Y, Color.Red);
-                   pictureBox1.Refresh();
-             */      
+            /* label1.Text = pred_p.ToString();
+                    bmp.SetPixel(pred_p.X, pred_p.Y, Color.Red);
+                    pictureBox1.Refresh();
+              */
 
+            
             int dir = 6;
+            int pred_dir = dir;
             Point p = pred_p;
             while (true)
             {
                 dir -= 2;
                 if (dir < 0)
                     dir += 8;
-
+                
                 while (true)
                 {
                     p = new_point(dir, pred_p);
@@ -92,12 +94,26 @@ namespace Lab3_task2
                     else
                         ++dir;
                     if (dir > 7)
-                        dir -= 8;
+                        dir -= 8;                        
                 }
+                if (dir == (pred_dir + 4) % 8)
+                {
+                    MessageBoxButtons buttons = MessageBoxButtons.OK;
+                    DialogResult result;
+                    result = MessageBox.Show("Не выделено ни одного пикселя", "problem", buttons);
+                    points.Clear();
+                    return points;
+                }
+
                 if (points.Exists(pt => (pt.X == pred_p.X && pt.Y == pred_p.Y)))
                     break;
-                else points.Add(pred_p);
+                else
+                {
+                    points.Add(pred_p);
+                 //   if (dir == pred_dir )
 
+                    pred_dir = dir;
+                }
             }
             return points;
         }
