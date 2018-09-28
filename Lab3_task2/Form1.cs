@@ -78,12 +78,10 @@ namespace Lab3_task2
                 return new Point(p.X + 1, p.Y);
         }
 
-        List<Point> find_border(Point click)
+        bool find_border(Point click, out List<Point> points)
         {
-            List<Point> points = new List<Point>();
+            points = new List<Point>();
             Bitmap bmp = pictureBox1.Image as Bitmap;
-            int cnt_horizontal = 0;
-            int last_x = 0;
             Point pred_p = find_start_point(click);
             if (pred_p.X == -1 || pred_p.Y == -1)
             {
@@ -91,7 +89,7 @@ namespace Lab3_task2
                 DialogResult result;
                 result = MessageBox.Show("Неверные координаты", "problem", buttons);
                 points.Clear();
-                return points;
+                return false;
             }
             else
             {
@@ -101,6 +99,8 @@ namespace Lab3_task2
                         pictureBox1.Refresh();
                   */
 
+                int cnt_horizontal = 1;
+                Point last_p = pred_p;
 
                 int dir = 6;
                 int pred_dir = dir;
@@ -130,20 +130,28 @@ namespace Lab3_task2
                         DialogResult result;
                         result = MessageBox.Show("Не выделено ни одного пикселя", "problem", buttons);
                         points.Clear();
-                        return points;
+                        return false;
                     }
 
                     if (points.Exists(pt => (pt.X == pred_p.X && pt.Y == pred_p.Y)))
                         break;
                     else
                     {
+                        if (pred_p.Y == last_p.Y)
+                            ++cnt_horizontal;
+                        else cnt_horizontal = 1;
+                        if (cnt_horizontal > 2)
+                        {
+                            points.Remove(last_p);
+                        }
+                        last_p = pred_p;
                         points.Add(pred_p);
                         
 
                         pred_dir = dir;
                     }
                 }
-                return points;
+                return true;
             }
         }
 
@@ -170,7 +178,7 @@ namespace Lab3_task2
 
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
         {
-            if (checkBox1.Checked)
+          /* if (checkBox1.Checked)
             {
                 if (with_border == null)
                 {
@@ -185,17 +193,38 @@ namespace Lab3_task2
             else
             {
                 pictureBox1.Image = Bitmap.FromFile(openFileDialog1.FileName);
-            }
+            }*/
         }
         
         private void pictureBox1_MouseClick(object sender, MouseEventArgs e)
         {
+            pictureBox1.Image = Bitmap.FromFile(openFileDialog1.FileName);
             with_border = null;
-            List<Point> points = find_border(e.Location);
+            List<Point> points = new List<Point>();
+            bool f = find_border(e.Location, out points);
             with_border = pictureBox1.Image.Clone() as Bitmap;
-            foreach (Point pt in points)
+
+            if (f)
             {
-                with_border.SetPixel(pt.X, pt.Y, Color.Red);
+                //draw
+                Point pt = points[0];
+                using (Graphics g = Graphics.FromImage(with_border))
+                {
+                    foreach (Point npt in points)
+                    {
+                        g.DrawLine(Pens.Red, pt, npt);
+                        pt = npt;
+                    }
+                }
+                g.DrawLine(Pens.Red, pt, points[0]);
+                //with_border.SetPixel(pt.X, pt.Y, Color.Red);
+                pictureBox1.Image = with_border;
+            }
+            else
+            {
+                MessageBoxButtons buttons = MessageBoxButtons.OK;
+                DialogResult result;
+                result = MessageBox.Show("Выберите мышкой область внутри границы", "Не выбрана область", buttons);
             }
 
         }
