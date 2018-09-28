@@ -100,6 +100,7 @@ namespace Lab3_task2
                   */
 
                 int cnt_horizontal = 1;
+                Point last_last_p = pred_p;
                 Point last_p = pred_p;
 
                 int dir = 6;
@@ -138,8 +139,21 @@ namespace Lab3_task2
                     else
                     {
                         if (pred_p.Y == last_p.Y)
+                        {
                             ++cnt_horizontal;
-                        else cnt_horizontal = 1;
+                        }
+                        else
+                        {
+                            if (cnt_horizontal > 1)
+                            {
+                                points.Remove(last_p);
+                                points.Add(last_last_p);
+                                points.Add(last_p);
+                                points.Add(last_p);
+                            }
+                            cnt_horizontal = 1;
+                            last_last_p = pred_p;
+                        }
                         if (cnt_horizontal > 2)
                         {
                             points.Remove(last_p);
