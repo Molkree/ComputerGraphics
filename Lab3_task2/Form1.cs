@@ -82,7 +82,8 @@ namespace Lab3_task2
         {
             List<Point> points = new List<Point>();
             Bitmap bmp = pictureBox1.Image as Bitmap;
-
+            int cnt_horizontal = 0;
+            int last_x = 0;
             Point pred_p = find_start_point(click);
             if (pred_p.X == -1 || pred_p.Y == -1)
             {
@@ -137,7 +138,7 @@ namespace Lab3_task2
                     else
                     {
                         points.Add(pred_p);
-                        //   if (dir == pred_dir )
+                        
 
                         pred_dir = dir;
                     }
@@ -196,6 +197,7 @@ namespace Lab3_task2
             {
                 with_border.SetPixel(pt.X, pt.Y, Color.Red);
             }
+
         }
     }
 }
