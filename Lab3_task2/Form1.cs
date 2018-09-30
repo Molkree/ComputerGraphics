@@ -370,7 +370,7 @@ namespace Lab3_task2
             if (colorDialog2.ShowDialog() == DialogResult.Cancel)
                 return;
             border_color = colorDialog2.Color;
-            label2.BackColor = fill_color;
+            label2.BackColor = border_color;
         }
     }
 }
