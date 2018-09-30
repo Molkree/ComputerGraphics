@@ -30,7 +30,7 @@ namespace Lab3_task2
         Bitmap with_border = null;
         Color bg_color;
         Mode mode = Mode.Border;
-        Color fill_color = Color.White;
+        Color fill_color = Color.BlueViolet;
         List<Point> points = new List<Point>(); //точки после поиска границы,не отсортированы, чтобы ее нарисовать
         bool border_finded = false;
         Image curr = null;
@@ -217,6 +217,7 @@ namespace Lab3_task2
             points.Clear();
             border_finded = false;
             mode = Mode.Border;
+            button2.Text = "Заливка";
         }
 
         private List<Point> calc_fill_border()
@@ -226,13 +227,23 @@ namespace Lab3_task2
             Point[] tmp = res.ToArray();
             Bitmap bmp = curr as Bitmap;
             // поиск внутренних областей
-            for (int i = 0; i < tmp.Length; i += 2)
+            for (int i = 0; i < tmp.Length - 1; i += 2)
             {
                 //пока считаю, что граница только черная
                 Point first = tmp[i];
                 Point second = tmp[i + 1];
+
+                if (first.Y < second.Y)
+                {
+                    ++i;
+                    first = tmp[i];
+                    second = tmp[i + 1];
+                }
+                
                 if (first.X == second.X || first.X == second.X - 1)
                     continue;
+                
+            
                 bool prev_is_border = false;
                 //сканируем область внутри?
                 for (int j = first.X + 1; j < second.X; ++j)
@@ -263,10 +274,18 @@ namespace Lab3_task2
         private void time_to_fill(Point[] border)
         {
             Pen pen = new Pen(fill_color);
-            for (int i = 0; i < border.Length; i += 2)
+            for (int i = 0; i < border.Length - 1; i += 2)
             {
                 Point first = border[i];
                 Point second = border[i + 1];
+
+                if (first.Y < second.Y)
+                {
+                    ++i;
+                    first = border[i];
+                    second = border[i + 1];
+                }
+                
                 if (first.X == second.X || first.X == second.X - 1)
                     continue;
                 first.X = first.X + 1;
@@ -321,7 +340,7 @@ namespace Lab3_task2
                     //pictureBox1.Image = Bitmap.FromFile(openFileDialog1.FileName);
                     Point[] t = points.ToArray();
                     //костыль
-                    if (t.Length % 2 == 1)
+                    if (false)//if (t.Length % 2 == 1)
                     {
                         //TODO разобраться с ним наконец
                         MessageBoxButtons buttons = MessageBoxButtons.OK;
