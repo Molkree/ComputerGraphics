@@ -212,8 +212,39 @@ namespace Lab3_task2
         private List<Point> calc_fill_border()
         {
             List<Point> res = new List<Point>(points);
-            //TODO добавить поиск внутренних областей
-
+            res.Sort(new YXComparer());
+            Point[] tmp = res.ToArray();
+            Bitmap bmp = curr as Bitmap;
+            // поиск внутренних областей
+            for (int i = 0; i < tmp.Length; i += 2)
+            {
+                //пока считаю, что граница только черная
+                Point first = tmp[i];
+                Point second = tmp[i + 1];
+                if (first.X == second.X || first.X == second.X - 1)
+                    continue;
+                bool prev_is_border = false;
+                //сканируем область внутри?
+                for (int j = first.X + 1; j < second.X; ++j)
+                {
+                    if (bmp.GetPixel(j, first.Y).ToArgb() == Color.Black.ToArgb())
+                    {
+                        if (!prev_is_border)
+                        {
+                            res.Add(new Point(j, first.Y));
+                            prev_is_border = true;
+                        }
+                    }
+                    else
+                    {
+                        if (prev_is_border)
+                        {
+                            res.Add(new Point(j-1, first.Y));
+                            prev_is_border = false;
+                        }
+                    }
+                }
+            }
 
             res.Sort(new YXComparer());
             return res;
