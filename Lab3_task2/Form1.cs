@@ -34,7 +34,7 @@ namespace Lab3_task2
         List<Point> points = new List<Point>(); //точки после поиска границы,не отсортированы, чтобы ее нарисовать
         bool border_finded = false;
         Image curr = null;
-
+        Color border_color = Color.Black;
         /*    Point find_start_point()
             {
                 Bitmap bmp = pictureBox1.Image as Bitmap;
@@ -71,7 +71,9 @@ namespace Lab3_task2
 
             for (int x = act_x; x < bmp.Width; ++x)
             {
-                if (bmp.GetPixel(x, act_y).ToArgb() != bg_color.ToArgb())
+                //if (bmp.GetPixel(x, act_y).ToArgb() != bg_color.ToArgb())
+                //    return new Point(x, act_y);
+                if (bmp.GetPixel(x, act_y).ToArgb() == border_color.ToArgb())
                     return new Point(x, act_y);
             }
             return new Point(-1, -1);
@@ -130,7 +132,12 @@ namespace Lab3_task2
                     while (true)
                     {
                         p = new_point(dir, pred_p);
-                        if (bmp.GetPixel(p.X, p.Y).ToArgb() != Color.White.ToArgb())
+                        /*if (bmp.GetPixel(p.X, p.Y).ToArgb() != Color.White.ToArgb())
+                        {
+                            pred_p = p;
+                            break;
+                        }*/
+                        if (bmp.GetPixel(p.X, p.Y).ToArgb() == border_color.ToArgb())
                         {
                             pred_p = p;
                             break;
@@ -189,8 +196,10 @@ namespace Lab3_task2
         {
             InitializeComponent();
             label1.BackColor = fill_color;
+            label2.BackColor = border_color;
             colorDialog1.FullOpen = true;
             colorDialog1.Color = fill_color;
+            colorDialog2.Color = border_color;
         }
 
         private void openFileDialog1_FileOk(object sender, CancelEventArgs e)
@@ -227,7 +236,7 @@ namespace Lab3_task2
                 //сканируем область внутри?
                 for (int j = first.X + 1; j < second.X; ++j)
                 {
-                    if (bmp.GetPixel(j, first.Y).ToArgb() == Color.Black.ToArgb())
+                    if (bmp.GetPixel(j, first.Y).ToArgb() == border_color.ToArgb())
                     {
                         if (!prev_is_border)
                         {
@@ -246,7 +255,7 @@ namespace Lab3_task2
                 }
             }
 
-            res.Sort(new YXComparer());
+           res.Sort(new YXComparer());
             return res;
         }
 
@@ -354,6 +363,14 @@ namespace Lab3_task2
                 return;
             fill_color = colorDialog1.Color;
             label1.BackColor = fill_color;
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            if (colorDialog2.ShowDialog() == DialogResult.Cancel)
+                return;
+            border_color = colorDialog2.Color;
+            label2.BackColor = fill_color;
         }
     }
 }
