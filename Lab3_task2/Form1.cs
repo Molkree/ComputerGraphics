@@ -216,6 +216,7 @@ namespace Lab3_task2
             with_border = null;
             points.Clear();
             border_finded = false;
+            mode = Mode.Border;
         }
 
         private List<Point> calc_fill_border()
@@ -363,6 +364,9 @@ namespace Lab3_task2
                 return;
             fill_color = colorDialog1.Color;
             label1.BackColor = fill_color;
+            if (fill_color.ToArgb() == Color.Black.ToArgb())
+                label1.ForeColor = Color.White;
+            else label1.ForeColor = Color.Black;
         }
 
         private void button4_Click(object sender, EventArgs e)
@@ -371,6 +375,9 @@ namespace Lab3_task2
                 return;
             border_color = colorDialog2.Color;
             label2.BackColor = border_color;
+            if (border_color.ToArgb() == Color.White.ToArgb())
+                label2.ForeColor = Color.Black;
+            else label2.ForeColor = Color.White;
         }
     }
 }
