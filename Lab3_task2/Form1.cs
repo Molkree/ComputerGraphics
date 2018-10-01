@@ -229,24 +229,25 @@ namespace Lab3_task2
                 Point first = points[i-1];
                 Point second = points[i];
 
-                if (second.Y == max_y || second.Y == min_y)
-                    continue;
+           /*     if (second.Y == max_y || second.Y == min_y)
+                    continue;*/
 
                 if (first.X == second.X)
                 {
                     dir = second.Y > first.Y ? 6 : 2;
-                    res.Add(second);
+                    if (second.Y != max_y && second.Y != min_y)
+                        res.Add(second);
                 }
                 else if (first.Y == second.Y)
                 {
                     // !!!
                     dir = second.X > first.X ? 0 : 4;
-
-                    if ((dir == 4 && pred_dir == 5) || (dir == 0 && pred_dir == 1))
-                    {
-                        res.Remove(first);
-                        res.Add(second);
-                    }
+                    if (second.Y != max_y && second.Y != min_y)
+                        if ((dir == 4 && pred_dir == 5) || (dir == 0 && pred_dir == 1))
+                        {
+                            res.Remove(first);
+                            res.Add(second);
+                        }
 
                        
                 }
@@ -256,10 +257,12 @@ namespace Lab3_task2
                         dir = second.X > first.X ? 1 : 3;
                     else dir = second.X > first.X ? 7 : 5;
 
-                    if ((dir == 5 && pred_dir == 3) || (dir == 3 && pred_dir == 5) || (dir == 1 && pred_dir == 7) || (dir == 7 && pred_dir == 1))
-                        res.Remove(res[res.Count - 1]);
-                    res.Add(second);
-
+                    if (second.Y != max_y && second.Y != min_y)
+                    {
+                        if ((dir == 5 && pred_dir == 3) || (dir == 3 && pred_dir == 5) || (dir == 1 && pred_dir == 7) || (dir == 7 && pred_dir == 1))
+                            res.Remove(res[res.Count - 1]);
+                        res.Add(second);
+                    }
                 }
 
      /*           if (pred_dir == 4 && second.Y < first.Y)
@@ -297,15 +300,19 @@ namespace Lab3_task2
 
                 bool prev_is_border = false;
                 //сканируем область внутри?
+                int cnt = 0;
                 for (int j = first.X + 1; j < second.X; ++j)
                 {
+                    cnt = 0;
                     if (bmp.GetPixel(j, first.Y).ToArgb() == border_color.ToArgb())
                     {
                         if (!prev_is_border)
                         {
                             if (!res.Exists(pt => (pt.X == j && pt.Y == first.Y)))
+                            {
                                 res.Add(new Point(j, first.Y));
-                            
+                                ++cnt;
+                            }
                             prev_is_border = true;
                             
                         }
@@ -314,12 +321,17 @@ namespace Lab3_task2
                     {
                         if (prev_is_border)
                         {
-                            if (!res.Exists(pt => (pt.X == j-1 && pt.Y == first.Y)))
-                                res.Add(new Point(j-1, first.Y));
+                            if (!res.Exists(pt => (pt.X == j - 1 && pt.Y == first.Y)))
+                            {
+                                res.Add(new Point(j - 1, first.Y));
+                                ++cnt;
+                            }
                             prev_is_border = false;
                         }
                     }
                 }
+                if (cnt % 2 == 1)
+                    res.Remove(res[res.Count - 1]);
             }
 
            res.Sort(new YXComparer());
