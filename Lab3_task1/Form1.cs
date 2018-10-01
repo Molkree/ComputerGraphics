@@ -55,6 +55,61 @@ namespace Lab3_task1
             lastPoint = Point.Empty;
         }
 
+        /// <summary>
+        /// Resize the image to the specified width and height.
+        /// </summary>
+        /// <param name="image">The image to resize.</param>
+        /// <param name="width">The width to resize to.</param>
+        /// <param name="height">The height to resize to.</param>
+        /// <returns>The resized image.</returns>
+        public static Bitmap ResizeImage(Image image, int width, int height)
+        {
+            var destRect = new Rectangle(0, 0, width, height);
+            var destImage = new Bitmap(width, height, PixelFormat.Format24bppRgb);
+
+            destImage.SetResolution(image.HorizontalResolution, image.VerticalResolution);
+
+            using (var graphics = Graphics.FromImage(destImage))
+            {
+                graphics.CompositingMode = CompositingMode.SourceCopy;
+                graphics.CompositingQuality = CompositingQuality.HighQuality;
+                graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                graphics.SmoothingMode = SmoothingMode.HighQuality;
+                graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
+
+                using (var wrapMode = new ImageAttributes())
+                {
+                    wrapMode.SetWrapMode(WrapMode.TileFlipXY);
+                    graphics.DrawImage(image, destRect, 0, 0, image.Width, image.Height, GraphicsUnit.Pixel, wrapMode);
+                }
+            }
+
+            return destImage;
+        }
+
+        Bitmap floodImage = null;
+        IntPtr ptrFlood;
+        int bytesFlood;
+        BitmapData bmp_dataFlood;
+        private void button1_Click(object sender, EventArgs e)
+        {
+            if (floodImage != null)
+            {
+                System.Runtime.InteropServices.Marshal.Copy(rgb_valuesFlood, 0, ptrFlood, bytesFlood);
+                floodImage.UnlockBits(bmp_dataFlood);
+            }
+            openFileDialog1.ShowDialog();
+            floodImage = ResizeImage(Image.FromFile(openFileDialog1.FileName), pictureBox1.ClientSize.Width, pictureBox1.ClientSize.Height);
+            Rectangle rectFlood = new Rectangle(0, 0, floodImage.Width, floodImage.Height);
+            bmp_dataFlood =
+                floodImage.LockBits(rectFlood, ImageLockMode.ReadWrite,
+                floodImage.PixelFormat);
+            ptrFlood = bmp_dataFlood.Scan0;
+            bytesFlood = Math.Abs(bmp_dataFlood.Stride) * floodImage.Height;
+            rgb_valuesFlood = new byte[bytesFlood];
+            System.Runtime.InteropServices.Marshal.Copy(ptrFlood, rgb_valuesFlood, 0, bytesFlood);
+        }
+
         private void clearButton_Click(object sender, EventArgs e)
         {
             if (pictureBox1.Image != null)
@@ -62,12 +117,18 @@ namespace Lab3_task1
                 pictureBox1.Image = null;
                 Refresh();
             }
+            if (floodImage != null)
+            {
+                System.Runtime.InteropServices.Marshal.Copy(rgb_valuesFlood, 0, ptrFlood, bytesFlood);
+                floodImage.UnlockBits(bmp_dataFlood);
+            }
+            floodImage = null;
         }
 
         private byte[] getRGBValues(out Bitmap bmp, out BitmapData bmp_data,
             out IntPtr ptr, out int bytes)
         {
-            bmp = new Bitmap(pictureBox1.ClientSize.Width, pictureBox1.ClientSize.Height);
+            bmp = new Bitmap(pictureBox1.ClientSize.Width, pictureBox1.ClientSize.Height, PixelFormat.Format24bppRgb);
             pictureBox1.DrawToBitmap(bmp, pictureBox1.ClientRectangle);
 
             // Lock the bitmap's bits.  
@@ -91,6 +152,7 @@ namespace Lab3_task1
 
         BitmapData bmpData;
         byte[] rgbValues;
+        byte[] rgb_valuesFlood;
         void floodFill(int ind)
         {
             if (rgbValues[ind] == 255 && rgbValues[ind + 1] == 255 && rgbValues[ind + 2] == 255) // check if white
@@ -102,30 +164,34 @@ namespace Lab3_task1
                 int left_point = ind;
                 while (left_edge <= left_point && rgbValues[left_point] == 255 && rgbValues[left_point + 1] == 255 && rgbValues[left_point + 2] == 255)
                 {
-                    rgbValues[left_point] = 0;
-                    rgbValues[left_point + 1] = 0;
-                    rgbValues[left_point + 2] = 0;
-                    rgbValues[left_point + 3] = 255;
+                    if (floodImage == null)
+                        for (int i = left_point; i < left_point + 3; ++i)
+                            rgbValues[i] = 0;
+                    else
+                        for (int i = left_point; i < left_point + 3; ++i)
+                            rgbValues[i] = rgb_valuesFlood[i];
 
-                    left_point -= 4;
+                    left_point -= 3;
                 }
-                left_point += 4;
+                left_point += 3;
 
                 // right search
-                int right_point = ind + 4;
+                int right_point = ind + 3;
                 while (right_point < right_edge && rgbValues[right_point] == 255 && rgbValues[right_point + 1] == 255 && rgbValues[right_point + 2] == 255)
                 {
-                    rgbValues[right_point] = 0;
-                    rgbValues[right_point + 1] = 0;
-                    rgbValues[right_point + 2] = 0;
-                    rgbValues[right_point + 3] = 255;
+                    if (floodImage == null)
+                        for (int i = right_point; i < right_point + 3; ++i)
+                            rgbValues[i] = 0;
+                    else
+                        for (int i = right_point; i < right_point + 3; ++i)
+                            rgbValues[i] = rgb_valuesFlood[i];
 
-                    right_point += 4;
+                    right_point += 3;
                 }
-                right_point -= 4;
+                right_point -= 3;
 
                 // recursion
-                for (int i = left_point; i <= right_point; i += 4)
+                for (int i = left_point; i <= right_point; i += 3)
                 {
                     if (0 <= i - bmpData.Stride)
                         floodFill(i - bmpData.Stride);
@@ -143,7 +209,7 @@ namespace Lab3_task1
 
             rgbValues = getRGBValues(out bmp, out bmpData, out ptr, out bytes);
 
-            floodFill(4 * e.X + e.Y * bmpData.Stride);
+            floodFill(3 * e.X + e.Y * bmpData.Stride);
 
             System.Runtime.InteropServices.Marshal.Copy(rgbValues, 0, ptr, bytes);
             bmp.UnlockBits(bmpData);
