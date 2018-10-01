@@ -51,7 +51,7 @@
             // clearButton
             // 
             this.clearButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 13F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.clearButton.Location = new System.Drawing.Point(433, 569);
+            this.clearButton.Location = new System.Drawing.Point(437, 558);
             this.clearButton.Name = "clearButton";
             this.clearButton.Size = new System.Drawing.Size(112, 41);
             this.clearButton.TabIndex = 1;
@@ -66,7 +66,7 @@
             // button1
             // 
             this.button1.Font = new System.Drawing.Font("Microsoft Sans Serif", 13F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.button1.Location = new System.Drawing.Point(12, 567);
+            this.button1.Location = new System.Drawing.Point(12, 558);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(131, 43);
             this.button1.TabIndex = 2;
@@ -78,7 +78,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(987, 622);
+            this.ClientSize = new System.Drawing.Size(987, 612);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.clearButton);
             this.Controls.Add(this.pictureBox1);
