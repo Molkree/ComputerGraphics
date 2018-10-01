@@ -139,6 +139,8 @@ namespace Lab3_task2
                         }*/
                         if (bmp.GetPixel(p.X, p.Y).ToArgb() == border_color.ToArgb())
                         {
+                            if ((dir == 5 && pred_dir == 3) || (dir == 3 && pred_dir == 5) || (dir == 1 && pred_dir == 7) || (dir == 7 && pred_dir == 1))
+                                points.Add(pred_p);
                             pred_p = p;
                             break;
                         }
@@ -181,6 +183,8 @@ namespace Lab3_task2
                             points.Remove(last_p);
                         }
                         last_p = pred_p;
+
+                        
                         points.Add(pred_p);
                         
 
@@ -252,15 +256,19 @@ namespace Lab3_task2
                     {
                         if (!prev_is_border)
                         {
-                            res.Add(new Point(j, first.Y));
+                            if (!res.Exists(pt => (pt.X == j && pt.Y == first.Y)))
+                                res.Add(new Point(j, first.Y));
+                            
                             prev_is_border = true;
+                            
                         }
                     }
                     else
                     {
                         if (prev_is_border)
                         {
-                            res.Add(new Point(j-1, first.Y));
+                            if (!res.Exists(pt => (pt.X == j-1 && pt.Y == first.Y)))
+                                res.Add(new Point(j-1, first.Y));
                             prev_is_border = false;
                         }
                     }
@@ -290,6 +298,8 @@ namespace Lab3_task2
                     continue;
                 first.X = first.X + 1;
                 second.X = second.X - 1;
+                if (first.X == second.X)
+                    (curr as Bitmap).SetPixel(first.X, first.Y, fill_color);
                 g.DrawLine(pen, first, second);
             }
         }
