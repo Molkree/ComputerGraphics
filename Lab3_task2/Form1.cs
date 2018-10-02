@@ -283,7 +283,7 @@ namespace Lab3_task2
                     res.Remove(pt);
             }
             //поиск внутренних границ
-            res.Sort(new YXComparer());
+        /*    res.Sort(new YXComparer());
             Point[] tmp = res.ToArray();
             Bitmap bmp = curr as Bitmap;
             // поиск внутренних областей
@@ -329,7 +329,7 @@ namespace Lab3_task2
                 }
                 if (cnt % 2 == 1)
                     res.Add(res[res.Count - 1]);
-            }
+            }*/
 
            res.Sort(new YXComparer());
             return res;
