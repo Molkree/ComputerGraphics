@@ -98,7 +98,8 @@ namespace Lab3_task1
             {
                 clearButton_Click(sender, e);
 
-                floodImage = ResizeImage(Image.FromFile(openFileDialog1.FileName), pictureBox1.ClientSize.Width, pictureBox1.ClientSize.Height);
+                floodImage = Image.FromFile(openFileDialog1.FileName) as Bitmap;
+                //floodImage = ResizeImage(Image.FromFile(openFileDialog1.FileName), pictureBox1.ClientSize.Width, pictureBox1.ClientSize.Height);
                 Rectangle rectFlood = new Rectangle(0, 0, floodImage.Width, floodImage.Height);
                 bmp_dataFlood =
                     floodImage.LockBits(rectFlood, ImageLockMode.ReadWrite,
@@ -154,7 +155,9 @@ namespace Lab3_task1
         BitmapData bmpData;
         byte[] rgbValues;
         byte[] rgb_valuesFlood;
-        Queue<Tuple<int, int>> lines = new Queue<Tuple<int, int>>();
+        //Queue<Tuple<int, int>> lines = new Queue<Tuple<int, int>>();
+
+        int start_x, start_y;
         void floodFill(int ind)
         {
             if (rgbValues[ind] == pictureBox1.BackColor.B && rgbValues[ind + 1] == pictureBox1.BackColor.G &&
@@ -163,31 +166,73 @@ namespace Lab3_task1
                 int left_edge = (ind / bmpData.Stride) * bmpData.Stride;
                 int right_edge = left_edge + bmpData.Stride;
 
-                // left search
                 int left_point = ind;
-                while (left_edge <= left_point && rgbValues[left_point] == pictureBox1.BackColor.B &&
-                    rgbValues[left_point + 1] == pictureBox1.BackColor.G && rgbValues[left_point + 2] == pictureBox1.BackColor.R)
-                {
-                    for (int i = left_point; i < left_point + 3; ++i)
-                        rgbValues[i] = 0;
-
-                    left_point -= 3;
-                }
-                left_point += 3;
-
-                // right search
                 int right_point = ind + 3;
-                while (right_point < right_edge && rgbValues[right_point] == pictureBox1.BackColor.B &&
-                    rgbValues[right_point + 1] == pictureBox1.BackColor.G && rgbValues[right_point + 2] == pictureBox1.BackColor.R)
+                if (floodImage == null)
                 {
-                    for (int i = right_point; i < right_point + 3; ++i)
-                        rgbValues[i] = 0;
+                    // left search
+                    while (left_edge <= left_point && rgbValues[left_point] == pictureBox1.BackColor.B &&
+                        rgbValues[left_point + 1] == pictureBox1.BackColor.G && rgbValues[left_point + 2] == pictureBox1.BackColor.R)
+                    {
+                        for (int i = left_point; i < left_point + 3; ++i)
+                            rgbValues[i] = 0;
 
-                    right_point += 3;
+                        left_point -= 3;
+                    }
+                    left_point += 3;
+
+                    // right search
+                    while (right_point < right_edge && rgbValues[right_point] == pictureBox1.BackColor.B &&
+                        rgbValues[right_point + 1] == pictureBox1.BackColor.G && rgbValues[right_point + 2] == pictureBox1.BackColor.R)
+                    {
+                        for (int i = right_point; i < right_point + 3; ++i)
+                            rgbValues[i] = 0;
+
+                        right_point += 3;
+                    }
+                    right_point -= 3;
                 }
-                right_point -= 3;
-                if (floodImage != null)
-                    lines.Enqueue(Tuple.Create(left_point, right_point));
+                else
+                {
+                    // left search
+                    while (left_edge <= left_point && rgbValues[left_point] == pictureBox1.BackColor.B &&
+                        rgbValues[left_point + 1] == pictureBox1.BackColor.G && rgbValues[left_point + 2] == pictureBox1.BackColor.R)
+                    {
+                        int cur_x = left_point % bmpData.Stride / 3; // divide by 3 to go from channels to pixels number
+                        int cur_y = left_point / bmpData.Stride;
+                        int flood_x = cur_x < start_x ? floodImage.Width - (start_x - cur_x) % floodImage.Width - 1 : (cur_x - start_x) % floodImage.Width;
+                        int flood_y = cur_y < start_y ? floodImage.Height - (start_y - cur_y) % floodImage.Height - 1: (cur_y - start_y) % floodImage.Height;
+                        int flood_ind = 3 * flood_x + flood_y * bmp_dataFlood.Stride; // back to channels
+
+                        rgbValues[left_point] = rgb_valuesFlood[flood_ind];
+                        rgbValues[left_point + 1] = rgb_valuesFlood[flood_ind + 1];
+                        rgbValues[left_point + 2] = rgb_valuesFlood[flood_ind + 2];
+
+                        left_point -= 3;
+                    }
+                    left_point += 3;
+
+                    // right search
+                    while (right_point < right_edge && rgbValues[right_point] == pictureBox1.BackColor.B &&
+                        rgbValues[right_point + 1] == pictureBox1.BackColor.G && rgbValues[right_point + 2] == pictureBox1.BackColor.R)
+                    {
+                        int cur_x = right_point % bmpData.Stride / 3; // divide by 3 to go from channels to pixels number
+                        int cur_y = right_point / bmpData.Stride;
+                        int flood_x = cur_x < start_x ? floodImage.Width - (start_x - cur_x) % floodImage.Width - 1 : (cur_x - start_x) % floodImage.Width;
+                        int flood_y = cur_y < start_y ? floodImage.Height - (start_y - cur_y) % floodImage.Height - 1 : (cur_y - start_y) % floodImage.Height;
+                        int flood_ind = 3 * flood_x + flood_y * bmp_dataFlood.Stride; // back to channels
+
+                        rgbValues[right_point] = rgb_valuesFlood[flood_ind];
+                        rgbValues[right_point + 1] = rgb_valuesFlood[flood_ind + 1];
+                        rgbValues[right_point + 2] = rgb_valuesFlood[flood_ind + 2];
+
+                        right_point += 3;
+                    }
+                    right_point -= 3;
+
+                }
+                //if (floodImage != null)
+                //    lines.Enqueue(Tuple.Create(left_point, right_point));
 
                 // recursion
                 for (int i = left_point; i <= right_point; i += 3)
@@ -207,16 +252,18 @@ namespace Lab3_task1
 
             rgbValues = getRGBValues(out bmp, out bmpData, out ptr, out bytes);
 
+            start_x = e.X;
+            start_y = e.Y;
             floodFill(3 * e.X + e.Y * bmpData.Stride);
 
-            if (floodImage != null)
-                while (lines.Count != 0)
-                {
-                    var line = lines.Dequeue();
-                    for (int i = line.Item1; i <= line.Item2; i += 3)
-                        for (int j = i; j < i + 3; ++j)
-                            rgbValues[j] = rgb_valuesFlood[j];
-                }
+            //if (floodImage != null)
+            //    while (lines.Count != 0)
+            //    {
+            //        var line = lines.Dequeue();
+            //        for (int i = line.Item1; i <= line.Item2; i += 3)
+            //            for (int j = i; j < i + 3; ++j)
+            //                rgbValues[j] = rgb_valuesFlood[j];
+            //    }
 
             System.Runtime.InteropServices.Marshal.Copy(rgbValues, 0, ptr, bytes);
             bmp.UnlockBits(bmpData);
