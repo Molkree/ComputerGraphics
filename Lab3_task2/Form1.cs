@@ -147,16 +147,16 @@ namespace Lab3_task2
                         if (dir > 7)
                             dir -= 8;
                     }
-                    if (dir == (pred_dir + 4) % 8)
+                /*    if (dir == (pred_dir + 4) % 8)
                     {
                         MessageBoxButtons buttons = MessageBoxButtons.OK;
                         DialogResult result;
                         result = MessageBox.Show("Не выделено ни одного пикселя", "problem", buttons);
                         points.Clear();
                         return false;
-                    }
+                    }*/
 
-                    if (points.Exists(pt => (pt.X == pred_p.X && pt.Y == pred_p.Y)))
+                    if (points[0].X == pred_p.X && points[0].Y == pred_p.Y)
                         break;
                     else
                     {
