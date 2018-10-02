@@ -94,13 +94,10 @@ namespace Lab3_task1
         BitmapData bmp_dataFlood;
         private void button1_Click(object sender, EventArgs e)
         {
-            if (floodImage != null)
+            if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
-                System.Runtime.InteropServices.Marshal.Copy(rgb_valuesFlood, 0, ptrFlood, bytesFlood);
-                floodImage.UnlockBits(bmp_dataFlood);
-            }
-            if (openFileDialog1.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-            {
+                clearButton_Click(sender, e);
+
                 floodImage = ResizeImage(Image.FromFile(openFileDialog1.FileName), pictureBox1.ClientSize.Width, pictureBox1.ClientSize.Height);
                 Rectangle rectFlood = new Rectangle(0, 0, floodImage.Width, floodImage.Height);
                 bmp_dataFlood =
@@ -160,14 +157,16 @@ namespace Lab3_task1
         Queue<Tuple<int, int>> lines = new Queue<Tuple<int, int>>();
         void floodFill(int ind)
         {
-            if (rgbValues[ind] == 255 && rgbValues[ind + 1] == 255 && rgbValues[ind + 2] == 255) // check if white
+            if (rgbValues[ind] == pictureBox1.BackColor.B && rgbValues[ind + 1] == pictureBox1.BackColor.G &&
+                rgbValues[ind + 2] == pictureBox1.BackColor.R) // start floodfill only if clicked on background
             {
                 int left_edge = (ind / bmpData.Stride) * bmpData.Stride;
                 int right_edge = left_edge + bmpData.Stride;
 
                 // left search
                 int left_point = ind;
-                while (left_edge <= left_point && rgbValues[left_point] == 255 && rgbValues[left_point + 1] == 255 && rgbValues[left_point + 2] == 255)
+                while (left_edge <= left_point && rgbValues[left_point] == pictureBox1.BackColor.B &&
+                    rgbValues[left_point + 1] == pictureBox1.BackColor.G && rgbValues[left_point + 2] == pictureBox1.BackColor.R)
                 {
                     for (int i = left_point; i < left_point + 3; ++i)
                         rgbValues[i] = 0;
@@ -178,7 +177,8 @@ namespace Lab3_task1
 
                 // right search
                 int right_point = ind + 3;
-                while (right_point < right_edge && rgbValues[right_point] == 255 && rgbValues[right_point + 1] == 255 && rgbValues[right_point + 2] == 255)
+                while (right_point < right_edge && rgbValues[right_point] == pictureBox1.BackColor.B &&
+                    rgbValues[right_point + 1] == pictureBox1.BackColor.G && rgbValues[right_point + 2] == pictureBox1.BackColor.R)
                 {
                     for (int i = right_point; i < right_point + 3; ++i)
                         rgbValues[i] = 0;
