@@ -229,20 +229,18 @@ namespace Lab3_task2
                 Point first = points[i-1];
                 Point second = points[i];
 
-           /*     if (second.Y == max_y || second.Y == min_y)
-                    continue;*/
-
+      
                 if (first.X == second.X)
                 {
                     dir = second.Y > first.Y ? 6 : 2;
-                    if (second.Y != max_y && second.Y != min_y)
+                  //  if (second.Y != max_y && second.Y != min_y)
                         res.Add(second);
                 }
                 else if (first.Y == second.Y)
                 {
                     // !!!
                     dir = second.X > first.X ? 0 : 4;
-                    if (second.Y != max_y && second.Y != min_y)
+                 //   if (second.Y != max_y && second.Y != min_y)
                         if ((dir == 4 && pred_dir == 5) || (dir == 0 && pred_dir == 1))
                         {
                             res.Remove(first);
@@ -257,22 +255,15 @@ namespace Lab3_task2
                         dir = second.X > first.X ? 1 : 3;
                     else dir = second.X > first.X ? 7 : 5;
 
-                    if (second.Y != max_y && second.Y != min_y)
-                    {
+                 //   if (second.Y != max_y && second.Y != min_y)
+                  //  {
                         if ((dir == 5 && pred_dir == 3) || (dir == 3 && pred_dir == 5) || (dir == 1 && pred_dir == 7) || (dir == 7 && pred_dir == 1))
                             res.Remove(res[res.Count - 1]);
                         res.Add(second);
-                    }
+                 //   }
                 }
 
-     /*           if (pred_dir == 4 && second.Y < first.Y)
-                        res.Remove(res[res.Count - 2]);
-                else if (pred_dir == 0 && second.Y > first.Y)
-                    res.Remove(res[res.Count - 2]);
-
-    */
-
-
+   
                 pred_dir = dir;
               
             }
@@ -285,6 +276,12 @@ namespace Lab3_task2
             }
 
 
+            foreach (var pt in points)
+            {
+                if (pt.Y == min_y || pt.Y == max_y)
+                    if (res.Exists(p => (p.X == pt.X && p.Y == pt.Y)))
+                    res.Remove(pt);
+            }
             //поиск внутренних границ
             res.Sort(new YXComparer());
             Point[] tmp = res.ToArray();
@@ -331,7 +328,7 @@ namespace Lab3_task2
                     }
                 }
                 if (cnt % 2 == 1)
-                    res.Remove(res[res.Count - 1]);
+                    res.Add(res[res.Count - 1]);
             }
 
            res.Sort(new YXComparer());
