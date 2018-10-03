@@ -104,8 +104,7 @@ namespace Lab4
             float ya = p2.Y - p1.Y;
             float xb = to_check.X - p1.X;
             float yb = to_check.Y - p1.Y;
-            // слагаемые наоборот, потому что система координат игреком вниз
-            float res = xb * ya - yb * xa;
+            float res = yb * xa - xb * ya;
             if (less(res, 0f))
                 return -1;
             else if (eq(res, 0f))
@@ -182,7 +181,6 @@ namespace Lab4
             {
                 g.FillRectangle(Brushes.Black, e.X, e.Y, 1, 1);
                 //справа или слева
-                // TODO (вроде по формуле, но считает странно)
                 int lr = left_or_right(pr.points[0], pr.points[1], e.Location); 
                 if (lr > 0) // слева
                     label_check_answ1.Text = "Точка слева";
@@ -242,19 +240,19 @@ namespace Lab4
             if (textBox_trans_x.Text != "0" || textBox_trans_y.Text != "0")
             {
                 // проблемы с parse
-                pr.translate(Double.Parse(textBox_trans_x.Text),
-                             Double.Parse(textBox_trans_y.Text));
+                pr.translate(Int32.Parse(textBox_trans_x.Text),
+                             Int32.Parse(textBox_trans_y.Text));
             }
             if (textBox_rotation.Text != "0")
             {
+                double r = Double.Parse(textBox_rotation.Text);
+                pr.rotate(r, rotation_point);
+            }
+            if (textBox_scaling_x.Text != "1")
+            {          
                 int x = Int32.Parse(textBox_x.Text);
                 int y = Int32.Parse(textBox_y.Text);
-                double r = Double.Parse(textBox_rotation.Text);
-                pr.rotate(r, new Point(x,y));
-            }
-            if (textBox_scaling.Text != "1")
-            {
-                pr.scaling(Double.Parse(textBox_scaling.Text));
+                pr.scaling(x, y);
             }
 
             show_primitive();
@@ -280,6 +278,8 @@ namespace Lab4
 
         private void textBox_rotation_TextChanged(object sender, EventArgs e)
         {
+            if (textBox_rotation.Text == "")
+                textBox_rotation.Text = "0";
             int a = Int32.Parse(textBox_rotation.Text);
             if (a < 0 || a > 359)
             {
@@ -287,7 +287,7 @@ namespace Lab4
             }
         }
 
-        private void textBox_x_y_TextChanged(object sender, EventArgs e)
+        private void textBox_rot_TextChanged(object sender, EventArgs e)
         {
             // При каждом изменении рисует новую точку - не очищать же весь picturebox каждый раз? :/
             if (textBox_x.Text == "")
@@ -302,6 +302,20 @@ namespace Lab4
             rotation_point.X = x;
             rotation_point.Y = y;
             g.FillRectangle(Brushes.Red, x, y, 2, 2);
+        }
+
+        private void textBox_scaling_TextChanged(object sender, EventArgs e)
+        {
+            if (textBox_scaling_x.Text == "")
+                textBox_scaling_x.Text = "1";
+            if (textBox_scaling_y.Text == "")
+                textBox_scaling_y.Text = "1";
+            if (textBox_trans_x.Text == "")
+                textBox_trans_x.Text = "0";
+            if (textBox_trans_y.Text == "")
+                textBox_trans_y.Text = "0";
+           
+
         }
     }
 }

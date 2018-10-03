@@ -33,7 +33,7 @@ namespace Lab4
             // TODO
         }
 
-        public void scaling(double coef)
+        public void scaling(int kx, int ky)
         {
             //и тут тоже на точку плевать, она - материальная точка
             // TODO

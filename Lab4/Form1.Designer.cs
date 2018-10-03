@@ -37,7 +37,7 @@
             this.label_scaling = new System.Windows.Forms.Label();
             this.textBox_trans_x = new System.Windows.Forms.TextBox();
             this.textBox_rotation = new System.Windows.Forms.TextBox();
-            this.textBox_scaling = new System.Windows.Forms.TextBox();
+            this.textBox_scaling_x = new System.Windows.Forms.TextBox();
             this.button_exec = new System.Windows.Forms.Button();
             this.label_check_answ1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
@@ -50,6 +50,9 @@
             this.label_point = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
+            this.textBox_scaling_y = new System.Windows.Forms.TextBox();
+            this.label6 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -112,7 +115,7 @@
             // label_scaling
             // 
             this.label_scaling.AutoSize = true;
-            this.label_scaling.Location = new System.Drawing.Point(12, 169);
+            this.label_scaling.Location = new System.Drawing.Point(16, 173);
             this.label_scaling.Name = "label_scaling";
             this.label_scaling.Size = new System.Drawing.Size(83, 13);
             this.label_scaling.TabIndex = 6;
@@ -125,6 +128,7 @@
             this.textBox_trans_x.Size = new System.Drawing.Size(31, 20);
             this.textBox_trans_x.TabIndex = 7;
             this.textBox_trans_x.Text = "0";
+            this.textBox_trans_x.TextChanged += new System.EventHandler(this.textBox_scaling_TextChanged);
             this.textBox_trans_x.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox_KeyPress_int);
             // 
             // textBox_rotation
@@ -137,18 +141,19 @@
             this.textBox_rotation.TextChanged += new System.EventHandler(this.textBox_rotation_TextChanged);
             this.textBox_rotation.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox_KeyPress_int);
             // 
-            // textBox_scaling
+            // textBox_scaling_x
             // 
-            this.textBox_scaling.Location = new System.Drawing.Point(105, 166);
-            this.textBox_scaling.Name = "textBox_scaling";
-            this.textBox_scaling.Size = new System.Drawing.Size(68, 20);
-            this.textBox_scaling.TabIndex = 9;
-            this.textBox_scaling.Text = "1";
-            this.textBox_scaling.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox_KeyPress_double);
+            this.textBox_scaling_x.Location = new System.Drawing.Point(142, 166);
+            this.textBox_scaling_x.Name = "textBox_scaling_x";
+            this.textBox_scaling_x.Size = new System.Drawing.Size(31, 20);
+            this.textBox_scaling_x.TabIndex = 9;
+            this.textBox_scaling_x.Text = "1";
+            this.textBox_scaling_x.TextChanged += new System.EventHandler(this.textBox_scaling_TextChanged);
+            this.textBox_scaling_x.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox_KeyPress_int);
             // 
             // button_exec
             // 
-            this.button_exec.Location = new System.Drawing.Point(14, 254);
+            this.button_exec.Location = new System.Drawing.Point(12, 285);
             this.button_exec.Name = "button_exec";
             this.button_exec.Size = new System.Drawing.Size(75, 23);
             this.button_exec.TabIndex = 10;
@@ -159,7 +164,7 @@
             // label_check_answ1
             // 
             this.label_check_answ1.AutoSize = true;
-            this.label_check_answ1.Location = new System.Drawing.Point(12, 356);
+            this.label_check_answ1.Location = new System.Drawing.Point(9, 379);
             this.label_check_answ1.Name = "label_check_answ1";
             this.label_check_answ1.Size = new System.Drawing.Size(37, 13);
             this.label_check_answ1.TabIndex = 12;
@@ -168,7 +173,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(13, 302);
+            this.label2.Location = new System.Drawing.Point(9, 330);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(60, 13);
             this.label2.TabIndex = 13;
@@ -181,12 +186,13 @@
             this.textBox_trans_y.Size = new System.Drawing.Size(31, 20);
             this.textBox_trans_y.TabIndex = 14;
             this.textBox_trans_y.Text = "0";
+            this.textBox_trans_y.TextChanged += new System.EventHandler(this.textBox_scaling_TextChanged);
             this.textBox_trans_y.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox_KeyPress_int);
             // 
             // label_check2
             // 
             this.label_check2.AutoSize = true;
-            this.label_check2.Location = new System.Drawing.Point(10, 384);
+            this.label_check2.Location = new System.Drawing.Point(9, 412);
             this.label_check2.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label_check2.Name = "label_check2";
             this.label_check2.Size = new System.Drawing.Size(147, 13);
@@ -196,7 +202,7 @@
             // label_check_answ2
             // 
             this.label_check_answ2.AutoSize = true;
-            this.label_check_answ2.Location = new System.Drawing.Point(11, 419);
+            this.label_check_answ2.Location = new System.Drawing.Point(9, 450);
             this.label_check_answ2.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label_check_answ2.Name = "label_check_answ2";
             this.label_check_answ2.Size = new System.Drawing.Size(37, 13);
@@ -206,7 +212,7 @@
             // label_check1
             // 
             this.label_check1.AutoSize = true;
-            this.label_check1.Location = new System.Drawing.Point(9, 324);
+            this.label_check1.Location = new System.Drawing.Point(9, 352);
             this.label_check1.Name = "label_check1";
             this.label_check1.Size = new System.Drawing.Size(136, 13);
             this.label_check1.TabIndex = 17;
@@ -214,28 +220,28 @@
             // 
             // textBox_x
             // 
-            this.textBox_x.Location = new System.Drawing.Point(134, 212);
+            this.textBox_x.Location = new System.Drawing.Point(141, 224);
             this.textBox_x.Name = "textBox_x";
-            this.textBox_x.Size = new System.Drawing.Size(39, 20);
+            this.textBox_x.Size = new System.Drawing.Size(31, 20);
             this.textBox_x.TabIndex = 18;
             this.textBox_x.Text = "0";
-            this.textBox_x.TextChanged += new System.EventHandler(this.textBox_x_y_TextChanged);
+            this.textBox_x.TextChanged += new System.EventHandler(this.textBox_rot_TextChanged);
             this.textBox_x.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox_KeyPress_int);
             // 
             // textBox_y
             // 
-            this.textBox_y.Location = new System.Drawing.Point(134, 238);
+            this.textBox_y.Location = new System.Drawing.Point(141, 250);
             this.textBox_y.Name = "textBox_y";
-            this.textBox_y.Size = new System.Drawing.Size(41, 20);
+            this.textBox_y.Size = new System.Drawing.Size(31, 20);
             this.textBox_y.TabIndex = 19;
             this.textBox_y.Text = "0";
-            this.textBox_y.TextChanged += new System.EventHandler(this.textBox_x_y_TextChanged);
+            this.textBox_y.TextChanged += new System.EventHandler(this.textBox_rot_TextChanged);
             this.textBox_y.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox_KeyPress_int);
             // 
             // label_point
             // 
             this.label_point.AutoSize = true;
-            this.label_point.Location = new System.Drawing.Point(12, 199);
+            this.label_point.Location = new System.Drawing.Point(12, 231);
             this.label_point.Name = "label_point";
             this.label_point.Size = new System.Drawing.Size(108, 13);
             this.label_point.TabIndex = 20;
@@ -244,7 +250,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(116, 215);
+            this.label3.Location = new System.Drawing.Point(123, 227);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(12, 13);
             this.label3.TabIndex = 21;
@@ -253,17 +259,48 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(116, 238);
+            this.label4.Location = new System.Drawing.Point(123, 253);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(12, 13);
             this.label4.TabIndex = 22;
             this.label4.Text = "y";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(124, 169);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(12, 13);
+            this.label5.TabIndex = 23;
+            this.label5.Text = "x";
+            // 
+            // textBox_scaling_y
+            // 
+            this.textBox_scaling_y.Location = new System.Drawing.Point(141, 192);
+            this.textBox_scaling_y.Name = "textBox_scaling_y";
+            this.textBox_scaling_y.Size = new System.Drawing.Size(31, 20);
+            this.textBox_scaling_y.TabIndex = 24;
+            this.textBox_scaling_y.Text = "1";
+            this.textBox_scaling_y.TextChanged += new System.EventHandler(this.textBox_scaling_TextChanged);
+            this.textBox_scaling_y.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox_KeyPress_int);
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(123, 195);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(12, 13);
+            this.label6.TabIndex = 25;
+            this.label6.Text = "y";
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(795, 475);
+            this.Controls.Add(this.label6);
+            this.Controls.Add(this.textBox_scaling_y);
+            this.Controls.Add(this.label5);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label_point);
@@ -276,7 +313,7 @@
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label_check_answ1);
             this.Controls.Add(this.button_exec);
-            this.Controls.Add(this.textBox_scaling);
+            this.Controls.Add(this.textBox_scaling_x);
             this.Controls.Add(this.textBox_rotation);
             this.Controls.Add(this.textBox_trans_x);
             this.Controls.Add(this.label_scaling);
@@ -305,7 +342,7 @@
         private System.Windows.Forms.Label label_scaling;
         private System.Windows.Forms.TextBox textBox_trans_x;
         private System.Windows.Forms.TextBox textBox_rotation;
-        private System.Windows.Forms.TextBox textBox_scaling;
+        private System.Windows.Forms.TextBox textBox_scaling_x;
         private System.Windows.Forms.Button button_exec;
         private System.Windows.Forms.Label label_check_answ1;
         private System.Windows.Forms.Label label2;
@@ -318,6 +355,9 @@
         private System.Windows.Forms.Label label_point;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.TextBox textBox_scaling_y;
+        private System.Windows.Forms.Label label6;
     }
 }
 
