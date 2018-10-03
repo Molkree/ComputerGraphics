@@ -134,7 +134,8 @@
             this.textBox_rotation.Size = new System.Drawing.Size(68, 20);
             this.textBox_rotation.TabIndex = 8;
             this.textBox_rotation.Text = "0";
-            this.textBox_rotation.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox_KeyPress_double);
+            this.textBox_rotation.TextChanged += new System.EventHandler(this.textBox_rotation_TextChanged);
+            this.textBox_rotation.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox_KeyPress_int);
             // 
             // textBox_scaling
             // 
@@ -218,6 +219,7 @@
             this.textBox_x.Size = new System.Drawing.Size(39, 20);
             this.textBox_x.TabIndex = 18;
             this.textBox_x.Text = "0";
+            this.textBox_x.TextChanged += new System.EventHandler(this.textBox_x_y_TextChanged);
             this.textBox_x.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox_KeyPress_int);
             // 
             // textBox_y
@@ -227,6 +229,7 @@
             this.textBox_y.Size = new System.Drawing.Size(41, 20);
             this.textBox_y.TabIndex = 19;
             this.textBox_y.Text = "0";
+            this.textBox_y.TextChanged += new System.EventHandler(this.textBox_x_y_TextChanged);
             this.textBox_y.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox_KeyPress_int);
             // 
             // label_point

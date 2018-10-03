@@ -124,6 +124,8 @@ namespace Lab4
                 mode = Mode.Read;
                 g.Clear(Color.White);
                 pts = new List<PointF>();
+                label_check1.Visible = false;
+                label_check_answ1.Visible = false;
                 label_check2.Visible = false;
                 label_check_answ2.Visible = false;
             }
@@ -273,9 +275,22 @@ namespace Lab4
             }
         }
 
-        private void button_choose_Click(object sender, EventArgs e)
+        private void textBox_rotation_TextChanged(object sender, EventArgs e)
         {
+            int a = Int32.Parse(textBox_rotation.Text);
+            if (a < 0 || a > 359)
+            {
+                // TODO поругаться
+            }
+        }
 
+        private void textBox_x_y_TextChanged(object sender, EventArgs e)
+        {
+            // При каждом изменении рисует новую точку - не очищать же весь picturebox каждый раз? :/
+            int x = Int32.Parse(textBox_x.Text);
+            int y = Int32.Parse(textBox_y.Text);
+
+            g.FillRectangle(Brushes.Red, x, y, 1, 1);
         }
     }
 }
