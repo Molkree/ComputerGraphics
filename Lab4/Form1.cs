@@ -104,7 +104,8 @@ namespace Lab4
             float ya = p2.Y - p1.Y;
             float xb = to_check.X - p1.X;
             float yb = to_check.Y - p1.Y;
-            float res = yb * xa - xb * ya;
+            // слагаемые наоборот, потому что система координат игреком вниз
+            float res = xb * ya - yb * xa;
             if (less(res, 0f))
                 return -1;
             else if (eq(res, 0f))
