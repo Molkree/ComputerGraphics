@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
+
 namespace Lab4
 {
     enum Mode { None, Read, Point, Edge, Polygon };
@@ -18,6 +19,9 @@ namespace Lab4
         Mode mode;
         List<Point> pts;
         Primitive pr;
+        //для пересечения ребра и ребра
+        int cnt = 0;
+        List<Point> to_edge;
 
         public Form1()
         { 
@@ -29,54 +33,49 @@ namespace Lab4
             button_check.Visible = false;
             label_check.Visible = false;
             label2.Visible = false;
+            label3.Text = "Для проверки пересечения\n дважды нажмите на поле";
+            label3.Visible = false;
+            label4.Visible = false;
+            to_edge = new List<Point>();
         }
 
         // нарисовать примитив по точкам
         private void show_primitive()
         {
-            if (pr.points.Count == 1)   // точка
-            {
-                g.FillRectangle(Brushes.Black, pr.points[0].X, pr.points[0].Y, 1, 1);
-            }
-            else if (pr.points.Count == 2)   // ребро
-            {
-                g.DrawLine(Pens.Black, pr.points[0], pr.points[1]);
-            }
-            else    // многоугольник
-            {
                 // TODO
-                // запретить ставить точки так, чтобы линии пересекались
+                // запретить ставить точки так, чтобы линии пересекались*/
                 Pen pen = Pens.Black;
-                g.DrawLines(pen, pr.points.ToArray());
+                if (pr.p_type != 1)
+                //эта функция кидает исключения, если один элемент
+                    g.DrawLines(pen, pr.points.ToArray());
                 g.DrawLine(pen, pr.points[0], pr.points[pr.points.Count-1]);
-            }
         }
 
         private void button_make_Click(object sender, EventArgs e)
         {
-            if (button_make.Text == "Задать примитив")
+            if (mode != Mode.Read)
             {
                 button_make.Text = "Готово";
                 mode = Mode.Read;
                 g.Clear(Color.White);
                 pts = new List<Point>();
-
+                label3.Visible = false;
+                label4.Visible = false;
             }
-            else // Готово
+            else // mode == mode.Read
             {
                 button_make.Text = "Задать примитив";
                 pr = new Primitive(pts);
                 show_primitive();
-                if (pts.Count == 1)
+                if (pr.p_type == 1)
                 {
                     mode = Mode.Point;
                     button_check.Visible = false;
                     button_check.Enabled = false;
                     label_check.Visible = false;
                     label2.Visible = false;
-
                 }
-                else if (pts.Count == 2)
+                else if (pr.p_type == 2)
                 {
                     mode = Mode.Edge;
                     button_check.Text = "Точка справа \nили слева?";
@@ -85,6 +84,9 @@ namespace Lab4
                     button_check.Enabled = true;
                     label_check.Visible = true;
                     label2.Visible = true;
+                    label3.Visible = true;
+                    label4.Visible = true;
+                    label4.Text = "Еще два раза";
                 }
                 else
                 {
@@ -99,15 +101,47 @@ namespace Lab4
             }
         }
 
+        private bool is_crossed()
+        {
+            //TODO
+            return false;
+        }
+
         private void pictureBox1_MouseClick(object sender, MouseEventArgs e)
         {
             if (mode == Mode.Read)
             {
                 pts.Add(e.Location);
                 g.FillRectangle(Brushes.Black, e.X, e.Y, 1, 1);
-
             }
-            else { }
+            else
+                if (mode == Mode.Edge)
+                {
+                    if (cnt == 0)
+                    {
+                        to_edge.Clear();
+                        g.Clear(Color.White);
+                        show_primitive();
+                        to_edge.Add(e.Location);
+                        g.FillRectangle(Brushes.Black, e.X, e.Y, 1, 1);
+                        label4.Text = "Еще один!";
+                        ++cnt;
+                    }
+                    else if (cnt == 1)
+                    {
+                        //TODO
+                        to_edge.Add(e.Location);
+                        g.DrawLine(Pens.BlueViolet, to_edge[0], to_edge[1]);
+                        g.FillRectangle(Brushes.Black, e.X, e.Y, 1, 1);
+                        bool f = is_crossed();
+                        if (f)
+                            label4.Text = "Пересекаются";
+                        else
+                            label4.Text = "Увы :С";
+                        label4.Text+= "\n(можно нажимать снова)";
+                        cnt = 0;
+                    }
+                }
         }
 
         // очистка поля
@@ -115,7 +149,14 @@ namespace Lab4
         {
             pts.Clear();
             g.Clear(Color.White);
-            mode = Mode.None;
+            mode = Mode.Read;
+            button_check.Enabled = false;
+            button_check.Visible = false;
+            label_check.Visible = false;
+            label2.Visible = false;
+            label3.Visible = false;
+            label4.Visible = false;
+            button_make.Text = "Готово";
         }
 
         // сделать афинные преобразования

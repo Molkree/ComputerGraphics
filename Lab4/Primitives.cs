@@ -8,15 +8,16 @@ using System.Threading.Tasks;
 namespace Lab4
 {
     /*
-     Вопрос: делать структуру на каждый примитив, и для всех расписывать
+     p_type - тип полигона (по количеству точек) 1 - точка, 2 - линия, 3++ многоугольник
          */
     public struct Primitive
     {
         public List<Point> points;
-
+        public int p_type; 
         public Primitive(List<Point> pts)
         {
             this.points = new List<Point>(pts);
+            p_type = points.Count;
         }
 
         // double or int ?
@@ -27,11 +28,14 @@ namespace Lab4
 
         public void rotate(double angle)
         {
+            //на точку всем плевать
+            //поворот ребра осуществляется вокруг центра, поворот многоугольника вокруг заданной точки
             // TODO
         }
 
         public void scaling(double coef)
         {
+            //и тут тоже на точку плевать, она - материальная точка
             // TODO
         }
     }
