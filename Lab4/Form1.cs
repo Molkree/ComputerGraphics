@@ -102,7 +102,9 @@ namespace Lab4
         {
             float xa = p2.X - p1.X;
             float ya = p2.Y - p1.Y;
-            float res = to_check.Y * xa - to_check.X * ya;
+            float xb = to_check.X - p1.X;
+            float yb = to_check.Y - p1.Y;
+            float res = yb * xa - xb * ya;
             if (less(res, 0f))
                 return -1;
             else if (eq(res, 0f))
