@@ -12,11 +12,11 @@ namespace Lab4
          */
     public struct Primitive
     {
-        public List<Point> points;
+        public List<PointF> points;
         public int p_type; 
-        public Primitive(List<Point> pts)
+        public Primitive(List<PointF> pts)
         {
-            this.points = new List<Point>(pts);
+            this.points = new List<PointF>(pts);
             p_type = points.Count;
         }
 
