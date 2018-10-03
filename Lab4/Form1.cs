@@ -11,13 +11,11 @@ using System.Windows.Forms;
 namespace Lab4
 {
     enum Mode { None, Read, Point, Edge, Polygon };
-    enum RotateMode { Default, Change }
 
     public partial class Form1 : Form
     {
         Graphics g = null;
         Mode mode;
-        RotateMode rmode;
         Point rotation_point = new Point(0, 0);
         List<PointF> pts;
         Primitive pr;
@@ -30,9 +28,8 @@ namespace Lab4
         { 
             InitializeComponent();
             g = pictureBox1.CreateGraphics();
-            g.Clear(Color.White);
+            pictureBox1.BackColor = Color.White;
             mode = Mode.None;
-            rmode = RotateMode.Default;
             label_check1.Visible = false;
             label_check_answ1.Visible = false;
             label2.Visible = false;
