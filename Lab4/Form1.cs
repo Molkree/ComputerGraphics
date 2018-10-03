@@ -88,14 +88,14 @@ namespace Lab4
                 // запретить ставить точки так, чтобы линии пересекались*/
             Pen pen = Pens.Black;
             //из за смещения начала координат
-            PointF tmp1 = new PointF(pr.points[0].X, pr.points[0].Y + pictureBox1.Height);
+            PointF tmp1 = new PointF(pr.points[0].X, pictureBox1.Height - pr.points[0].Y);
             for (int i = 1; i < pr.points.Count; ++i)
             {
-                PointF tmp2 = new PointF(pr.points[i].X, pictureBox1.Height + pr.points[i].Y);
+                PointF tmp2 = new PointF(pr.points[i].X, pictureBox1.Height - pr.points[i].Y);
                 g.DrawLine(pen, tmp1, tmp2);
                 tmp1 = tmp2;
             }
-            g.DrawLine(pen, tmp1, new PointF(pr.points[0].X, pictureBox1.Height + pr.points[0].Y));
+            g.DrawLine(pen, tmp1, new PointF(pr.points[0].X, pictureBox1.Height - pr.points[0].Y));
         }
 
         // > 0 => точка слева
@@ -181,19 +181,19 @@ namespace Lab4
 
         private void pictureBox1_MouseClick(object sender, MouseEventArgs e)
         {
-            PointF tmp = new PointF(e.X, e.Y - pictureBox1.Height);
+            PointF tmp = new PointF(e.X, pictureBox1.Height - e.Y);
             if (mode == Mode.Read)
             {
                 //pts.Add(e.Location);
                 pts.Add(tmp);
                 //g.FillRectangle(Brushes.Black, e.X, e.Y, 1, 1);
-                g.FillRectangle(Brushes.Black, tmp.X, pictureBox1.Height + tmp.Y, 1, 1);
+                g.FillRectangle(Brushes.Black, tmp.X, pictureBox1.Height - tmp.Y, 1, 1);
             }
             //ввод точек для 1) справа или слева от ребра 2) пересекается ли со вторым ребром
             else if (mode == Mode.Edge)
             {
                 //g.FillRectangle(Brushes.Black, e.X, e.Y, 1, 1);
-                g.FillRectangle(Brushes.Black, tmp.X, pictureBox1.Height + tmp.Y, 1, 1);
+                g.FillRectangle(Brushes.Black, tmp.X, pictureBox1.Height - tmp.Y, 1, 1);
                 //справа или слева
                 //int lr = left_or_right(pr.points[0], pr.points[1], e.Location); 
                 int lr = left_or_right(pr.points[0], pr.points[1], tmp);
@@ -219,7 +219,7 @@ namespace Lab4
                     //to_edge.Add(e.Location);
                     to_edge.Add(tmp);
                     //g.DrawLine(Pens.BlueViolet, to_edge[0], to_edge[1]);
-                    g.DrawLine(Pens.BlueViolet, new PointF(to_edge[0].X, pictureBox1.Height + to_edge[0].X), new PointF(to_edge[1].X, pictureBox1.Height + to_edge[1].X));
+                    g.DrawLine(Pens.BlueViolet, new PointF(to_edge[0].X, pictureBox1.Height - to_edge[0].Y), new PointF(to_edge[1].X, pictureBox1.Height - to_edge[1].Y));
                     bool f = is_crossed(pr.points[0], pr.points[1], to_edge[0], to_edge[1]);
                     if (f)
                         label_check_answ2.Text = "Пересекаются";
