@@ -86,11 +86,16 @@ namespace Lab4
         {
                 // TODO
                 // запретить ставить точки так, чтобы линии пересекались*/
-                Pen pen = Pens.Black;
-                if (pr.p_type != 1)
-                //эта функция кидает исключения, если один элемент
-                    g.DrawLines(pen, pr.points.ToArray());
-                g.DrawLine(pen, pr.points[0], pr.points[pr.points.Count-1]);
+            Pen pen = Pens.Black;
+            //из за смещения начала координат
+            PointF tmp1 = new PointF(pr.points[0].X, pr.points[0].Y + pictureBox1.Height);
+            for (int i = 1; i < pr.points.Count; ++i)
+            {
+                PointF tmp2 = new PointF(pr.points[i].X, pictureBox1.Height + pr.points[i].Y);
+                g.DrawLine(pen, tmp1, tmp2);
+                tmp1 = tmp2;
+            }
+            g.DrawLine(pen, tmp1, new PointF(pr.points[0].X, pictureBox1.Height + pr.points[0].Y));
         }
 
         // > 0 => точка слева
@@ -169,17 +174,22 @@ namespace Lab4
 
         private void pictureBox1_MouseClick(object sender, MouseEventArgs e)
         {
+            PointF tmp = new PointF(e.X, e.Y - pictureBox1.Height);
             if (mode == Mode.Read)
             {
-                pts.Add(e.Location);
-                g.FillRectangle(Brushes.Black, e.X, e.Y, 1, 1);
+                //pts.Add(e.Location);
+                pts.Add(tmp);
+                //g.FillRectangle(Brushes.Black, e.X, e.Y, 1, 1);
+                g.FillRectangle(Brushes.Black, tmp.X, pictureBox1.Height + tmp.Y, 1, 1);
             }
             //ввод точек для 1) справа или слева от ребра 2) пересекается ли со вторым ребром
             else if (mode == Mode.Edge)
             {
-                g.FillRectangle(Brushes.Black, e.X, e.Y, 1, 1);
+                //g.FillRectangle(Brushes.Black, e.X, e.Y, 1, 1);
+                g.FillRectangle(Brushes.Black, tmp.X, pictureBox1.Height + tmp.Y, 1, 1);
                 //справа или слева
-                int lr = left_or_right(pr.points[0], pr.points[1], e.Location); 
+                //int lr = left_or_right(pr.points[0], pr.points[1], e.Location); 
+                int lr = left_or_right(pr.points[0], pr.points[1], tmp);
                 if (lr > 0) // слева
                     label_check_answ1.Text = "Точка слева";
                 else if (lr < 0)
@@ -191,15 +201,18 @@ namespace Lab4
                     to_edge.Clear();
                     g.Clear(Color.White);
                     show_primitive();
-                    to_edge.Add(e.Location);
+                    //to_edge.Add(e.Location);
+                    to_edge.Add(tmp);
                     label_check_answ2.Text = "Еще один!";
                     ++cnt;
                 }
                 else if (cnt == 1)
                 {
                     //TODO
-                    to_edge.Add(e.Location);
-                    g.DrawLine(Pens.BlueViolet, to_edge[0], to_edge[1]);
+                    //to_edge.Add(e.Location);
+                    to_edge.Add(tmp);
+                    //g.DrawLine(Pens.BlueViolet, to_edge[0], to_edge[1]);
+                    g.DrawLine(Pens.BlueViolet, new PointF(to_edge[0].X, pictureBox1.Height + to_edge[0].X), new PointF(to_edge[1].X, pictureBox1.Height + to_edge[1].X));
                     bool f = is_crossed(pr.points[0], pr.points[1], to_edge[0], to_edge[1]);
                     if (f)
                         label_check_answ2.Text = "Пересекаются";
@@ -212,7 +225,8 @@ namespace Lab4
             //ввод точек для "принадлежит ли полигону"
             else if (mode == Mode.Polygon)
             {
-                if (point_belongs(e.Location))
+                //if (point_belongs(e.Location))
+                if (point_belongs(tmp))
                     label_check_answ1.Text = "Принадлежит";
                 else label_check_answ1.Text = "Не принадлежит";
             }
@@ -295,10 +309,12 @@ namespace Lab4
             int x = Int32.Parse(textBox_x.Text);
             int y = Int32.Parse(textBox_y.Text);
 
-            g.FillRectangle(Brushes.White, rotation_point.X, rotation_point.Y, 2, 2);
+            //g.FillRectangle(Brushes.White, rotation_point.X, rotation_point.Y, 2, 2);
+            g.FillRectangle(Brushes.White, rotation_point.X, pictureBox1.Height + rotation_point.Y, 2, 2);
             rotation_point.X = x;
             rotation_point.Y = y;
-            g.FillRectangle(Brushes.Red, x, y, 2, 2);
+            //g.FillRectangle(Brushes.Red, x, y, 2, 2);
+            g.FillRectangle(Brushes.Red, x, pictureBox1.Height + y, 2, 2);
         }
 
         private void textBox_scaling_TextChanged(object sender, EventArgs e)
