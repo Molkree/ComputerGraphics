@@ -11,11 +11,14 @@ using System.Windows.Forms;
 namespace Lab4
 {
     enum Mode { None, Read, Point, Edge, Polygon };
+    enum RotateMode { Default, Change }
 
     public partial class Form1 : Form
     {
         Graphics g = null;
         Mode mode;
+        RotateMode rmode;
+        Point rotation_point = new Point(0, 0);
         List<PointF> pts;
         Primitive pr;
         //для пересечения ребра и ребра
@@ -29,13 +32,13 @@ namespace Lab4
             g = pictureBox1.CreateGraphics();
             g.Clear(Color.White);
             mode = Mode.None;
-            button_check.Enabled = false;
-            button_check.Visible = false;
-            label_check.Visible = false;
+            rmode = RotateMode.Default;
+            label_check1.Visible = false;
+            label_check_answ1.Visible = false;
             label2.Visible = false;
-            label3.Text = "Для проверки пересечения\n дважды нажмите на поле";
-            label3.Visible = false;
-            label4.Visible = false;
+            label_check2.Text = "Для проверки пересечения\n дважды нажмите на поле";
+            label_check2.Visible = false;
+            label_check_answ2.Visible = false;
             to_edge = new List<PointF>();
         }
 
@@ -93,6 +96,26 @@ namespace Lab4
                 g.DrawLine(pen, pr.points[0], pr.points[pr.points.Count-1]);
         }
 
+        // > 0 => точка слева
+        // < 0 => точка справа
+        int left_or_right(PointF p1, PointF p2, PointF to_check)
+        {
+            float xa = p2.X - p1.X;
+            float ya = p2.Y - p1.Y;
+            float res = to_check.Y * xa - to_check.X * ya;
+            if (less(res, 0f))
+                return -1;
+            else if (eq(res, 0f))
+                return 0;
+            else return 1;
+        }
+
+        bool point_belongs(PointF pt)
+        {
+            // TODO
+            return false;
+        }
+
         private void button_make_Click(object sender, EventArgs e)
         {
             if (mode != Mode.Read)
@@ -101,8 +124,8 @@ namespace Lab4
                 mode = Mode.Read;
                 g.Clear(Color.White);
                 pts = new List<PointF>();
-                label3.Visible = false;
-                label4.Visible = false;
+                label_check2.Visible = false;
+                label_check_answ2.Visible = false;
             }
             else // mode == mode.Read
             {
@@ -112,32 +135,29 @@ namespace Lab4
                 if (pr.p_type == 1)
                 {
                     mode = Mode.Point;
-                    button_check.Visible = false;
-                    button_check.Enabled = false;
-                    label_check.Visible = false;
+                    label_check1.Visible = false;
+                    label_check_answ1.Visible = false;
                     label2.Visible = false;
                 }
                 else if (pr.p_type == 2)
                 {
                     mode = Mode.Edge;
-                    button_check.Text = "Точка справа \nили слева?";
-                    label_check.Text = "Щелкните мышкой \nпо графической области";
-                    button_check.Visible = true;
-                    button_check.Enabled = true;
-                    label_check.Visible = true;
+                    label_check1.Text = "Точка справа \nили слева?";
+                    label_check_answ1.Text = "Щелкните мышкой \nпо полю";
+                    label_check1.Visible = true;
+                    label_check_answ1.Visible = true;
                     label2.Visible = true;
-                    label3.Visible = true;
-                    label4.Visible = true;
-                    label4.Text = "Еще два раза";
+                    label_check2.Visible = true;
+                    label_check_answ2.Visible = true;
+                    label_check_answ2.Text = "Еще два раза";
                 }
                 else
                 {
                     mode = Mode.Polygon;
-                    button_check.Text = "Принадлежит ли точка?";
-                    label_check.Text = "Щелкните мышкой \nпо графической области";
-                    button_check.Visible = true;
-                    button_check.Enabled = true;
-                    label_check.Visible = true;
+                    label_check1.Text = "Принадлежит ли точка?";
+                    label_check_answ1.Text = "Щелкните мышкой \nпо полю";
+                    label_check1.Visible = true;
+                    label_check_answ1.Visible = true;
                     label2.Visible = true;
                 }   
             }
@@ -157,9 +177,13 @@ namespace Lab4
             {
                 g.FillRectangle(Brushes.Black, e.X, e.Y, 1, 1);
                 //справа или слева
-               /* bool lr = left_or_right();
-                if (lr)
-                    label_check = ...*/
+                // TODO (вроде по формуле, но считает странно)
+                int lr = left_or_right(pr.points[0], pr.points[1], e.Location); 
+                if (lr > 0) // слева
+                    label_check_answ1.Text = "Точка слева";
+                else if (lr < 0)
+                    label_check_answ1.Text = "Точка справа";
+                else label_check_answ1.Text = "Точка находится на прямой отрезка";
                 //пересекается ли
                 if (cnt == 0)
                 {
@@ -167,7 +191,7 @@ namespace Lab4
                     g.Clear(Color.White);
                     show_primitive();
                     to_edge.Add(e.Location);
-                    label4.Text = "Еще один!";
+                    label_check_answ2.Text = "Еще один!";
                     ++cnt;
                 }
                 else if (cnt == 1)
@@ -177,17 +201,19 @@ namespace Lab4
                     g.DrawLine(Pens.BlueViolet, to_edge[0], to_edge[1]);
                     bool f = is_crossed(pr.points[0], pr.points[1], to_edge[0], to_edge[1]);
                     if (f)
-                        label4.Text = "Пересекаются";
+                        label_check_answ2.Text = "Пересекаются";
                     else
-                        label4.Text = "Увы :С";
-                    label4.Text += "\n(можно нажимать снова)";
+                        label_check_answ2.Text = "Увы :С";
+                    label_check_answ2.Text += "\n(можно нажимать снова)";
                     cnt = 0;
                 }
             }
             //ввод точек для 1) принадлежит ли полигону 2) поворот полигона вокруг точки
             else if (mode == Mode.Polygon)
             {
-
+                if (point_belongs(e.Location))
+                    label_check_answ1.Text = "Принадлежит";
+                else label_check_answ1.Text = "Не принадлежит";
             }
         }
 
@@ -197,12 +223,11 @@ namespace Lab4
             pts.Clear();
             g.Clear(Color.White);
             mode = Mode.Read;
-            button_check.Enabled = false;
-            button_check.Visible = false;
-            label_check.Visible = false;
+            label_check1.Visible = false;
+            label_check_answ1.Visible = false;
             label2.Visible = false;
-            label3.Visible = false;
-            label4.Visible = false;
+            label_check2.Visible = false;
+            label_check_answ2.Visible = false;
             button_make.Text = "Готово";
         }
 
@@ -210,12 +235,22 @@ namespace Lab4
         private void button_exec_Click(object sender, EventArgs e)
         {
             if (textBox_trans_x.Text != "0" || textBox_trans_y.Text != "0")
-                pr.translate(Int32.Parse(textBox_trans_x.Text),
-                             Int32.Parse(textBox_trans_y.Text));
+            {
+                // проблемы с parse
+                pr.translate(Double.Parse(textBox_trans_x.Text),
+                             Double.Parse(textBox_trans_y.Text));
+            }
             if (textBox_rotation.Text != "0")
-                pr.rotate(Double.Parse(textBox_rotation.Text));
+            {
+                int x = Int32.Parse(textBox_x.Text);
+                int y = Int32.Parse(textBox_y.Text);
+                double r = Double.Parse(textBox_rotation.Text);
+                pr.rotate(r, new Point(x,y));
+            }
             if (textBox_scaling.Text != "1")
+            {
                 pr.scaling(Double.Parse(textBox_scaling.Text));
+            }
 
             show_primitive();
             
@@ -236,6 +271,11 @@ namespace Lab4
             {
                 e.Handled = true;
             }
+        }
+
+        private void button_choose_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

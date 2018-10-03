@@ -21,12 +21,12 @@ namespace Lab4
         }
 
         // double or int ?
-        public void translate(int x, int y)
+        public void translate(double x, double y)
         {
             // TODO
         }
 
-        public void rotate(double angle)
+        public void rotate(double angle, Point center)
         {
             //на точку всем плевать
             //поворот ребра осуществляется вокруг центра, поворот многоугольника вокруг заданной точки
