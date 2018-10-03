@@ -290,10 +290,18 @@ namespace Lab4
         private void textBox_x_y_TextChanged(object sender, EventArgs e)
         {
             // При каждом изменении рисует новую точку - не очищать же весь picturebox каждый раз? :/
+            if (textBox_x.Text == "")
+                textBox_x.Text = "0";
+            if (textBox_y.Text == "")
+                textBox_y.Text = "0";
+
             int x = Int32.Parse(textBox_x.Text);
             int y = Int32.Parse(textBox_y.Text);
 
-            g.FillRectangle(Brushes.Red, x, y, 1, 1);
+            g.FillRectangle(Brushes.White, rotation_point.X, rotation_point.Y, 2, 2);
+            rotation_point.X = x;
+            rotation_point.Y = y;
+            g.FillRectangle(Brushes.Red, x, y, 2, 2);
         }
     }
 }
