@@ -136,37 +136,44 @@ namespace Lab4
             }
             else // mode == mode.Read
             {
-                button_make.Text = "Задать примитив";
-                pr = new Primitive(pts);
-                show_primitive();
-                if (pr.p_type == 1)
+                if (pts.Count == 0)
                 {
-                    mode = Mode.Point;
-                    label_check1.Visible = false;
-                    label_check_answ1.Visible = false;
-                    label2.Visible = false;
-                }
-                else if (pr.p_type == 2)
-                {
-                    mode = Mode.Edge;
-                    label_check1.Text = "Точка справа \nили слева?";
-                    label_check_answ1.Text = "Щелкните мышкой \nпо полю";
-                    label_check1.Visible = true;
-                    label_check_answ1.Visible = true;
-                    label2.Visible = true;
-                    label_check2.Visible = true;
-                    label_check_answ2.Visible = true;
-                    label_check_answ2.Text = "Еще два раза";
+                    MessageBox.Show("Выберите хотя бы одну точку на поле", "Не выбрано ни одной точки", MessageBoxButtons.OK);
                 }
                 else
                 {
-                    mode = Mode.Polygon;
-                    label_check1.Text = "Принадлежит ли точка?";
-                    label_check_answ1.Text = "Щелкните мышкой \nпо полю";
-                    label_check1.Visible = true;
-                    label_check_answ1.Visible = true;
-                    label2.Visible = true;
-                }   
+                    button_make.Text = "Задать примитив";
+                    pr = new Primitive(pts);
+                    show_primitive();
+                    if (pr.p_type == 1)
+                    {
+                        mode = Mode.Point;
+                        label_check1.Visible = false;
+                        label_check_answ1.Visible = false;
+                        label2.Visible = false;
+                    }
+                    else if (pr.p_type == 2)
+                    {
+                        mode = Mode.Edge;
+                        label_check1.Text = "Точка справа \nили слева?";
+                        label_check_answ1.Text = "Щелкните мышкой \nпо полю";
+                        label_check1.Visible = true;
+                        label_check_answ1.Visible = true;
+                        label2.Visible = true;
+                        label_check2.Visible = true;
+                        label_check_answ2.Visible = true;
+                        label_check_answ2.Text = "Еще два раза";
+                    }
+                    else
+                    {
+                        mode = Mode.Polygon;
+                        label_check1.Text = "Принадлежит ли точка?";
+                        label_check_answ1.Text = "Щелкните мышкой \nпо полю";
+                        label_check1.Visible = true;
+                        label_check_answ1.Visible = true;
+                        label2.Visible = true;
+                    }
+                }
             }
         }
 
