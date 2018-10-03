@@ -127,6 +127,7 @@ namespace Lab4
                 label_check_answ1.Visible = false;
                 label_check2.Visible = false;
                 label_check_answ2.Visible = false;
+                label2.Visible = false;
             }
             else // mode == mode.Read
             {
@@ -208,7 +209,7 @@ namespace Lab4
                     cnt = 0;
                 }
             }
-            //ввод точек для 1) принадлежит ли полигону 2) поворот полигона вокруг точки
+            //ввод точек для "принадлежит ли полигону"
             else if (mode == Mode.Polygon)
             {
                 if (point_belongs(e.Location))
@@ -236,7 +237,6 @@ namespace Lab4
         {
             if (textBox_trans_x.Text != "0" || textBox_trans_y.Text != "0")
             {
-                // проблемы с parse
                 pr.translate(Int32.Parse(textBox_trans_x.Text),
                              Int32.Parse(textBox_trans_y.Text));
             }
