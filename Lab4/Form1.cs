@@ -180,6 +180,12 @@ namespace Lab4
                     continue;
                 if (eq(pt.Y, Math.Max(tmp1.Y, tmp2.Y)) && less(pt.X, Math.Min(tmp1.X, tmp2.X)))
                     ++cnt;
+                // pt.Y находится между точками tmp1.Y и tmp2.Y 
+                if (less(pt.Y, Math.Max(tmp1.Y, tmp2.Y)) && less(Math.Min(tmp1.Y, tmp2.Y), pt.Y))
+                {
+                    if (clockwise(tmp1, tmp2, pt)) // поворот точек левый
+                        ++cnt;
+                }
                 else if (is_crossed(tmp1, tmp2, pt, ray))
                     ++cnt;
             }
