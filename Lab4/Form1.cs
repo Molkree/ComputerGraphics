@@ -132,30 +132,11 @@ namespace Lab4
             return -1;
         }
 
-        /*        Функция, вычисляющая удвоенную знаковую площадь треугольника: 
-        int triangle_area_2(int x1, int y1, int x2, int y2, int x3, int y3)
-                {
-                    return (x2 - x1) * (y3 - y1) - (y2 - y1) * (x3 - x1);
-                }
-
-                Функция, возвращающая обычную площадь треугольника: 
-        double triangle_area(int x1, int y1, int x2, int y2, int x3, int y3)
-                {
-                    return abs(triangle_area_2(x1, y1, x2, y2, x3, y3)) / 2.0;
-                }
-                Функция, проверяющая, образует ли указанная тройка точек поворот по часовой стрелке: 
-
-        bool clockwise(int x1, int y1, int x2, int y2, int x3, int y3)
-                {
-                    return triangle_area_2(x1, y1, x2, y2, x3, y3) < 0;
-                }
-                */
-
         // левый поворот трех точек
         bool clockwise(PointF p1, PointF p2, PointF p3)//int x1, int y1, int x2, int y2, int x3, int y3)
         {
-            double area = Math.Abs((p2.X - p1.X) * (p3.Y - p1.Y) - (p2.Y - p1.Y) * (p3.X - p1.X)) / 2.0;
-            return  less((float)area, 0);
+            float area = Math.Abs((p2.X - p1.X) * (p3.Y - p1.Y) - (p2.Y - p1.Y) * (p3.X - p1.X)) / 2.0f;
+            return  less(area, 0);
         }
 
         // принадлежность точки многоугольнику
@@ -181,11 +162,11 @@ namespace Lab4
                 if (eq(pt.Y, Math.Max(tmp1.Y, tmp2.Y)) && less(pt.X, Math.Min(tmp1.X, tmp2.X)))
                     ++cnt;
                 // pt.Y находится между точками tmp1.Y и tmp2.Y 
-                if (less(pt.Y, Math.Max(tmp1.Y, tmp2.Y)) && less(Math.Min(tmp1.Y, tmp2.Y), pt.Y))
+                /*else if (less(pt.Y, Math.Max(tmp1.Y, tmp2.Y)) && less(Math.Min(tmp1.Y, tmp2.Y), pt.Y))
                 {
                     if (clockwise(tmp1, tmp2, pt)) // поворот точек левый
                         ++cnt;
-                }
+                }*/
                 else if (is_crossed(tmp1, tmp2, pt, ray))
                     ++cnt;
             }
