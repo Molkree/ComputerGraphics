@@ -349,7 +349,6 @@ namespace Lab4
 
         private void textBox_rot_TextChanged(object sender, EventArgs e)
         {
-            // При каждом изменении рисует новую точку - не очищать же весь picturebox каждый раз? :/
             if (textBox_x.Text == "")
                 textBox_x.Text = "0";
             if (textBox_y.Text == "")
@@ -359,11 +358,11 @@ namespace Lab4
             int y = Int32.Parse(textBox_y.Text);
 
             //g.FillRectangle(Brushes.White, rotation_point.X, rotation_point.Y, 2, 2);
-            g.FillRectangle(Brushes.White, rotation_point.X, pictureBox1.Height + rotation_point.Y, 2, 2);
+            g.FillRectangle(Brushes.White, rotation_point.X, pictureBox1.Height - rotation_point.Y, 2, 2);
             rotation_point.X = x;
-            rotation_point.Y = y;
+            rotation_point.Y = pictureBox1.Height - y;
             //g.FillRectangle(Brushes.Red, x, y, 2, 2);
-            g.FillRectangle(Brushes.Red, x, pictureBox1.Height + y, 2, 2);
+            g.FillRectangle(Brushes.Red, x, y, 2, 2);
         }
 
         private void textBox_scaling_TextChanged(object sender, EventArgs e)
