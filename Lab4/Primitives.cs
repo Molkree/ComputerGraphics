@@ -83,11 +83,14 @@ namespace Lab4
             int m = n1;
             int n = n2;
 
-            List<float> c = new List<float>(l * n);
+            List<float> c = new List<float>();
+            for (int i = 0; i < l * n; ++i)
+                c.Add(0f);
+
             for (int i = 0; i<l; ++i)
                 for (int j =0; j<n; ++j)
                 {
-                    c[i * l + j] = 0;
+                    //c[i * l + j] = 0;
                     for (int r = 0; r < m; ++r)
                         c[i * l + j] += matr1[i * m1 + r] * matr2[r * m2 + j];
                 }
