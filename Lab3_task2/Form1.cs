@@ -1,11 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Lab3_task2
@@ -16,7 +12,7 @@ namespace Lab3_task2
     {
         public override int Compare(Point x, Point y)
         {
-            if (object.Equals(x, y)) return 0;
+            if (Equals(x, y)) return 0;
             if (x.Y < y.Y)
                 return -1;
             if (x.Y == y.Y && x.X < y.X) return -1;
@@ -35,33 +31,9 @@ namespace Lab3_task2
         bool border_finded = false;
         Image curr = null;
         Color border_color = Color.Black;
-        /*    Point find_start_point()
-            {
-                Bitmap bmp = pictureBox1.Image as Bitmap;
-
-                for (int x = bmp.Width-1; x >= 0; --x)
-                    for (int y = 1; y < bmp.Height; ++y)
-                    {
-                        Color c = bmp.GetPixel(x, y);
-                        if (c.ToArgb() != Color.White.ToArgb())
-                        {
-                            while (c.ToArgb() != Color.White.ToArgb())
-                            {
-                                --x;
-                                c = bmp.GetPixel(x, y);
-                            }
-                            ++x;
-                            return new Point(x, y);
-                        }
-                    }
-
-
-                return new Point(0, 0);
-            }*/
 
         Point find_start_point(Point click)
         {
-            //Bitmap bmp = pictureBox1.Image as Bitmap;
             Bitmap bmp = curr as Bitmap;
 
             int act_x = click.X * bmp.Width / pictureBox1.Width;
@@ -71,8 +43,6 @@ namespace Lab3_task2
 
             for (int x = act_x; x < bmp.Width; ++x)
             {
-                //if (bmp.GetPixel(x, act_y).ToArgb() != bg_color.ToArgb())
-                //    return new Point(x, act_y);
                 if (bmp.GetPixel(x, act_y).ToArgb() == border_color.ToArgb())
                     return new Point(x, act_y);
             }
@@ -107,7 +77,6 @@ namespace Lab3_task2
             max_y = int.MinValue;
             min_y = int.MaxValue;
             points.Clear();
-            //Bitmap bmp = pictureBox1.Image as Bitmap;
             Bitmap bmp = curr as Bitmap;
             Point pred_p = find_start_point(click);
             if (pred_p.X == -1 || pred_p.Y == -1)
@@ -147,14 +116,6 @@ namespace Lab3_task2
                         if (dir > 7)
                             dir -= 8;
                     }
-                /*    if (dir == (pred_dir + 4) % 8)
-                    {
-                        MessageBoxButtons buttons = MessageBoxButtons.OK;
-                        DialogResult result;
-                        result = MessageBox.Show("Не выделено ни одного пикселя", "problem", buttons);
-                        points.Clear();
-                        return false;
-                    }*/
 
                     if (points[0].X == pred_p.X && points[0].Y == pred_p.Y)
                         break;
@@ -201,7 +162,7 @@ namespace Lab3_task2
 
         private void openFileDialog1_FileOk(object sender, CancelEventArgs e)
         {
-            curr = Bitmap.FromFile(openFileDialog1.FileName);
+            curr = Image.FromFile(openFileDialog1.FileName);
             pictureBox1.Image = curr;
             g = Graphics.FromImage(curr);
             pictureBox1.Refresh();
@@ -219,35 +180,31 @@ namespace Lab3_task2
 
         private List<Point> calc_fill_border()
         {
-            //модифицируем границу для заливки
             List<Point> res = new List<Point>();
             res.Add(points[0]);
             int pred_dir = 6;
             int dir = 6;
             for (int i = 1; i < points.Count; ++i)
             {
-                Point first = points[i-1];
+                Point first = points[i - 1];
                 Point second = points[i];
 
-      
                 if (first.X == second.X)
                 {
                     dir = second.Y > first.Y ? 6 : 2;
-                  //  if (second.Y != max_y && second.Y != min_y)
-                        res.Add(second);
+                    // peaks
+                    if ((dir == 2 && pred_dir == 7) || (dir == 6 && pred_dir == 3))
+                        res.Add(first);
+                    res.Add(second);
                 }
                 else if (first.Y == second.Y)
                 {
-                    // !!!
                     dir = second.X > first.X ? 0 : 4;
-                 //   if (second.Y != max_y && second.Y != min_y)
-                        if ((dir == 4 && pred_dir == 5) || (dir == 0 && pred_dir == 1))
-                        {
-                            res.Remove(first);
-                            res.Add(second);
-                        }
-
-                       
+                    if ((dir == 4 && pred_dir == 5) || (dir == 0 && pred_dir == 1)) // add other cases
+                    {
+                        res.Remove(first);
+                        res.Add(second);
+                    }
                 }
                 else
                 {
@@ -255,17 +212,17 @@ namespace Lab3_task2
                         dir = second.X > first.X ? 1 : 3;
                     else dir = second.X > first.X ? 7 : 5;
 
-                 //   if (second.Y != max_y && second.Y != min_y)
-                  //  {
-                        if ((dir == 5 && pred_dir == 3) || (dir == 3 && pred_dir == 5) || (dir == 1 && pred_dir == 7) || (dir == 7 && pred_dir == 1))
-                            res.Remove(res[res.Count - 1]);
-                        res.Add(second);
-                 //   }
+                    // remove horizontal lines
+                    if ((dir == 3 && pred_dir == 4) || (dir == 7 && pred_dir == 0))
+                        res.Remove(first);
+                    if ((dir == 5 && pred_dir == 3) || (dir == 3 && pred_dir == 5) || (dir == 1 && pred_dir == 7) || (dir == 7 && pred_dir == 1)     || (dir == 1 && pred_dir == 6) || (dir == 5 && pred_dir == 2)/*(dir == 3 && pred_dir == 6)*/ ) // add all peaks
+                        res.Add(first);
+                        //res.Remove(res[res.Count - 1]); // add twice
+                    res.Add(second);
                 }
 
-   
                 pred_dir = dir;
-              
+
             }
             if (pred_dir == 0)
             {
@@ -275,65 +232,84 @@ namespace Lab3_task2
                     res.Remove(last);
             }
 
-
-            foreach (var pt in points)
-            {
-                if (pt.Y == min_y || pt.Y == max_y)
-                    if (res.Exists(p => (p.X == pt.X && p.Y == pt.Y)))
-                    res.Remove(pt);
-            }
-            //поиск внутренних границ
-        /*    res.Sort(new YXComparer());
-            Point[] tmp = res.ToArray();
-            Bitmap bmp = curr as Bitmap;
-            // поиск внутренних областей
-            for (int i = 0; i < tmp.Length; i += 2)
-            {
-                Point first = tmp[i];
-                Point second = tmp[i + 1];
- 
-                if (first.X == second.X || first.X == second.X - 1)
-                    continue;
-
-                bool prev_is_border = false;
-                //сканируем область внутри?
-                int cnt = 0;
-                for (int j = first.X + 1; j < second.X; ++j)
-                {
-                    cnt = 0;
-                    if (bmp.GetPixel(j, first.Y).ToArgb() == border_color.ToArgb())
-                    {
-                        if (!prev_is_border)
-                        {
-                            if (!res.Exists(pt => (pt.X == j && pt.Y == first.Y)))
-                            {
-                                res.Add(new Point(j, first.Y));
-                                ++cnt;
-                            }
-                            prev_is_border = true;
-                            
-                        }
-                    }
-                    else
-                    {
-                        if (prev_is_border)
-                        {
-                            if (!res.Exists(pt => (pt.X == j - 1 && pt.Y == first.Y)))
-                            {
-                                res.Add(new Point(j - 1, first.Y));
-                                ++cnt;
-                            }
-                            prev_is_border = false;
-                        }
-                    }
-                }
-                if (cnt % 2 == 1)
-                    res.Add(res[res.Count - 1]);
-            }*/
-
-           res.Sort(new YXComparer());
+            //foreach (var pt in points)
+            //{
+            //    if (pt.Y == min_y || pt.Y == max_y)
+            //        if (res.Exists(p => (p.X == pt.X && p.Y == pt.Y)))
+            //            res.RemoveAll(pt);
+            //}
+            res.RemoveAll(pt => pt.Y == min_y || pt.Y == max_y);
+            res.Sort(new YXComparer());
             return res;
         }
+
+        //private List<Point> calc_fill_border()
+        //{
+        //    //модифицируем границу для заливки
+        //    List<Point> res = new List<Point>();
+        //    res.Add(points[0]);
+        //    int pred_dir = 6;
+        //    int dir = 6;
+        //    for (int i = 1; i < points.Count; ++i)
+        //    {
+        //        Point first = points[i - 1];
+        //        Point second = points[i];
+
+        //        if (first.X == second.X)
+        //        {
+        //            dir = second.Y > first.Y ? 6 : 2;
+        //            res.Add(second);
+        //        }
+        //        else if (first.Y == second.Y)
+        //        {
+        //            //// !!!
+        //            //dir = second.X > first.X ? 0 : 4;
+        //            //if ((dir == 4 && pred_dir == /*4*/5) || (dir == 0 && pred_dir == /*0*/1) || (dir == 4 && pred_dir == 3) || (dir == 0 && pred_dir == 7))
+        //            //{
+        //            //    res.Remove(first);
+        //            //    res.Add(second);
+        //            //}
+        //            ////res.Add(first);
+        //            ////res.Add(second);
+        //            if (pred_dir != 0 && pred_dir != 4)
+        //                res.Add(first);
+        //        }
+        //        else
+        //        {
+        //            if (second.Y < first.Y)
+        //                dir = second.X > first.X ? 1 : 3;
+        //            else dir = second.X > first.X ? 7 : 5;
+        //            //if (dir == 1 && pred_dir == 0 || dir == 7 && pred_dir == 0 || dir == 3 && pred_dir == 4 || dir == 5 && pred_dir == 4)
+        //            //{
+        //            //    res.Add(first);
+        //            //    res.Add(first);
+        //            //}
+        //            if ((dir == 5 && pred_dir == 3) || (dir == 3 && pred_dir == 5) || (dir == 1 && pred_dir == 7) || (dir == 7 && pred_dir == 1))
+        //                res.Add(first);
+        //                //res.Remove(res[res.Count - 1]);
+        //            res.Add(second);
+        //        }
+
+        //        pred_dir = dir;
+        //    }
+        //    if (pred_dir == 0)
+        //    {
+        //        Point first = res[0];
+        //        Point last = res[res.Count - 1];
+        //        if (first.Y > last.Y)
+        //            res.Remove(last);
+        //    }
+
+        //    //foreach (var pt in points)
+        //    //{
+        //    //    if (pt.Y == min_y || pt.Y == max_y)
+        //    //        if (res.Exists(p => (p.X == pt.X && p.Y == pt.Y)))
+        //    //            res.Remove(pt);
+        //    //}
+
+        //    res.Sort(new YXComparer());
+        //    return res;
+        //}
 
         private void time_to_fill(Point[] border)
         {
@@ -343,7 +319,7 @@ namespace Lab3_task2
                 Point first = border[i];
                 Point second = border[i + 1];
 
-                if (first.X == second.X || first.X == second.X - 1)
+                if (first.X == second.X/* || first.X == second.X - 1*/)
                     continue;
                 first.X = first.X + 1;
                 second.X = second.X - 1;
@@ -355,16 +331,13 @@ namespace Lab3_task2
 
         private void pictureBox1_MouseClick(object sender, MouseEventArgs e)
         {
-            //if (pictureBox1.Image == null) return;
             if (curr == null) return;
             //включен режим поиска границы
             if (mode == Mode.Border)
             {
-                //pictureBox1.Image = Bitmap.FromFile(openFileDialog1.FileName);
                 pictureBox1.Image = curr;
                 with_border = null;
                 border_finded = find_border(e.Location);
-                //with_border = pictureBox1.Image.Clone() as Bitmap;
                 with_border = curr.Clone() as Bitmap;
 
                 if (border_finded)
@@ -380,7 +353,6 @@ namespace Lab3_task2
                         }
                         gg.DrawLine(Pens.Red, pt, points[0]);
                     } 
-                    //with_border.SetPixel(pt.X, pt.Y, Color.Red);
                     pictureBox1.Image = with_border;
                 }
                 else
@@ -396,7 +368,6 @@ namespace Lab3_task2
                 if (border_finded)
                 {
                     //там красная граница, она мне не нравится, ее надо убрать
-                    //pictureBox1.Image = Bitmap.FromFile(openFileDialog1.FileName);
                     //костыль
                     pictureBox1.Image = curr;
                     List<Point> nborder = calc_fill_border();
@@ -411,6 +382,8 @@ namespace Lab3_task2
                     else
                     {
                         time_to_fill(nborder.ToArray());
+                        Image pic = pictureBox1.Image;
+                        pic.Save("../../newImage.png", System.Drawing.Imaging.ImageFormat.Png);
                     }
                 }
                 else
