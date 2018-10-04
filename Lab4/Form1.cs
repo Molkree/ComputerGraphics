@@ -14,6 +14,10 @@ namespace Lab4
 
     public partial class Form1 : Form
     {
+        Pen new_fig = Pens.Black;
+        Pen old_fig = Pens.LightGray;
+
+
         Graphics g = null;
         Mode mode;
         Point rotation_point = new Point(0, 0);
@@ -83,11 +87,11 @@ namespace Lab4
         }
 
         // нарисовать примитив по точкам
-        private void show_primitive()
+        private void show_primitive(Pen pen)
         {
-                // TODO
-                // запретить ставить точки так, чтобы линии пересекались*/
-            Pen pen = Pens.Black;
+            // TODO
+            // запретить ставить точки так, чтобы линии пересекались*/
+            
             //из за смещения начала координат
             PointF tmp1 = new PointF(pr.points[0].X, pictureBox1.Height - pr.points[0].Y);
             for (int i = 1; i < pr.points.Count; ++i)
@@ -185,7 +189,7 @@ namespace Lab4
                 {
                     button_make.Text = "Задать примитив";
                     pr = new Primitive(pts);
-                    show_primitive();
+                    show_primitive(new_fig);
                     if (pr.p_type == 1)
                     {
                         mode = Mode.Point;
@@ -248,7 +252,7 @@ namespace Lab4
                 {
                     to_edge.Clear();
                     g.Clear(Color.White);
-                    show_primitive();
+                    show_primitive(new_fig);
                     //to_edge.Add(e.Location);
                     to_edge.Add(tmp);
                     label_check_answ2.Text = "Еще один!";
@@ -293,11 +297,20 @@ namespace Lab4
             label_check2.Visible = false;
             label_check_answ2.Visible = false;
             button_make.Text = "Готово";
+            textBox_trans_x.Text = "0";
+            textBox_trans_y.Text = "0";
+            textBox_rotation.Text = "0";
+            textBox_scaling_x.Text = "1";
+            textBox_scaling_y.Text = "1";
+            textBox_x.Text = "0";
+            textBox_y.Text = "0";
+
         }
 
         // сделать афинные преобразования
         private void button_exec_Click(object sender, EventArgs e)
         {
+            show_primitive(old_fig);
             //масштабируем и переносим относительно начала координат (сдвигом левой нижней точки в начало)
             //
             if (textBox_scaling_x.Text != "1" || textBox_trans_x.Text != "0" || textBox_trans_y.Text != "0")
@@ -330,7 +343,7 @@ namespace Lab4
                 pr.translate(rotation_point.X, rotation_point.Y);
             }
 
-            show_primitive();
+            show_primitive(new_fig);
             
         }
 
@@ -358,7 +371,8 @@ namespace Lab4
             int a = Int32.Parse(textBox_rotation.Text);
             if (a < 0 || a > 359)
             {
-                // TODO поругаться
+                MessageBox.Show("Угол должен быть в диапазоне [0, 360)", "Неверный угол", MessageBoxButtons.OK);
+                textBox_rotation.Text = "0";
             }
         }
 
