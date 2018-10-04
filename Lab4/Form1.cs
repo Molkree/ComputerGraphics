@@ -298,21 +298,36 @@ namespace Lab4
         // сделать афинные преобразования
         private void button_exec_Click(object sender, EventArgs e)
         {
-            if (textBox_trans_x.Text != "0" || textBox_trans_y.Text != "0")
+            //масштабируем и переносим относительно начала координат (сдвигом левой нижней точки в начало)
+            //
+            if (textBox_scaling_x.Text != "1" || textBox_trans_x.Text != "0" || textBox_trans_y.Text != "0")
             {
-                pr.translate(Int32.Parse(textBox_trans_x.Text),
-                             Int32.Parse(textBox_trans_y.Text));
+                //сначала переносим в начало
+                pr.translate(-1 * pr.left_bot.X, -1 * pr.left_bot.Y);
+                //делаем, что нужно
+                if (textBox_scaling_x.Text != "1")
+                {
+                    int x = Int32.Parse(textBox_x.Text);
+                    int y = Int32.Parse(textBox_y.Text);
+                    pr.scaling(x, y);
+
+                }
+                if (textBox_trans_x.Text != "0" || textBox_trans_y.Text != "0")
+                {
+                    pr.translate(Int32.Parse(textBox_trans_x.Text),
+                                 Int32.Parse(textBox_trans_y.Text));
+                }
+                //переносим обратно
+                pr.translate(pr.left_bot.X, pr.left_bot.Y);
             }
+
+            //поворачиваем относительно введенной точки rotation_point
             if (textBox_rotation.Text != "0")
             {
                 double r = Double.Parse(textBox_rotation.Text);
-                pr.rotate(r, rotation_point);
-            }
-            if (textBox_scaling_x.Text != "1")
-            {          
-                int x = Int32.Parse(textBox_x.Text);
-                int y = Int32.Parse(textBox_y.Text);
-                pr.scaling(x, y);
+                pr.translate(-1 * rotation_point.X, -1 * rotation_point.Y);
+                pr.rotate(r);
+                pr.translate(rotation_point.X, rotation_point.Y);
             }
 
             show_primitive();
