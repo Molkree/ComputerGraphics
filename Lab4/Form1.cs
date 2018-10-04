@@ -307,9 +307,9 @@ namespace Lab4
                 //делаем, что нужно
                 if (textBox_scaling_x.Text != "1")
                 {
-                    int x = Int32.Parse(textBox_x.Text);
-                    int y = Int32.Parse(textBox_y.Text);
-                    pr.scaling(x, y);
+                    float x = float.Parse(textBox_scaling_x.Text);
+                    float y = float.Parse(textBox_scaling_y.Text);
+                    pr.scaling((float)x, (float)y);
 
                 }
                 if (textBox_trans_x.Text != "0" || textBox_trans_y.Text != "0")
@@ -345,7 +345,7 @@ namespace Lab4
 
         private void textBox_KeyPress_double(object sender, KeyPressEventArgs e)
         {
-            if (!(Char.IsDigit(e.KeyChar) || e.KeyChar == '-' || e.KeyChar == '.') && e.KeyChar != Convert.ToChar(8))
+            if (!(Char.IsDigit(e.KeyChar) || e.KeyChar == '-' || e.KeyChar == ',') && e.KeyChar != Convert.ToChar(8))
             {
                 e.Handled = true;
             }
