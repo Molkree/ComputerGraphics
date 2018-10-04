@@ -114,10 +114,49 @@ namespace Lab4
             else return 1;
         }
 
-        bool point_belongs(PointF pt)
+        //принадлежность точки ребру
+        private int point_belongs(PointF e1, PointF e2, PointF pt)
         {
-            // TODO
-            return false;
+            float a = e1.Y - e2.Y;
+            float b = e2.X - e1.X;
+            float c = e1.X * e2.Y - e2.X * e1.Y;
+
+            if (a * pt.X + b * pt.Y + c > eps)
+                return -1;
+
+            bool toedge = l_eq(Math.Min(e1.X, e2.X), pt.X) && l_eq(pt.X, Math.Max(e1.X, e2.X))
+                        && l_eq(Math.Min(e1.Y, e2.Y), pt.Y) && l_eq(pt.Y, Math.Max(e1.Y, e2.Y));
+            if (toedge)
+                return 1;
+            return -1;
+        }
+
+        private bool point_belongs(PointF pt)
+        {
+            //пускаем луч || Ох и считаем количество пересечений. четное - не принадлежит, нечетное - принадлежит
+            //вернем -1 если нет, 0 если на ребре, 1 если принадлежит
+            //если у ребра x1 = x2, то не учитываем его
+            //если попали в нижнюю точку ребра, то не учитываем его
+            int cnt = 0;
+            PointF ray = new PointF(pictureBox1.Width, pt.Y);
+
+            for (int i = 1; i <= pr.points.Count; ++i)
+            {
+                PointF tmp1 = pr.points[i - 1];
+                PointF tmp2 = pr.points[i % pr.points.Count];
+                if (point_belongs(tmp1, tmp2, pt) == 1)
+                    return true;
+                if (eq(tmp1.Y, tmp2.Y))
+                    continue;
+                if (eq(pt.Y, Math.Min(tmp1.Y, tmp2.Y)))
+                    continue;
+                if (eq(pt.Y, Math.Max(tmp1.Y, tmp2.Y)) && less(pt.X, Math.Min(tmp1.X, tmp2.X)))
+                    ++cnt;
+                else if (is_crossed(tmp1, tmp2, pt, ray))
+                    ++cnt;
+            }
+
+            return cnt % 2 == 0? false : true;
         }
 
         private void button_make_Click(object sender, EventArgs e)
@@ -235,7 +274,8 @@ namespace Lab4
                 //if (point_belongs(e.Location))
                 if (point_belongs(tmp))
                     label_check_answ1.Text = "Принадлежит";
-                else label_check_answ1.Text = "Не принадлежит";
+                else
+                    label_check_answ1.Text = "Не принадлежит";
             }
         }
 

@@ -19,23 +19,21 @@ namespace Lab4
             this.points = new List<PointF>(pts);
             p_type = points.Count;
         }
-
-        // double or int ?
-        public void translate(double x, double y)
+        
+        public void translate(float x, float y)
         {
             // TODO
         }
 
         public void rotate(double angle, Point center)
         {
-            //на точку всем плевать
             //поворот ребра осуществляется вокруг центра, поворот многоугольника вокруг заданной точки
             // TODO
         }
 
-        public void scaling(int kx, int ky)
+        public void scaling(float kx, float ky)
         {
-            //и тут тоже на точку плевать, она - материальная точка
+            //тут тоже на точку плевать, она - материальная точка
             // TODO
         }
     }
