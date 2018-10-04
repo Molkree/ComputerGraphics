@@ -132,6 +132,32 @@ namespace Lab4
             return -1;
         }
 
+        /*        Функция, вычисляющая удвоенную знаковую площадь треугольника: 
+        int triangle_area_2(int x1, int y1, int x2, int y2, int x3, int y3)
+                {
+                    return (x2 - x1) * (y3 - y1) - (y2 - y1) * (x3 - x1);
+                }
+
+                Функция, возвращающая обычную площадь треугольника: 
+        double triangle_area(int x1, int y1, int x2, int y2, int x3, int y3)
+                {
+                    return abs(triangle_area_2(x1, y1, x2, y2, x3, y3)) / 2.0;
+                }
+                Функция, проверяющая, образует ли указанная тройка точек поворот по часовой стрелке: 
+
+        bool clockwise(int x1, int y1, int x2, int y2, int x3, int y3)
+                {
+                    return triangle_area_2(x1, y1, x2, y2, x3, y3) < 0;
+                }
+                */
+
+        // левый поворот трех точек
+        bool clockwise(PointF p1, PointF p2, PointF p3)//int x1, int y1, int x2, int y2, int x3, int y3)
+        {
+            double area = Math.Abs((p2.X - p1.X) * (p3.Y - p1.Y) - (p2.Y - p1.Y) * (p3.X - p1.X)) / 2.0;
+            return  less((float)area, 0);
+        }
+
         // принадлежность точки многоугольнику
         private bool point_belongs(PointF pt)
         {
