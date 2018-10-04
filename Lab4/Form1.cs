@@ -121,7 +121,7 @@ namespace Lab4
             float b = e2.X - e1.X;
             float c = e1.X * e2.Y - e2.X * e1.Y;
 
-            if (a * pt.X + b * pt.Y + c > eps)
+            if (Math.Abs(a * pt.X + b * pt.Y + c) > eps)
                 return -1;
 
             bool toedge = l_eq(Math.Min(e1.X, e2.X), pt.X) && l_eq(pt.X, Math.Max(e1.X, e2.X))
