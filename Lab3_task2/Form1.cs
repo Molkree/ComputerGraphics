@@ -90,7 +90,6 @@ namespace Lab3_task2
             else
             {
                points.Add(pred_p);
-               int cnt_horizontal = 1;
                Point last_p = pred_p;
 
                 int dir = 6;
@@ -108,6 +107,19 @@ namespace Lab3_task2
                        
                         if (bmp.GetPixel(p.X, p.Y).ToArgb() == border_color.ToArgb())
                         {
+                            // diagonals
+                            if ((dir == 5 && pred_dir == 3) || (dir == 3 && pred_dir == 5) ||
+                                (dir == 1 && pred_dir == 7) || (dir == 7 && pred_dir == 1) ||
+                                // vertical
+                                (dir == 6 && pred_dir == 2) || (dir == 6 && pred_dir == 2) ||
+                                // half 
+                                (dir == 7 && pred_dir == 2) || (dir == 5 && pred_dir == 2) ||
+                                (dir == 2 && pred_dir == 7) || (dir == 2 && pred_dir == 5) ||
+                                (dir == 6 && pred_dir == 3) || (dir == 6 && pred_dir == 1) ||
+                                (dir == 3 && pred_dir == 6) || (dir == 1 && pred_dir == 6))
+                                points.Add(pred_p);
+
+
                             pred_p = p;
                             break;
                         }
@@ -121,25 +133,14 @@ namespace Lab3_task2
                         break;
                     else
                     {
-                        if (pred_p.Y == last_p.Y)
-                        {
-                            ++cnt_horizontal;
-                        }
-                        else
-                        {
-                            cnt_horizontal = 1;
-                        }
-                        if (cnt_horizontal > 2)
-                        {
-                            points.Remove(last_p);
-                        }
-
                         last_p = pred_p;
                         if (pred_p.Y < min_y)
                             min_y = pred_p.Y;
                         if (pred_p.Y > max_y)
                             max_y = pred_p.Y;
-                        points.Add(pred_p);
+
+                        
+                            points.Add(pred_p);
                         
 
                         pred_dir = dir;
@@ -178,6 +179,7 @@ namespace Lab3_task2
             button2.Text = "Заливка";
         }
 
+        // dir нужны для способа Ильи. Надо объединить с time_to_fill
         private List<Point> calc_fill_border()
         {
             List<Point> res = new List<Point>();
@@ -192,19 +194,12 @@ namespace Lab3_task2
                 if (first.X == second.X)
                 {
                     dir = second.Y > first.Y ? 6 : 2;
-                    // peaks
-                    if ((dir == 2 && pred_dir == 7) || (dir == 6 && pred_dir == 3) || (dir == 2 && pred_dir == 6) || (dir == 6 && pred_dir == 2))
-                        res.Add(first);
                     res.Add(second);
                 }
                 else if (first.Y == second.Y)
                 {
                     dir = second.X > first.X ? 0 : 4;
-                    if ((dir == 4 && pred_dir == 5) || (dir == 0 && pred_dir == 1)) // add other cases
-                    {
-                        res.Remove(first);
-                        res.Add(second);
-                    }
+                    
                 }
                 else
                 {
@@ -212,52 +207,13 @@ namespace Lab3_task2
                         dir = second.X > first.X ? 1 : 3;
                     else dir = second.X > first.X ? 7 : 5;
 
-                    // remove horizontal lines
-                    if ((dir == 3 && pred_dir == 4) || (dir == 7 && pred_dir == 0))
-                        res.Remove(first);
-                    // add ends of horizontal lines
-                    if ((dir == 5 && pred_dir == 4) || (dir == 1 && pred_dir == 0))
-                        if (!res.Contains(first))
-                            res.Add(first);
-                    if ((dir == 5 && pred_dir == 3) || (dir == 3 && pred_dir == 5) || (dir == 1 && pred_dir == 7) || (dir == 7 && pred_dir == 1)     || (dir == 1 && pred_dir == 6) || (dir == 5 && pred_dir == 2) ) // add all peaks
-                        res.Add(first);
-                    res.Add(second);
+     
                 }
 
                 pred_dir = dir;
 
             }
-            {
-                Point first = res[res.Count - 1];
-                Point second = res[0];
-                if (first.X == second.X)
-                {
-                    dir = second.Y > first.Y ? 6 : 2;
-                    // peaks
-                    if ((dir == 2 && pred_dir == 7) || (dir == 6 && pred_dir == 3))
-                        res.Add(first);
-                }
-                else if (first.Y == second.Y)
-                {
-                    res.Remove(first);
-                }
-                else
-                {
-                    if (second.Y < first.Y)
-                        dir = second.X > first.X ? 1 : 3;
-                    else dir = second.X > first.X ? 7 : 5;
-
-                    // remove horizontal lines
-                    if ((dir == 3 && pred_dir == 4) || (dir == 7 && pred_dir == 0))
-                        res.Remove(first);
-                    // add ends of horizontal lines
-                    if ((dir == 5 && pred_dir == 4) || (dir == 1 && pred_dir == 0))
-                        if (!res.Contains(first))
-                            res.Add(first);
-                    if ((dir == 5 && pred_dir == 3) || (dir == 3 && pred_dir == 5) || (dir == 1 && pred_dir == 7) || (dir == 7 && pred_dir == 1) || (dir == 1 && pred_dir == 6) || (dir == 5 && pred_dir == 2)) // add all peaks
-                        res.Add(first);
-                }
-            }
+            
 
             res.RemoveAll(pt => pt.Y == min_y || pt.Y == max_y);
             res.Sort(new YXComparer());
