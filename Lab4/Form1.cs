@@ -389,9 +389,9 @@ namespace Lab4
             //g.FillRectangle(Brushes.White, rotation_point.X, rotation_point.Y, 2, 2);
             g.FillRectangle(Brushes.White, rotation_point.X, pictureBox1.Height - rotation_point.Y, 2, 2);
             rotation_point.X = x;
-            rotation_point.Y = pictureBox1.Height - y;
+            rotation_point.Y = y;
             //g.FillRectangle(Brushes.Red, x, y, 2, 2);
-            g.FillRectangle(Brushes.Red, x, y, 2, 2);
+            g.FillRectangle(Brushes.Red, x, pictureBox1.Height - y, 2, 2);
         }
 
         private void textBox_scaling_TextChanged(object sender, EventArgs e)
