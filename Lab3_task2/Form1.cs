@@ -200,7 +200,7 @@ namespace Lab3_task2
                 else if (first.Y == second.Y)
                 {
                     dir = second.X > first.X ? 0 : 4;
-                    if ((dir == 4 && pred_dir == 5) || (dir == 0 && pred_dir == 1)) // add other cases
+                    if ((dir == 4 && pred_dir == 5) || (dir == 0 && pred_dir == 1)) // remove horizontal lines
                     {
                         res.Remove(first);
                         res.Add(second);
@@ -219,7 +219,7 @@ namespace Lab3_task2
                     if ((dir == 5 && pred_dir == 4) || (dir == 1 && pred_dir == 0))
                         if (!res.Contains(first))
                             res.Add(first);
-                    if ((dir == 5 && pred_dir == 3) || (dir == 3 && pred_dir == 5) || (dir == 1 && pred_dir == 7) || (dir == 7 && pred_dir == 1)     || (dir == 1 && pred_dir == 6) || (dir == 5 && pred_dir == 2) ) // add all peaks
+                    if ((dir == 5 && pred_dir == 3) || (dir == 3 && pred_dir == 5) || (dir == 1 && pred_dir == 7) || (dir == 7 && pred_dir == 1) || (dir == 1 && pred_dir == 6) || (dir == 5 && pred_dir == 2) ) // add all peaks
                         res.Add(first);
                     res.Add(second);
                 }
@@ -247,9 +247,6 @@ namespace Lab3_task2
                         dir = second.X > first.X ? 1 : 3;
                     else dir = second.X > first.X ? 7 : 5;
 
-                    // remove horizontal lines
-                    if ((dir == 3 && pred_dir == 4) || (dir == 7 && pred_dir == 0))
-                        res.Remove(first);
                     // add ends of horizontal lines
                     if ((dir == 5 && pred_dir == 4) || (dir == 1 && pred_dir == 0))
                         if (!res.Contains(first))
