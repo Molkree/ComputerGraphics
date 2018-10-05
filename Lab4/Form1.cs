@@ -313,12 +313,12 @@ namespace Lab4
             show_primitive(old_fig);
             //масштабируем и переносим относительно начала координат (сдвигом левой нижней точки в начало)
             //
-            if (textBox_scaling_x.Text != "1" || textBox_trans_x.Text != "0" || textBox_trans_y.Text != "0")
+            if (textBox_scaling_x.Text != "1" || textBox_scaling_y.Text != "1" || textBox_trans_x.Text != "0" || textBox_trans_y.Text != "0")
             {
                 //сначала переносим в начало
                 pr.translate(-1 * pr.left_bot.X, -1 * pr.left_bot.Y);
                 //делаем, что нужно
-                if (textBox_scaling_x.Text != "1")
+                if (textBox_scaling_x.Text != "1" || textBox_scaling_y.Text != "1")
                 {
                     float x = float.Parse(textBox_scaling_x.Text);
                     float y = float.Parse(textBox_scaling_y.Text);
