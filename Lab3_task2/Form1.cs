@@ -193,7 +193,7 @@ namespace Lab3_task2
                 {
                     dir = second.Y > first.Y ? 6 : 2;
                     // peaks
-                    if ((dir == 2 && pred_dir == 7) || (dir == 6 && pred_dir == 3))
+                    if ((dir == 2 && pred_dir == 7) || (dir == 6 && pred_dir == 3) || (dir == 2 && pred_dir == 6) || (dir == 6 && pred_dir == 2))
                         res.Add(first);
                     res.Add(second);
                 }
@@ -215,101 +215,54 @@ namespace Lab3_task2
                     // remove horizontal lines
                     if ((dir == 3 && pred_dir == 4) || (dir == 7 && pred_dir == 0))
                         res.Remove(first);
-                    if ((dir == 5 && pred_dir == 3) || (dir == 3 && pred_dir == 5) || (dir == 1 && pred_dir == 7) || (dir == 7 && pred_dir == 1)     || (dir == 1 && pred_dir == 6) || (dir == 5 && pred_dir == 2)/*(dir == 3 && pred_dir == 6)*/ ) // add all peaks
+                    // add ends of horizontal lines
+                    if ((dir == 5 && pred_dir == 4) || (dir == 1 && pred_dir == 0))
+                        if (!res.Contains(first))
+                            res.Add(first);
+                    if ((dir == 5 && pred_dir == 3) || (dir == 3 && pred_dir == 5) || (dir == 1 && pred_dir == 7) || (dir == 7 && pred_dir == 1)     || (dir == 1 && pred_dir == 6) || (dir == 5 && pred_dir == 2) ) // add all peaks
                         res.Add(first);
-                        //res.Remove(res[res.Count - 1]); // add twice
                     res.Add(second);
                 }
 
                 pred_dir = dir;
 
             }
-            if (pred_dir == 0)
             {
-                Point first = res[0];
-                Point last = res[res.Count - 1];
-                if (first.Y > last.Y)
-                    res.Remove(last);
+                Point first = res[res.Count - 1];
+                Point second = res[0];
+                if (first.X == second.X)
+                {
+                    dir = second.Y > first.Y ? 6 : 2;
+                    // peaks
+                    if ((dir == 2 && pred_dir == 7) || (dir == 6 && pred_dir == 3))
+                        res.Add(first);
+                }
+                else if (first.Y == second.Y)
+                {
+                    res.Remove(first);
+                }
+                else
+                {
+                    if (second.Y < first.Y)
+                        dir = second.X > first.X ? 1 : 3;
+                    else dir = second.X > first.X ? 7 : 5;
+
+                    // remove horizontal lines
+                    if ((dir == 3 && pred_dir == 4) || (dir == 7 && pred_dir == 0))
+                        res.Remove(first);
+                    // add ends of horizontal lines
+                    if ((dir == 5 && pred_dir == 4) || (dir == 1 && pred_dir == 0))
+                        if (!res.Contains(first))
+                            res.Add(first);
+                    if ((dir == 5 && pred_dir == 3) || (dir == 3 && pred_dir == 5) || (dir == 1 && pred_dir == 7) || (dir == 7 && pred_dir == 1) || (dir == 1 && pred_dir == 6) || (dir == 5 && pred_dir == 2)) // add all peaks
+                        res.Add(first);
+                }
             }
 
-            //foreach (var pt in points)
-            //{
-            //    if (pt.Y == min_y || pt.Y == max_y)
-            //        if (res.Exists(p => (p.X == pt.X && p.Y == pt.Y)))
-            //            res.RemoveAll(pt);
-            //}
             res.RemoveAll(pt => pt.Y == min_y || pt.Y == max_y);
             res.Sort(new YXComparer());
             return res;
         }
-
-        //private List<Point> calc_fill_border()
-        //{
-        //    //модифицируем границу для заливки
-        //    List<Point> res = new List<Point>();
-        //    res.Add(points[0]);
-        //    int pred_dir = 6;
-        //    int dir = 6;
-        //    for (int i = 1; i < points.Count; ++i)
-        //    {
-        //        Point first = points[i - 1];
-        //        Point second = points[i];
-
-        //        if (first.X == second.X)
-        //        {
-        //            dir = second.Y > first.Y ? 6 : 2;
-        //            res.Add(second);
-        //        }
-        //        else if (first.Y == second.Y)
-        //        {
-        //            //// !!!
-        //            //dir = second.X > first.X ? 0 : 4;
-        //            //if ((dir == 4 && pred_dir == /*4*/5) || (dir == 0 && pred_dir == /*0*/1) || (dir == 4 && pred_dir == 3) || (dir == 0 && pred_dir == 7))
-        //            //{
-        //            //    res.Remove(first);
-        //            //    res.Add(second);
-        //            //}
-        //            ////res.Add(first);
-        //            ////res.Add(second);
-        //            if (pred_dir != 0 && pred_dir != 4)
-        //                res.Add(first);
-        //        }
-        //        else
-        //        {
-        //            if (second.Y < first.Y)
-        //                dir = second.X > first.X ? 1 : 3;
-        //            else dir = second.X > first.X ? 7 : 5;
-        //            //if (dir == 1 && pred_dir == 0 || dir == 7 && pred_dir == 0 || dir == 3 && pred_dir == 4 || dir == 5 && pred_dir == 4)
-        //            //{
-        //            //    res.Add(first);
-        //            //    res.Add(first);
-        //            //}
-        //            if ((dir == 5 && pred_dir == 3) || (dir == 3 && pred_dir == 5) || (dir == 1 && pred_dir == 7) || (dir == 7 && pred_dir == 1))
-        //                res.Add(first);
-        //                //res.Remove(res[res.Count - 1]);
-        //            res.Add(second);
-        //        }
-
-        //        pred_dir = dir;
-        //    }
-        //    if (pred_dir == 0)
-        //    {
-        //        Point first = res[0];
-        //        Point last = res[res.Count - 1];
-        //        if (first.Y > last.Y)
-        //            res.Remove(last);
-        //    }
-
-        //    //foreach (var pt in points)
-        //    //{
-        //    //    if (pt.Y == min_y || pt.Y == max_y)
-        //    //        if (res.Exists(p => (p.X == pt.X && p.Y == pt.Y)))
-        //    //            res.Remove(pt);
-        //    //}
-
-        //    res.Sort(new YXComparer());
-        //    return res;
-        //}
 
         private void time_to_fill(Point[] border)
         {
@@ -354,6 +307,7 @@ namespace Lab3_task2
                         gg.DrawLine(Pens.Red, pt, points[0]);
                     } 
                     pictureBox1.Image = with_border;
+                    with_border.Save("../../withBorder.png", System.Drawing.Imaging.ImageFormat.Png);
                 }
                 else
                 {
@@ -383,7 +337,7 @@ namespace Lab3_task2
                     {
                         time_to_fill(nborder.ToArray());
                         Image pic = pictureBox1.Image;
-                        pic.Save("../../newImage.png", System.Drawing.Imaging.ImageFormat.Png);
+                        pic.Save("../../flooded.png", System.Drawing.Imaging.ImageFormat.Png);
                     }
                 }
                 else
