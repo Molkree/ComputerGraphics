@@ -45,7 +45,7 @@ namespace Lab3_task2
 
                     using (Graphics g = Graphics.FromImage(pictureBox1.Image))
                     {
-                        using (Pen pen = new Pen(border_color, 1.5f))
+                        using (Pen pen = new Pen(border_color, 1.2f))
                             g.DrawLine(pen, lastPoint, e.Location);
                         g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
                     }
@@ -413,6 +413,8 @@ namespace Lab3_task2
         {
             if (mode == Mode.Draw)
             {
+                if (pictureBox1.Image == null)
+                    return;
                 mode = Mode.Border;
                 button2.Text = "Поиск границы";
 
@@ -464,6 +466,19 @@ namespace Lab3_task2
             if (border_color.ToArgb() == Color.White.ToArgb())
                 label2.ForeColor = Color.Black;
             else label2.ForeColor = Color.White;
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            if (pictureBox1.Image != null)
+            {
+                pictureBox1.Image = null;
+                Refresh();
+                with_border = null;
+                curr = null;
+                mode = Mode.Draw;
+                button2.Text = "Рисование";
+            }
         }
     }
 }
