@@ -54,8 +54,6 @@ namespace Lab3_task2
                         using (Pen pen = new Pen(border_color, 2f))
                         {
                             g.DrawLine(pen, lastPoint, e.Location);
-                            //g.DrawRectangle(pen, e.Location.X, e.Location.Y, 1, 1);
-                            //g.DrawEllipse(pen, e.Location.X, e.Location.Y, 1, 1);
                         }         
                     }
                     pictureBox1.Refresh();
@@ -85,7 +83,7 @@ namespace Lab3_task2
         Color border_color = Color.Black;
 
 
-        private bool is_eq(Color first, Color Second)
+        private static bool is_eq(Color first, Color Second)
         {
             int d = 150;
             return Math.Abs(first.R - Second.R) <= d &&  Math.Abs(first.G - Second.G) <= d &&  Math.Abs(first.B - Second.B) <= d;
@@ -102,14 +100,13 @@ namespace Lab3_task2
 
             for (int x = act_x; x < bmp.Width; ++x)
             {
-               // if (bmp.GetPixel(x, act_y).ToArgb() == border_color.ToArgb())
                if (is_eq(bmp.GetPixel(x, act_y), border_color))
                     return new Point(x, act_y);
             }
             return new Point(-1, -1);
         }
 
-        Point new_point(int dir, Point p)
+        static Point new_point(int dir, Point p)
         {
             if (dir == 7)
                 return new Point(p.X + 1, p.Y + 1);
@@ -142,8 +139,7 @@ namespace Lab3_task2
             if (pred_p.X == -1 || pred_p.Y == -1)
             {
                 MessageBoxButtons buttons = MessageBoxButtons.OK;
-                DialogResult result;
-                result = MessageBox.Show("Неверные координаты", "problem", buttons);
+                MessageBox.Show("Неверные координаты", "problem", buttons);
                 points.Clear();
                 return false;
             }
@@ -167,7 +163,6 @@ namespace Lab3_task2
                         p = new_point(dir, pred_p);
 
                         if (is_eq(bmp.GetPixel(p.X, p.Y), border_color))
-                            //if (bmp.GetPixel(p.X, p.Y).ToArgb() == border_color.ToArgb())
                         {
                             // horizontal lines
                             if ((dir == 0 && pred_dir == 4) || (dir == 4 && pred_dir == 0))
@@ -220,10 +215,8 @@ namespace Lab3_task2
         {
             InitializeComponent();
             label1.BackColor = fill_color;
-            label2.BackColor = border_color;
             colorDialog1.FullOpen = true;
             colorDialog1.Color = fill_color;
-            colorDialog2.Color = border_color;
         }
 
         private List<Point> calc_fill_border()
@@ -348,6 +341,8 @@ namespace Lab3_task2
 
         private void time_to_fill(Point[] border)
         {
+            if (curr == null)
+                return;
             Pen pen = new Pen(fill_color);
             for (int i = 0; i < border.Length; i += 2)
             {
@@ -362,6 +357,7 @@ namespace Lab3_task2
                     (curr as Bitmap).SetPixel(first.X, first.Y, fill_color);
                 g.DrawLine(pen, first, second);
             }
+            pen.Dispose();
         }
 
         private void pictureBox1_MouseClick(object sender, MouseEventArgs e)
@@ -371,6 +367,8 @@ namespace Lab3_task2
                 //включен режим поиска границы
                 if (mode == Mode.Border)
                 {
+                    if (curr == null)
+                        return;
                     pictureBox1.Image = curr;
                     g = Graphics.FromImage(curr);
                     points.Clear();
@@ -398,8 +396,7 @@ namespace Lab3_task2
                     else
                     {
                         MessageBoxButtons buttons = MessageBoxButtons.OK;
-                        DialogResult result;
-                        result = MessageBox.Show("Выберите мышкой область внутри границы", "Не выбрана область", buttons);
+                        MessageBox.Show("Выберите мышкой область внутри границы", "Не выбрана область", buttons);
                     }
                 }
                 else
@@ -415,8 +412,7 @@ namespace Lab3_task2
                         {
                             //TODO разобраться с ним наконец
                             MessageBoxButtons buttons = MessageBoxButtons.OK;
-                            DialogResult result;
-                            result = MessageBox.Show("Пора пилить костыль!", "Error", buttons);
+                            MessageBox.Show("Пора пилить костыль!", "Error", buttons);
                         }
                         else
                         {
@@ -428,8 +424,7 @@ namespace Lab3_task2
                     else
                     {
                         MessageBoxButtons buttons = MessageBoxButtons.OK;
-                        DialogResult result;
-                        result = MessageBox.Show("Не выбрана область. Вернитесь в режим поиска границы", "Error", buttons);
+                        MessageBox.Show("Не выбрана область. Вернитесь в режим поиска границы", "Error", buttons);
                     }
                 }
             }
@@ -460,17 +455,6 @@ namespace Lab3_task2
             else label1.ForeColor = Color.Black;
         }
 
-        private void button4_Click(object sender, EventArgs e)
-        {
-            if (colorDialog2.ShowDialog() == DialogResult.Cancel)
-                return;
-            border_color = colorDialog2.Color;
-            label2.BackColor = border_color;
-            if (border_color.ToArgb() == Color.White.ToArgb())
-                label2.ForeColor = Color.Black;
-            else label2.ForeColor = Color.White;
-        }
-
         private void button1_Click(object sender, EventArgs e)
         {
             if (pictureBox1.Image != null)
@@ -479,6 +463,7 @@ namespace Lab3_task2
                 Refresh();
                 with_border = null;
                 curr = null;
+                border_finded = false;
 
                 mode = Mode.Border;
                 button2.Text = "Поиск границы";
