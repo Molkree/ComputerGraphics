@@ -26,13 +26,17 @@ namespace Lab3_task2
 
         private void pictureBox1_MouseDown(object sender, MouseEventArgs e)
         {
-            lastPoint = e.Location;
-            isMouseDown = true;
+            if (e.Button == MouseButtons.Left)
+            {
+                lastPoint = e.Location;
+                isMouseDown = true;
+                pictureBox1.Image = curr;
+            }
         }
 
         private void pictureBox1_MouseMove(object sender, MouseEventArgs e)
         {
-            if (isMouseDown == true)
+            if (isMouseDown == true && e.Button == MouseButtons.Left)
             {
                 if (lastPoint != null)
                 {
@@ -56,8 +60,12 @@ namespace Lab3_task2
 
         private void pictureBox1_MouseUp(object sender, MouseEventArgs e)
         {
-            isMouseDown = false;
-            lastPoint = Point.Empty;
+            if (e.Button == MouseButtons.Left)
+            {
+                isMouseDown = false;
+                lastPoint = Point.Empty;
+                curr = pictureBox1.Image;
+            }
         }
 
         Graphics g;
@@ -348,7 +356,7 @@ namespace Lab3_task2
                 //включен режим поиска границы
                 if (mode == Mode.Border)
                 {
-                    curr = pictureBox1.Image;
+                    pictureBox1.Image = curr;
                     g = Graphics.FromImage(curr);
                     points.Clear();
 
