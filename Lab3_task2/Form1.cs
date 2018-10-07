@@ -416,6 +416,11 @@ namespace Lab3_task2
                 mode = Mode.Border;
                 button2.Text = "Поиск границы";
 
+                pictureBox1.MouseDown -= pictureBox1_MouseDown;
+                pictureBox1.MouseMove -= pictureBox1_MouseMove;
+                pictureBox1.MouseUp -= pictureBox1_MouseUp;
+                pictureBox1.MouseClick += pictureBox1_MouseClick;
+
                 curr = pictureBox1.Image;
                 g = Graphics.FromImage(curr);
                 with_border = null;
@@ -431,6 +436,11 @@ namespace Lab3_task2
             {
                 mode = Mode.Draw;
                 button2.Text = "Рисование";
+
+                pictureBox1.MouseDown += pictureBox1_MouseDown;
+                pictureBox1.MouseMove += pictureBox1_MouseMove;
+                pictureBox1.MouseUp += pictureBox1_MouseUp;
+                pictureBox1.MouseClick -= pictureBox1_MouseClick;
             }
         }
 
