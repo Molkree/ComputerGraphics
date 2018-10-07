@@ -44,13 +44,19 @@ namespace Lab3_task2
                     {
                         Bitmap bmp = new Bitmap(pictureBox1.ClientSize.Width, pictureBox1.ClientSize.Height);
                         pictureBox1.Image = bmp;
+                        using (Graphics g = Graphics.FromImage(pictureBox1.Image))
+                            g.Clear(Color.White);
                     }
 
                     using (Graphics g = Graphics.FromImage(pictureBox1.Image))
                     {
-                        using (Pen pen = new Pen(border_color, 1.2f))
-                            g.DrawLine(pen, lastPoint, e.Location);
                         g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+                        using (Pen pen = new Pen(border_color, 2f))
+                        {
+                            g.DrawLine(pen, lastPoint, e.Location);
+                            //g.DrawRectangle(pen, e.Location.X, e.Location.Y, 1, 1);
+                            //g.DrawEllipse(pen, e.Location.X, e.Location.Y, 1, 1);
+                        }         
                     }
                     pictureBox1.Refresh();
                     lastPoint = e.Location;
@@ -78,6 +84,13 @@ namespace Lab3_task2
         Image curr = null;
         Color border_color = Color.Black;
 
+
+        private bool is_eq(Color first, Color Second)
+        {
+            int d = 150;
+            return Math.Abs(first.R - Second.R) <= d &&  Math.Abs(first.G - Second.G) <= d &&  Math.Abs(first.B - Second.B) <= d;
+        }
+
         Point find_start_point(Point click)
         {
             Bitmap bmp = curr as Bitmap;
@@ -89,7 +102,8 @@ namespace Lab3_task2
 
             for (int x = act_x; x < bmp.Width; ++x)
             {
-                if (bmp.GetPixel(x, act_y).ToArgb() == border_color.ToArgb())
+               // if (bmp.GetPixel(x, act_y).ToArgb() == border_color.ToArgb())
+               if (is_eq(bmp.GetPixel(x, act_y), border_color))
                     return new Point(x, act_y);
             }
             return new Point(-1, -1);
@@ -152,7 +166,8 @@ namespace Lab3_task2
                     {
                         p = new_point(dir, pred_p);
 
-                        if (bmp.GetPixel(p.X, p.Y).ToArgb() == border_color.ToArgb())
+                        if (is_eq(bmp.GetPixel(p.X, p.Y), border_color))
+                            //if (bmp.GetPixel(p.X, p.Y).ToArgb() == border_color.ToArgb())
                         {
                             // horizontal lines
                             if ((dir == 0 && pred_dir == 4) || (dir == 4 && pred_dir == 0))
