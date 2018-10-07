@@ -5,7 +5,7 @@ using System.Windows.Forms;
 
 namespace Lab3_task2
 {
-    enum Mode { Border, Fill, Draw };
+    enum Mode { Border, Fill };
 
     public class YXComparer : Comparer<Point>
     {
@@ -63,7 +63,7 @@ namespace Lab3_task2
         Graphics g;
         Bitmap with_border = null;
         Color bg_color;
-        Mode mode = Mode.Draw;
+        Mode mode = Mode.Border;
         Color fill_color = Color.BlueViolet;
         List<Point> points = new List<Point>(); //точки после поиска границы,не отсортированы, чтобы ее нарисовать
         bool border_finded = false;
@@ -343,105 +343,86 @@ namespace Lab3_task2
 
         private void pictureBox1_MouseClick(object sender, MouseEventArgs e)
         {
-            if (mode == Mode.Draw)
-                return;
-            //включен режим поиска границы
-            if (mode == Mode.Border)
+            if (e.Button == MouseButtons.Right)
             {
-                pictureBox1.Image = curr;
-                with_border = null;
-                border_finded = find_border(e.Location);
-                with_border = curr.Clone() as Bitmap;
+                //включен режим поиска границы
+                if (mode == Mode.Border)
+                {
+                    curr = pictureBox1.Image;
+                    g = Graphics.FromImage(curr);
+                    points.Clear();
 
-                if (border_finded)
-                {
-                    //draw
-                    Point pt = points[0];
-                    using (Graphics gg = Graphics.FromImage(with_border))
+                    with_border = null;
+                    border_finded = find_border(e.Location);
+                    with_border = curr.Clone() as Bitmap;
+
+                    if (border_finded)
                     {
-                        foreach (Point npt in points)
+                        //draw
+                        Point pt = points[0];
+                        using (Graphics gg = Graphics.FromImage(with_border))
                         {
-                            gg.DrawLine(Pens.Red, pt, npt);
-                            pt = npt;
+                            foreach (Point npt in points)
+                            {
+                                gg.DrawLine(Pens.Red, pt, npt);
+                                pt = npt;
+                            }
+                            gg.DrawLine(Pens.Red, pt, points[0]);
                         }
-                        gg.DrawLine(Pens.Red, pt, points[0]);
-                    }
-                    pictureBox1.Image = with_border;
-                    with_border.Save("../../withBorder.png", System.Drawing.Imaging.ImageFormat.Png);
-                }
-                else
-                {
-                    MessageBoxButtons buttons = MessageBoxButtons.OK;
-                    DialogResult result;
-                    result = MessageBox.Show("Выберите мышкой область внутри границы", "Не выбрана область", buttons);
-                }
-            }
-            else
-            {
-                //режим заливки
-                if (border_finded)
-                {
-                    //там красная граница, она мне не нравится, ее надо убрать
-                    //костыль
-                    pictureBox1.Image = curr;
-                    List<Point> nborder = calc_fill_border();
-                    if (nborder.Count % 2 == 1)
-                    {
-                        //TODO разобраться с ним наконец
-                        MessageBoxButtons buttons = MessageBoxButtons.OK;
-                        DialogResult result;
-                        result = MessageBox.Show("Пора пилить костыль!", "Error", buttons);
+                        pictureBox1.Image = with_border;
+                        with_border.Save("../../withBorder.png", System.Drawing.Imaging.ImageFormat.Png);
                     }
                     else
                     {
-                        time_to_fill(nborder.ToArray());
-                        Image pic = pictureBox1.Image;
-                        pic.Save("../../flooded.png", System.Drawing.Imaging.ImageFormat.Png);
+                        MessageBoxButtons buttons = MessageBoxButtons.OK;
+                        DialogResult result;
+                        result = MessageBox.Show("Выберите мышкой область внутри границы", "Не выбрана область", buttons);
                     }
                 }
                 else
                 {
-                    MessageBoxButtons buttons = MessageBoxButtons.OK;
-                    DialogResult result;
-                    result = MessageBox.Show("Не выбрана область. Вернитесь в режим поиска границы", "Error", buttons);
+                    //режим заливки
+                    if (border_finded)
+                    {
+                        //там красная граница, она мне не нравится, ее надо убрать
+                        //костыль
+                        pictureBox1.Image = curr;
+                        List<Point> nborder = calc_fill_border();
+                        if (nborder.Count % 2 == 1)
+                        {
+                            //TODO разобраться с ним наконец
+                            MessageBoxButtons buttons = MessageBoxButtons.OK;
+                            DialogResult result;
+                            result = MessageBox.Show("Пора пилить костыль!", "Error", buttons);
+                        }
+                        else
+                        {
+                            time_to_fill(nborder.ToArray());
+                            Image pic = pictureBox1.Image;
+                            pic.Save("../../flooded.png", System.Drawing.Imaging.ImageFormat.Png);
+                        }
+                    }
+                    else
+                    {
+                        MessageBoxButtons buttons = MessageBoxButtons.OK;
+                        DialogResult result;
+                        result = MessageBox.Show("Не выбрана область. Вернитесь в режим поиска границы", "Error", buttons);
+                    }
                 }
             }
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
-            if (mode == Mode.Draw)
-            {
-                if (pictureBox1.Image == null)
-                    return;
-                mode = Mode.Border;
-                button2.Text = "Поиск границы";
-
-                pictureBox1.MouseDown -= pictureBox1_MouseDown;
-                pictureBox1.MouseMove -= pictureBox1_MouseMove;
-                pictureBox1.MouseUp -= pictureBox1_MouseUp;
-                pictureBox1.MouseClick += pictureBox1_MouseClick;
-
-                curr = pictureBox1.Image;
-                g = Graphics.FromImage(curr);
-                with_border = null;
-                points.Clear();
-                border_finded = false;
-            }
-            else if (mode == Mode.Border)
+            if (mode == Mode.Border)
             {
                 mode = Mode.Fill;
                 button2.Text = "Заливка";
             }
             else
             {
-                mode = Mode.Draw;
-                button2.Text = "Рисование";
-
-                pictureBox1.MouseDown += pictureBox1_MouseDown;
-                pictureBox1.MouseMove += pictureBox1_MouseMove;
-                pictureBox1.MouseUp += pictureBox1_MouseUp;
-                pictureBox1.MouseClick -= pictureBox1_MouseClick;
+                mode = Mode.Border;
+                button2.Text = "Поиск границы";
             }
         }
 
@@ -476,15 +457,8 @@ namespace Lab3_task2
                 with_border = null;
                 curr = null;
 
-                if (mode != Mode.Draw)
-                {
-                    pictureBox1.MouseDown += pictureBox1_MouseDown;
-                    pictureBox1.MouseMove += pictureBox1_MouseMove;
-                    pictureBox1.MouseUp += pictureBox1_MouseUp;
-                    pictureBox1.MouseClick -= pictureBox1_MouseClick;
-                }
-                mode = Mode.Draw;
-                button2.Text = "Рисование";
+                mode = Mode.Border;
+                button2.Text = "Поиск границы";
             }
         }
     }
