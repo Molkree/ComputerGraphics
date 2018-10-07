@@ -236,6 +236,9 @@ namespace Lab3_task1
             bmp.UnlockBits(bmpData);
             pictureBox1.Image = bmp;
             pictureBox1.Refresh();
+
+            Bitmap image = pictureBox1.Image as Bitmap;
+            image.Save("../../flooded_lines.png", ImageFormat.Png);
         }
     }
 }

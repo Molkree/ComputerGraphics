@@ -6,7 +6,7 @@ using System.Windows.Forms;
 
 namespace Lab3_task2
 {
-    enum Mode { Border, Fill };
+    enum Mode { Border, Fill, Draw };
 
     public class YXComparer : Comparer<Point>
     {
@@ -22,10 +22,49 @@ namespace Lab3_task2
 
     public partial class Form1 : Form
     {
+        Point lastPoint = Point.Empty;
+        bool isMouseDown = new bool();
+
+        private void pictureBox1_MouseDown(object sender, MouseEventArgs e)
+        {
+            lastPoint = e.Location;
+            isMouseDown = true;
+        }
+
+        private void pictureBox1_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (isMouseDown == true)
+            {
+                if (lastPoint != null)
+                {
+                    if (pictureBox1.Image == null) //if no available bitmap exists on the picturebox to draw on
+                    {
+                        Bitmap bmp = new Bitmap(pictureBox1.ClientSize.Width, pictureBox1.ClientSize.Height);
+                        pictureBox1.Image = bmp;
+                    }
+
+                    using (Graphics g = Graphics.FromImage(pictureBox1.Image))
+                    {
+                        using (Pen pen = new Pen(border_color, 1.5f))
+                            g.DrawLine(pen, lastPoint, e.Location);
+                        g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+                    }
+                    pictureBox1.Refresh();
+                    lastPoint = e.Location;
+                }
+            }
+        }
+
+        private void pictureBox1_MouseUp(object sender, MouseEventArgs e)
+        {
+            isMouseDown = false;
+            lastPoint = Point.Empty;
+        }
+
         Graphics g;
         Bitmap with_border = null;
         Color bg_color;
-        Mode mode = Mode.Border;
+        Mode mode = Mode.Draw;
         Color fill_color = Color.BlueViolet;
         List<Point> points = new List<Point>(); //точки после поиска границы,не отсортированы, чтобы ее нарисовать
         bool border_finded = false;
@@ -155,7 +194,6 @@ namespace Lab3_task2
             }
         }
 
-
         public Form1()
         {
             InitializeComponent();
@@ -164,24 +202,6 @@ namespace Lab3_task2
             colorDialog1.FullOpen = true;
             colorDialog1.Color = fill_color;
             colorDialog2.Color = border_color;
-        }
-
-        private void openFileDialog1_FileOk(object sender, CancelEventArgs e)
-        {
-            curr = Image.FromFile(openFileDialog1.FileName);
-            pictureBox1.Image = curr;
-            g = Graphics.FromImage(curr);
-            pictureBox1.Refresh();
-        }
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-            openFileDialog1.ShowDialog();
-            with_border = null;
-            points.Clear();
-            border_finded = false;
-            mode = Mode.Border;
-            button2.Text = "Заливка";
         }
 
         private List<Point> calc_fill_border()
@@ -312,7 +332,7 @@ namespace Lab3_task2
                 Point first = border[i];
                 Point second = border[i + 1];
 
-                if (first.X == second.X/* || first.X == second.X - 1*/)
+                if (first.X == second.X || first.X == second.X - 1)
                     continue;
                 first.X = first.X + 1;
                 second.X = second.X - 1;
@@ -324,7 +344,8 @@ namespace Lab3_task2
 
         private void pictureBox1_MouseClick(object sender, MouseEventArgs e)
         {
-            if (curr == null) return;
+            if (mode == Mode.Draw)
+                return;
             //включен режим поиска границы
             if (mode == Mode.Border)
             {
@@ -390,15 +411,26 @@ namespace Lab3_task2
 
         private void button2_Click(object sender, EventArgs e)
         {
-            if (mode == Mode.Border)
+            if (mode == Mode.Draw)
+            {
+                mode = Mode.Border;
+                button2.Text = "Поиск границы";
+
+                curr = pictureBox1.Image;
+                g = Graphics.FromImage(curr);
+                with_border = null;
+                points.Clear();
+                border_finded = false;
+            }
+            else if (mode == Mode.Border)
             {
                 mode = Mode.Fill;
-                button2.Text = "Поиск границы";
+                button2.Text = "Заливка";
             }
             else
             {
-                mode = Mode.Border;
-                button2.Text = "Заливка";
+                mode = Mode.Draw;
+                button2.Text = "Рисование";
             }
         }
 
