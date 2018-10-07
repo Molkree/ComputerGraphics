@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -476,6 +475,14 @@ namespace Lab3_task2
                 Refresh();
                 with_border = null;
                 curr = null;
+
+                if (mode != Mode.Draw)
+                {
+                    pictureBox1.MouseDown += pictureBox1_MouseDown;
+                    pictureBox1.MouseMove += pictureBox1_MouseMove;
+                    pictureBox1.MouseUp += pictureBox1_MouseUp;
+                    pictureBox1.MouseClick -= pictureBox1_MouseClick;
+                }
                 mode = Mode.Draw;
                 button2.Text = "Рисование";
             }
