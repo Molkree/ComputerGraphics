@@ -108,7 +108,8 @@ namespace Lab4
         {
             //из за смещения начала координат
             if (pr.points.Count == 1)
-                g.FillRectangle(Brushes.Black, pr.points[0].X, pictureBox1.Height - pr.points[0].Y, 2, 2);
+                using (SolidBrush brush = new SolidBrush(pen.Color))
+                    g.FillRectangle(brush, pr.points[0].X, pictureBox1.Height - pr.points[0].Y, 2, 2);
             else
             {
                 PointF tmp1 = new PointF(pr.points[0].X, pictureBox1.Height - pr.points[0].Y);
