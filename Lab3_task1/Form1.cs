@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Drawing;
-using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Windows.Forms;
 
@@ -41,7 +40,6 @@ namespace Lab3_task1
                     {
                         using (Pen black_pen = new Pen(Color.Black, 1))
                             g.DrawLine(black_pen, lastPoint, e.Location);
-                        g.SmoothingMode = SmoothingMode.AntiAlias;
                     }
                     pictureBox1.Refresh();
                     lastPoint = e.Location;
@@ -236,6 +234,9 @@ namespace Lab3_task1
             bmp.UnlockBits(bmpData);
             pictureBox1.Image = bmp;
             pictureBox1.Refresh();
+
+            Bitmap image = pictureBox1.Image as Bitmap;
+            image.Save("../../flooded_lines.png", ImageFormat.Png);
         }
     }
 }
