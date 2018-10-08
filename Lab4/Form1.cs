@@ -29,7 +29,7 @@ namespace Lab4
         float eps = 1E-9f;
 
         public Form1()
-        { 
+        {
             InitializeComponent();
             g = pictureBox1.CreateGraphics();
             pictureBox1.BackColor = Color.White;
@@ -41,6 +41,8 @@ namespace Lab4
             label_check2.Visible = false;
             label_check_answ2.Visible = false;
             to_edge = new List<PointF>();
+            label8.Visible = false;
+            label7.Visible = false;
         }
 
 
@@ -59,7 +61,7 @@ namespace Lab4
             return less(b1, b2) || eq(b1, b2);
         }
 
-       //ничего не знаю, код с емакса
+        //ничего не знаю, код с емакса
         private bool is_crossed(PointF first1, PointF first2, PointF second1, PointF second2)
         {
             float a1 = first1.Y - first2.Y;
@@ -83,24 +85,41 @@ namespace Lab4
 
             bool tofirst = l_eq(Math.Min(first1.X, first2.X), x) && l_eq(x, Math.Max(first1.X, first2.X)) && l_eq(Math.Min(first1.Y, first2.Y), y) && l_eq(y, Math.Max(first1.Y, first2.Y));
             bool tosecond = l_eq(Math.Min(second1.X, second2.X), x) && l_eq(x, Math.Max(second1.X, second2.X)) && l_eq(Math.Min(second1.Y, second2.Y), y) && l_eq(y, Math.Max(second1.Y, second2.Y));
+
+            if (mode == Mode.Edge)
+                if (tofirst && tosecond)
+                {
+                    label8.Visible = true;
+                    label7.Visible = true;
+                    label8.Text = "x: " + ((int)x).ToString();
+                    label7.Text = "y: " + ((int)y).ToString();
+                }
+                else
+                {
+                    label8.Visible = false;
+                    label7.Visible = false;
+                }
+
             return tofirst && tosecond;
         }
 
         // нарисовать примитив по точкам
         private void show_primitive(Pen pen)
         {
-            // TODO
-            // запретить ставить точки так, чтобы линии пересекались*/
-            
             //из за смещения начала координат
-            PointF tmp1 = new PointF(pr.points[0].X, pictureBox1.Height - pr.points[0].Y);
-            for (int i = 1; i < pr.points.Count; ++i)
+            if (pr.points.Count == 1)
+                g.FillRectangle(Brushes.Black, pr.points[0].X, pictureBox1.Height - pr.points[0].Y, 2, 2);
+            else
             {
-                PointF tmp2 = new PointF(pr.points[i].X, pictureBox1.Height - pr.points[i].Y);
-                g.DrawLine(pen, tmp1, tmp2);
-                tmp1 = tmp2;
+                PointF tmp1 = new PointF(pr.points[0].X, pictureBox1.Height - pr.points[0].Y);
+                for (int i = 1; i < pr.points.Count; ++i)
+                {
+                    PointF tmp2 = new PointF(pr.points[i].X, pictureBox1.Height - pr.points[i].Y);
+                    g.DrawLine(pen, tmp1, tmp2);
+                    tmp1 = tmp2;
+                }
+                g.DrawLine(pen, tmp1, new PointF(pr.points[0].X, pictureBox1.Height - pr.points[0].Y));
             }
-            g.DrawLine(pen, tmp1, new PointF(pr.points[0].X, pictureBox1.Height - pr.points[0].Y));
         }
 
         // > 0 => точка слева
@@ -162,11 +181,14 @@ namespace Lab4
                     ++cnt;
             }
 
-            return cnt % 2 == 0? false : true;
+            return cnt % 2 == 0 ? false : true;
         }
 
         private void button_make_Click(object sender, EventArgs e)
         {
+
+            label8.Visible = false;
+            label7.Visible = false;
             if (mode != Mode.Read)
             {
                 button_make.Text = "Готово";
@@ -288,7 +310,8 @@ namespace Lab4
         // очистка поля
         private void button_clear_Click(object sender, EventArgs e)
         {
-            pts.Clear();
+            if (pts != null)
+                pts.Clear();
             g.Clear(Color.White);
             mode = Mode.Read;
             label_check1.Visible = false;
@@ -304,6 +327,8 @@ namespace Lab4
             textBox_scaling_y.Text = "1";
             textBox_x.Text = "0";
             textBox_y.Text = "0";
+            label8.Visible = false;
+            label7.Visible = false;
 
         }
 
@@ -344,7 +369,7 @@ namespace Lab4
             }
 
             show_primitive(new_fig);
-            
+
         }
 
         // контроль вводимых символов
@@ -404,7 +429,7 @@ namespace Lab4
                 textBox_trans_x.Text = "0";
             if (textBox_trans_y.Text == "")
                 textBox_trans_y.Text = "0";
-           
+
 
         }
     }
