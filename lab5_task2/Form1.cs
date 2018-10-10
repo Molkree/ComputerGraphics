@@ -25,10 +25,14 @@ namespace lab5_task2
     public partial class Form1 : Form
     {
         const int DEF_ROUGHNESS = 5;
+        const int MAX_ROUGHNESS = 15;
+        const int DEF_DELTA = 1;
+        const int MAX_DELTA = 100;
         int right, left;
         Graphics g = null;
         Color background = Color.LightSteelBlue;
         int Roughness;
+        int delta;
         SortedSet<Point> m_d_points = null;
         const float eps = 1e-9f;
         public Form1()
@@ -42,6 +46,8 @@ namespace lab5_task2
             g = pictureBox1.CreateGraphics();
             textBox1.Text = DEF_ROUGHNESS.ToString();
             Roughness = DEF_ROUGHNESS;
+            delta = DEF_DELTA;
+            textBox2.Text = DEF_DELTA.ToString();
             m_d_points = new SortedSet<Point>(new XYComparer());
             drawStartPosition();
         }
@@ -83,13 +89,13 @@ namespace lab5_task2
                 var el = q.Dequeue();
                 Point l = el.Item1;
                 Point r = el.Item2;
-                if (Math.Abs(r.X - l.X) < 2)
+                if (Math.Abs(r.X - l.X) <= delta)
                     continue;
                 float length = (float)Math.Sqrt((r.X - l.X) * (r.X - l.X) + (r.Y - l.Y) * (r.Y - l.Y));
                 int mid_x = (r.X + l.X) / 2;
                 float mid_y = (r.Y + l.Y) / 2;
-                float delta = (float)random.NextDouble() * 2 - 1;
-                mid_y += Roughness * 0.1f * length * delta;
+                float rand = (float)random.NextDouble() * 2 - 1;
+                mid_y += Roughness * 0.1f * length * rand;
                 if (mid_y < eps)
                     mid_y = 0;
                 else if (Math.Abs(mid_y - trackBar1.Maximum) < eps)
@@ -137,11 +143,30 @@ namespace lab5_task2
             }
         }
 
+        //delta textbox
+        private void textBox2_TextChanged(object sender, EventArgs e)
+        {
+            if (textBox2.Text == "")
+                delta = DEF_DELTA;
+            else delta = Int32.Parse(textBox2.Text);
+            if (delta > MAX_DELTA)
+            {
+                delta = MAX_DELTA;
+                textBox2.Text = delta.ToString();
+            }
+        }
+
+        //roughness
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
             if (textBox1.Text == "")
                 Roughness = DEF_ROUGHNESS;
             else Roughness = Int32.Parse(textBox1.Text);
+            if (Roughness > MAX_ROUGHNESS)
+            {
+                Roughness = MAX_ROUGHNESS;
+                textBox1.Text = Roughness.ToString();
+            }
         }
     }
 }
