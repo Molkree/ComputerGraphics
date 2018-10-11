@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Threading;
 
 namespace lab5_task2
 {
@@ -26,11 +27,11 @@ namespace lab5_task2
     {
         const int DEF_ROUGHNESS = 5;
         const int MAX_ROUGHNESS = 15;
-        const int DEF_DELTA = 1;
+        const int DEF_DELTA = 5;
         const int MAX_DELTA = 100;
         int right, left;
         Graphics g = null;
-        Color background = Color.LightSteelBlue;
+        Color background = Color.MidnightBlue;
         int Roughness;
         int delta;
         SortedSet<Point> m_d_points = null;
@@ -75,6 +76,7 @@ namespace lab5_task2
             arr.Add(fict_left);
             g.FillPolygon(new SolidBrush(Color.Black), arr.ToArray());
             //g.DrawLines(new Pen(Color.Black), arr.ToArray());
+            Thread.Sleep(100);
         }
 
         private void midpoint_displacement(Point left, Point right)

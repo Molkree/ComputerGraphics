@@ -44,7 +44,7 @@
             // 
             // pictureBox1
             // 
-            this.pictureBox1.BackColor = System.Drawing.Color.LightSteelBlue;
+            this.pictureBox1.BackColor = System.Drawing.Color.MidnightBlue;
             this.pictureBox1.Location = new System.Drawing.Point(253, 28);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(715, 689);
