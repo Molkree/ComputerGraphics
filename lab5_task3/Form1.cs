@@ -14,10 +14,8 @@ namespace lab5_task3
     {
         Graphics g;
         float step = 0.05f;
+        Label p0, p1, p2, p3;
         Point p;
-
-        // for coordinates
-        int dx, dy;
         List<Label> labels = new List<Label>();
 
         public Form1()
@@ -27,13 +25,18 @@ namespace lab5_task3
             label1.Text = "ПКМ по точке,\nчтобы удалить её";
 
             // four initial points
+            make_initial_labels();
+
+            // why doesn't it work here?((
+            bezier();
+        }
+
+        void make_initial_labels()
+        {
             labels.Add(new_label(230, 230));
             labels.Add(new_label(270, 120));
             labels.Add(new_label(360, 100));
             labels.Add(new_label(420, 240));
-
-            // why doesn't it work?((
-            bezier();
         }
 
         // formula from lecture
@@ -177,6 +180,17 @@ namespace lab5_task3
                     bezier();
                 }
             }
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            g.Clear(Color.White);
+
+            foreach (Label l in labels)
+                l.Dispose();
+                
+            labels.Clear();
+            make_initial_labels();
         }
 
         private void point_MouseDown(object sender, MouseEventArgs e)
