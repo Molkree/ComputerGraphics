@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
+using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -15,11 +16,10 @@ namespace Lab5_task1
         Dictionary<char, string> rules;
 
         Graphics g;
-        Bitmap bmp;
         public Form1()
         {
             InitializeComponent();
-            bmp = new Bitmap(pictureBox1.ClientSize.Width, pictureBox1.ClientSize.Height);
+            Bitmap bmp = new Bitmap(pictureBox1.ClientSize.Width, pictureBox1.ClientSize.Height);
             pictureBox1.Image = bmp;
         }
 
@@ -37,17 +37,18 @@ namespace Lab5_task1
             {
                 List<string> lines = new List<string>();
                 string line;
-                System.IO.StreamReader file = new System.IO.StreamReader(openFileDialog1.FileName);
-                while ((line = file.ReadLine()) != null)
+                using (System.IO.StreamReader file = new System.IO.StreamReader(openFileDialog1.FileName))
                 {
-                    lines.Add(line);
+                    while ((line = file.ReadLine()) != null)
+                    {
+                        lines.Add(line);
+                    }
                 }
-                file.Close();
 
                 string[] tokens = lines[0].Split(' ');
                 axiom = tokens[0];
-                angle = double.Parse(tokens[1]);
-                start_angle = double.Parse(tokens[2]);
+                angle = double.Parse(tokens[1], CultureInfo.InvariantCulture);
+                start_angle = double.Parse(tokens[2], CultureInfo.InvariantCulture);
                 rules = new Dictionary<char, string>();
                 for (int i = 1; i < lines.Count(); ++i)
                 {
@@ -59,6 +60,7 @@ namespace Lab5_task1
 
         private void button2_Click(object sender, EventArgs e)
         {
+            var watch = System.Diagnostics.Stopwatch.StartNew();
             if (axiom == null)
                 return;
             string fractal = axiom;
@@ -76,25 +78,29 @@ namespace Lab5_task1
                 fractal = next_level;
             }
 
-            List<Point> points = calculate_points(fractal);
+            List<PointF> points = calculate_points(fractal);
             if (points.Count < 2)
                 return;
             draw_fractal(points);
+            watch.Stop();
+            var elapsedMs = watch.ElapsedMilliseconds;
+            label3.Text = (elapsedMs / 1000.0).ToString(CultureInfo.CurrentCulture);
         }
 
-        private List<Point> calculate_points(string fractal)
+        private List<PointF> calculate_points(string fractal)
         {
-            int len = 10000;
-            List<Point> points = new List<Point> { new Point(pictureBox1.Width / 2, pictureBox1.Height / 2) };
+            int len = 10;
+            List<PointF> points = new List<PointF> { new PointF(pictureBox1.Width / 2, pictureBox1.Height / 2) };
             double direction = -start_angle;
 
-            Stack<Tuple<Point, double>> stack = new Stack<Tuple<Point, double>>();
+            Stack<Tuple<PointF, double>> stack = new Stack<Tuple<PointF, double>>();
             for (int i = 0; i < fractal.Length; ++i)
                 switch (fractal[i])
                 {
                     case 'F':
-                        Point p = points.Last();
-                        p.Offset((int)(len * Math.Cos(direction * Math.PI / 180.0)), (int)(len * Math.Sin(direction * Math.PI / 180.0)));
+                        PointF p = points.Last();
+                        p.X += (float)(len * Math.Cos(direction * Math.PI / 180.0));
+                        p.Y += (float)(len * Math.Sin(direction * Math.PI / 180.0));
                         points.Add(p);
                         points.Add(p);
                         break;
@@ -105,7 +111,7 @@ namespace Lab5_task1
                         direction = (direction - angle) % 360;
                         break;
                     case '[':
-                        stack.Push(new Tuple<Point, double>(points.Last(), direction));
+                        stack.Push(new Tuple<PointF, double>(points.Last(), direction));
                         break;
                     case ']':
                         direction = stack.Peek().Item2;
@@ -119,12 +125,12 @@ namespace Lab5_task1
             return points;
         }
 
-        private void draw_fractal(List<Point> points)
+        private void draw_fractal(List<PointF> points)
         {
-            int min_x = points.Min(p => p.X);
-            int min_y = points.Min(p => p.Y);
-            int max_x = points.Max(p => p.X);
-            int max_y = points.Max(p => p.Y);
+            float min_x = points.Min(p => p.X);
+            float min_y = points.Min(p => p.Y);
+            float max_x = points.Max(p => p.X);
+            float max_y = points.Max(p => p.Y);
 
             points = points.Select(p =>
             {
