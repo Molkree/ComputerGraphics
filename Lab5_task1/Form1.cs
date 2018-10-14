@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Lab5_task1
@@ -78,8 +75,6 @@ namespace Lab5_task1
                 }
                 fractal = next_level;
             }
-            //if (start_angle != '*')
-            //    fractal = start_angle + fractal;
 
             List<Point> points = calculate_points(fractal);
             if (points.Count < 2)
@@ -101,6 +96,7 @@ namespace Lab5_task1
                         Point p = points.Last();
                         p.Offset((int)(len * Math.Cos(direction * Math.PI / 180.0)), (int)(len * Math.Sin(direction * Math.PI / 180.0)));
                         points.Add(p);
+                        points.Add(p);
                         break;
                     case '+':
                         direction = (direction + angle) % 360;
@@ -113,8 +109,8 @@ namespace Lab5_task1
                         break;
                     case ']':
                         direction = stack.Peek().Item2;
+                        points.Add(points.Last());
                         points.Add(stack.Peek().Item1);
-                        //points.Add(points.Last());
                         stack.Pop();
                         break;
                     default:
@@ -142,7 +138,8 @@ namespace Lab5_task1
             Clear();
             g = Graphics.FromImage(pictureBox1.Image);
             using (Pen pen = new Pen(Color.Black, 1))
-                g.DrawLines(pen, points.ToArray());
+                for (int i = 1; i < points.Count; i += 2)
+                    g.DrawLine(pen, points[i - 1], points[i]);
             pictureBox1.Refresh();
         }
     }
