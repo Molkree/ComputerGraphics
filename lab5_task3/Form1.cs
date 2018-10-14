@@ -1,11 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace lab5_task3
@@ -14,7 +9,6 @@ namespace lab5_task3
     {
         Graphics g;
         float step = 0.05f;
-        Label p0, p1, p2, p3;
         Point p;
         List<Label> labels = new List<Label>();
 
@@ -26,9 +20,6 @@ namespace lab5_task3
 
             // four initial points
             make_initial_labels();
-
-            // why doesn't it work here?((
-            bezier();
         }
 
         void make_initial_labels()
@@ -40,7 +31,7 @@ namespace lab5_task3
         }
 
         // formula from lecture
-        private PointF countB(List<Point> pts, float t)
+        private static PointF countB(List<Point> pts, float t)
         {
             float bx, by;
             float pow3 = (float)Math.Pow((1 - t), 3);
@@ -53,7 +44,7 @@ namespace lab5_task3
         }
 
         // just a middle point between p0 and p1 
-        Point mid_point(Point p0, Point p1)
+        static Point mid_point(Point p0, Point p1)
         {
             return new Point((p0.X + p1.X) / 2, (p0.Y + p1.Y) / 2);
         }
@@ -63,7 +54,7 @@ namespace lab5_task3
             List<PointF> curve = new List<PointF>();
 
             g.Clear(Color.White);
-            Pen pen = Pens.Gray;
+            pictureBox1.Update();
 
             // I need all_points to add some middle points
             List<Point> all_points = new List<Point>();
@@ -77,12 +68,14 @@ namespace lab5_task3
                 all_points.Add(mid_point(labels[count - 2].Location, labels[count - 1].Location));
             }
             all_points.Add(labels[count - 1].Location);
-            
+
             // four points to build a cubic bezier 
-            List<Point> four_points = new List<Point>();
-            four_points.Add(all_points[0]);
-            four_points.Add(all_points[1]);
-            four_points.Add(all_points[2]);
+            List<Point> four_points = new List<Point>
+            {
+                all_points[0],
+                all_points[1],
+                all_points[2]
+            };
 
             for (int i = 3; i < all_points.Count;)
             {
@@ -134,8 +127,10 @@ namespace lab5_task3
 
         Label new_label(int x, int y)
         {
-            Label l = new Label();
-            l.Location = new Point(x, y);
+            Label l = new Label
+            {
+                Location = new Point(x, y)
+            };
             int ind = 0;
             if (labels.Count > 0)
                 ind = labels.Count - 1;
@@ -161,6 +156,11 @@ namespace lab5_task3
             int mid_x = pictureBox1.Width / 2;
             int mid_y = pictureBox1.Height / 2;
             labels.Add(new_label(mid_x, mid_y));
+            bezier();
+        }
+
+        private void Form1_Shown(object sender, EventArgs e)
+        {
             bezier();
         }
 
@@ -191,6 +191,7 @@ namespace lab5_task3
                 
             labels.Clear();
             make_initial_labels();
+            bezier();
         }
 
         private void point_MouseDown(object sender, MouseEventArgs e)
