@@ -1,13 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Threading;
 
 namespace lab5_task2
 {
@@ -42,7 +37,7 @@ namespace lab5_task2
 
             trackBar1.Maximum = pictureBox1.Height - 1;
             trackBar2.Maximum = pictureBox1.Height - 1;
-            trackBar1.Value = trackBar2.Value = (int)(trackBar1.Maximum / 2);
+            trackBar1.Value = trackBar2.Value = trackBar1.Maximum / 2;
             right = left = trackBar1.Value;
             g = pictureBox1.CreateGraphics();
             textBox1.Text = DEF_ROUGHNESS.ToString();
@@ -56,8 +51,8 @@ namespace lab5_task2
         private void drawStartPosition()
         {
             g.Clear(background);
-            Pen p = new Pen(Color.Black);
-            g.DrawLine(p, 0, left, pictureBox1.Width, right);
+            using (Pen p = new Pen(Color.Black))
+                g.DrawLine(p, 0, left, pictureBox1.Width, right);
         }
 
         //reset button
@@ -74,9 +69,9 @@ namespace lab5_task2
             var arr = m_d_points.ToList();
             arr.Add(fict_right);
             arr.Add(fict_left);
-            g.FillPolygon(new SolidBrush(Color.Black), arr.ToArray());
-            //g.DrawLines(new Pen(Color.Black), arr.ToArray());
-            Thread.Sleep(100);
+            using (SolidBrush brush = new SolidBrush(Color.Black))
+                g.FillPolygon(brush, arr.ToArray());
+            //Thread.Sleep(100);
         }
 
         private void midpoint_displacement(Point left, Point right)
@@ -105,7 +100,7 @@ namespace lab5_task2
 
                 m_d_points.Add(new Point(mid_x, (int)mid_y));
                 draw_mountain();
-               // await 
+                // await 
                 Tuple<Point, Point> el1 = new Tuple<Point, Point>(l, new Point(mid_x, (int)mid_y));
                 Tuple<Point, Point> el2 = new Tuple<Point, Point>(new Point(mid_x, (int)mid_y), r);
                 q.Enqueue(el1);
@@ -139,7 +134,7 @@ namespace lab5_task2
 
         private void textBox1_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if (!(Char.IsDigit(e.KeyChar)) && e.KeyChar != Convert.ToChar(8))
+            if (!(char.IsDigit(e.KeyChar)) && e.KeyChar != Convert.ToChar(8))
             {
                 e.Handled = true;
             }
@@ -150,7 +145,7 @@ namespace lab5_task2
         {
             if (textBox2.Text == "")
                 delta = DEF_DELTA;
-            else delta = Int32.Parse(textBox2.Text);
+            else delta = int.Parse(textBox2.Text);
             if (delta > MAX_DELTA)
             {
                 delta = MAX_DELTA;
@@ -163,7 +158,7 @@ namespace lab5_task2
         {
             if (textBox1.Text == "")
                 Roughness = DEF_ROUGHNESS;
-            else Roughness = Int32.Parse(textBox1.Text);
+            else Roughness = int.Parse(textBox1.Text);
             if (Roughness > MAX_ROUGHNESS)
             {
                 Roughness = MAX_ROUGHNESS;
