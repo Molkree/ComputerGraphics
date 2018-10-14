@@ -6,11 +6,8 @@ using System.Windows.Forms;
 namespace Lab3_task1
 {
     public partial class Form1 : Form
-
     {
-
         Point lastPoint = Point.Empty;
-
         bool isMouseDown = new bool();
 
         public Form1()
