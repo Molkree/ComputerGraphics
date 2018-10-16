@@ -342,7 +342,7 @@ namespace Lab4
             if (textBox_scaling_x.Text != "1" || textBox_scaling_y.Text != "1" || textBox_trans_x.Text != "0" || textBox_trans_y.Text != "0")
             {
                 //сначала переносим в начало
-                pr.translate(-1 * pr.left_bot.X, -1 * pr.left_bot.Y);
+                pr.translate(-1 * pr.center.X, -1 * pr.center.Y);
                 //делаем, что нужно
                 if (textBox_scaling_x.Text != "1" || textBox_scaling_y.Text != "1")
                 {
@@ -357,7 +357,7 @@ namespace Lab4
                                  Int32.Parse(textBox_trans_y.Text));
                 }
                 //переносим обратно
-                pr.translate(pr.left_bot.X, pr.left_bot.Y);
+                pr.translate(pr.center.X, pr.center.Y);
             }
 
             //поворачиваем относительно введенной точки rotation_point
@@ -384,7 +384,7 @@ namespace Lab4
 
         private void textBox_KeyPress_double(object sender, KeyPressEventArgs e)
         {
-            if (!(Char.IsDigit(e.KeyChar) || e.KeyChar == '-' || e.KeyChar == ',') && e.KeyChar != Convert.ToChar(8))
+            if (!(Char.IsDigit(e.KeyChar) || e.KeyChar == '.' || e.KeyChar == ',') && e.KeyChar != Convert.ToChar(8))
             {
                 e.Handled = true;
             }
