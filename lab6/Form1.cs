@@ -150,15 +150,15 @@ namespace lab6
                 // сначала переносим в начало
                 figure.translate(-1 * figure.Center.X, -1 * figure.Center.Y, -1 * figure.Center.Z);
                 // делаем, что нужно
-                if (scaling_x.Text != "1" || scaling_y.Text != "1")
+                if (scaling_x.Text != "1" || scaling_y.Text != "1" || scaling_z.Text != "1")
                 {
                     float x = float.Parse(scaling_x.Text, CultureInfo.CurrentCulture);
                     float y = float.Parse(scaling_y.Text, CultureInfo.CurrentCulture);
                     float z = float.Parse(scaling_z.Text, CultureInfo.CurrentCulture);
-                    figure.scale(x, y, x);
+                    figure.scale(x, y, z);
 
                 }
-                if (trans_x.Text != "0" || trans_y.Text != "0")
+                if (trans_x.Text != "0" || trans_y.Text != "0" || trans_z.Text != "0")
                 {
                     figure.translate(int.Parse(trans_x.Text, CultureInfo.CurrentCulture),
                                      int.Parse(trans_y.Text, CultureInfo.CurrentCulture),
