@@ -46,7 +46,22 @@ namespace lab6
         // get point for isometric projection
         public PointF make_isometric()
         {
-            return new PointF(X, Y);
+            double r_phi = Math.Asin(Math.Tan((Math.PI * 30) / 180));
+            double r_psi = (Math.PI * 45) / 180;
+            float cos_phi = (float)Math.Cos(r_phi);
+            float sin_phi = (float)Math.Sin(r_phi);
+            float cos_psi = (float)Math.Cos(r_psi);
+            float sin_psi = (float)Math.Sin(r_psi);
+
+            List<float> M = new List<float> { cos_psi,  sin_phi * sin_psi,   0,  0,
+                                                 0,          cos_phi,        0,  0,
+                                              sin_psi,  -sin_phi * cos_psi,  0,  0,
+                                                 0,              0,          0,  1 };
+
+            List<float> xyz = new List<float> { X, Y, Z, 1 };
+            List<float> c = mul_matrix(xyz, 1, 4, M, 4, 4);
+
+            return new PointF(c[0], c[1]);
         }
 
         // get point for orthographic projection
