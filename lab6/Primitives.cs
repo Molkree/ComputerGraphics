@@ -49,6 +49,7 @@ namespace lab6
                 z = 1; // ??? what if z = 0? We can't divide by zero
 
             return new PointF(X / z, Y / z);
+
         }
 
         // get point for parallel projection
@@ -332,7 +333,8 @@ namespace lab6
         // List<PointF> vertex; // ??? 
         public Polyhedron(List<Face> fs)
         {
-            faces = new List<Face>(fs);
+            faces = new List<Face>();
+            faces.AddRange(fs);
         }
 
         // get points for central (perspective) projection

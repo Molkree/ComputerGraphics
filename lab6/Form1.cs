@@ -25,11 +25,12 @@ namespace lab6
             int center_y = pictureBox1.ClientSize.Height / 2;
 
             int size = 10;
+            int z = 0;
             List<Point3d> pts = new List<Point3d>();
-            pts.Add(new Point3d(center_x, center_y, 1));
-            pts.Add(new Point3d(center_x + size, center_y, 1));
-            pts.Add(new Point3d(center_x + size, center_y + size, 1));
-            pts.Add(new Point3d(center_x, center_y + size, 1));
+            pts.Add(new Point3d(center_x, center_y, z));
+            pts.Add(new Point3d(center_x + size, center_y, z));
+            pts.Add(new Point3d(center_x + size, center_y + size, z));
+            pts.Add(new Point3d(center_x, center_y + size, z));
 
             Face f = new Face(pts);
 
@@ -46,15 +47,16 @@ namespace lab6
             // front face
             faces.Add(f);
 
-            List<Point3d> points = f.points;
-            float cube_size = Math.Abs(points[0].X - points[1].X);
+            List<Point3d> l1 = new List<Point3d>();
+                
+            float cube_size = Math.Abs(f.points[0].X - f.points[1].X);
 
             // back face
-            for (int i = 0; i < points.Count; ++i)
+            for (int i = 0; i < f.points.Count; ++i)
             {
-                points[i].Z += cube_size;
+                l1.Add(new Point3d(f.points[i].X, f.points[i].Y, f.points[i].Z + cube_size));
             } 
-            Face f1 = new Face(points);
+            Face f1 = new Face(l1);
             faces.Add(f1);
 
             // up face
