@@ -88,6 +88,28 @@ namespace lab6
             Face f3 = new Face(l3);
             faces.Add(f3);
 
+            // left face
+            List<Point3d> l4 = new List<Point3d>
+            {
+                f.Points[0],
+                f.Points[3],
+                f1.Points[3],
+                f1.Points[0]
+            };
+            Face f4 = new Face(l4);
+            faces.Add(f4);
+
+            // right face
+            List<Point3d> l5 = new List<Point3d>
+            {
+                f.Points[1],
+                f.Points[2],
+                f1.Points[2],
+                f1.Points[1]
+            };
+            Face f5 = new Face(l5);
+            faces.Add(f5);
+
             Polyhedron cube = new Polyhedron(faces)
             {
                 Cube_size = cube_size

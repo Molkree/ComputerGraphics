@@ -374,9 +374,9 @@ namespace lab6
 
             foreach (Face f in Faces)
             {
-                Center.X = f.Center.X;
-                Center.Y = f.Center.Y;
-                Center.Z = f.Center.Z;
+                Center.X += f.Center.X;
+                Center.Y += f.Center.Y;
+                Center.Z += f.Center.Z;
             }
             Center.X /= Faces.Count;
             Center.Y /= Faces.Count;
