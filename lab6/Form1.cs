@@ -50,7 +50,7 @@ namespace lab6
         {
             List<Face> faces = new List<Face>
             {
-                // front face
+                // back face
                 f
             };
 
@@ -58,10 +58,10 @@ namespace lab6
                 
             float cube_size = Math.Abs(f.Points[0].X - f.Points[1].X);
 
-            // back face
+            // front face
             foreach (var point in f.Points)
             {
-                l1.Add(new Point3d(point.X, point.Y, point.Z - cube_size));
+                l1.Add(new Point3d(point.X, point.Y, point.Z + cube_size));
             }
             Face f1 = new Face(l1);
             faces.Add(f1);
