@@ -50,7 +50,7 @@ namespace lab6
         {
             List<float> P = new List<float> { 1, 0, 0, 0,
                                               0, 1, 0, 0,
-                                              0, 0, 0, 1/k,
+                                              0, 0, 0, -1/k,
                                               0, 0, 0, 1 };
 
             List<float> xyz = new List<float> { X, Y, Z, 1 };
