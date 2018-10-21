@@ -277,9 +277,20 @@ namespace lab6
     public class Face
     {
         public List<Point3d> points;
+        public Point3d center = new Point3d(0, 0, 0);
+
         public Face(List<Point3d> pts)
         {
             points = new List<Point3d>(pts);
+            foreach (Point3d p in points)
+            {
+                center.X += p.X;
+                center.Y += p.Y;
+                center.Z += p.Z;
+            }
+            center.X /= points.Count;
+            center.Y /= points.Count;
+            center.Z /= points.Count;
         }
 
         /* ------ Projections ------ */
@@ -377,11 +388,23 @@ namespace lab6
     public class Polyhedron
     {
         public List<Face> faces;
+        public Point3d center = new Point3d(0, 0, 0);
+        public float cube_size;
 
         public Polyhedron(List<Face> fs)
         {
-            faces = new List<Face>();
-            faces.AddRange(fs);
+            faces = new List<Face>(fs);
+
+            foreach (Face f in faces)
+            {
+                center.X = f.center.X;
+                center.Y = f.center.Y;
+                center.Z = f.center.Z;
+            }
+            center.X /= faces.Count;
+            center.Y /= faces.Count;
+            center.Z /= faces.Count;
+
         }
 
         public void show(Graphics g, Projection pr = 0, Pen pen = null)
