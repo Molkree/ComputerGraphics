@@ -186,33 +186,19 @@ namespace lab6
             Z = c[2];
         }
 
-        //public void scale(float kx, float ky, float kz)
-        //{
-        //    List<float> D = new List<float> { kx, 0,  0,  0,
-        //                                      0,  ky, 0,  0,
-        //                                      0,  0,  kz, 0,
-        //                                      0,  0,  0,  1 };
-        //    List<float> xyz = new List<float> { X, Y, Z, 1 };
-        //    List<float> c = mul_matrix(xyz, 1, 4, D, 4, 4);
-
-        //    X = c[0];
-        //    Y = c[1];
-        //    Z = c[2];
-        //}
         public void scale(float kx, float ky, float kz)
         {
-            List<float> D = new List<float> { kx, 0, 0, 0,
-                                               0, ky, 0, 0,
-                                               0, 0, kz, 0,
-                                               0, 0, 0, 1 };
+            List<float> D = new List<float> { kx, 0,  0,  0,
+                                              0,  ky, 0,  0,
+                                              0,  0,  kz, 0,
+                                              0,  0,  0,  1 };
             List<float> xyz = new List<float> { X, Y, Z, 1 };
             List<float> c = mul_matrix(xyz, 1, 4, D, 4, 4);
-            // or return new Point3d(c[0], c[1], c[2]);
+
             X = c[0];
             Y = c[1];
             Z = c[2];
         }
-
     }
 
     // прямая (ребро) - он нужен вообще?
