@@ -42,13 +42,17 @@ namespace lab6
         }
 
         // get point for central (perspective) projection
-        public PointF make_perspective()
+        public PointF make_perspective(float k = 1000)
         {
-            float z = Z;
-            if (z == 0)
-                z = 1; // ??? what if z = 0? We can't divide by zero
+            List<float> M = new List<float> { 1, 0, 0, 0,
+                                              0, 1, 0, 0,
+                                              0, 0, 0, 1/k,
+                                              0, 0, 0, 1 };
 
-            return new PointF(X / z, Y / z);
+            List<float> xyz = new List<float> { X, Y, Z, 1 };
+            List<float> c = mul_matrix(xyz, 1, 4, M, 4, 4);
+
+            return new PointF(c[0] / c[3], c[1] / c[3]);
 
         }
 
@@ -122,8 +126,6 @@ namespace lab6
         public void translate(float x, float y, float z)
         {
             List<float> T = new List<float> { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, x, y, z, 1 };
-            List<PointF> res = new List<PointF>();
-
             List<float> xyz = new List<float> { X, Y, Z, 1 };
             List<float> c = mul_matrix(xyz, 1, 4, T, 4, 4);
 

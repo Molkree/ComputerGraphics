@@ -24,7 +24,7 @@ namespace lab6
             int center_x = pictureBox1.ClientSize.Width / 2;
             int center_y = pictureBox1.ClientSize.Height / 2;
 
-            int size = 10;
+            int size = 150;
             int z = 0;
             List<Point3d> pts = new List<Point3d>();
             pts.Add(new Point3d(center_x, center_y, z));
