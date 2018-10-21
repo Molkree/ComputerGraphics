@@ -13,11 +13,15 @@ namespace lab6
     public partial class Form1 : Form
     {
         Graphics g;
+        Projection pr = 0;
         public Form1()
         {
             InitializeComponent();
             g = pictureBox1.CreateGraphics();
+            comboBox1.SelectedIndex = 0;
         }
+
+
 
         private void button1_Click(object sender, EventArgs e)
         {
@@ -35,9 +39,8 @@ namespace lab6
             Face f = new Face(pts);
 
             Polyhedron cube = make_cube(f);
-            cube.show(g);
-
-            //            Polyhedron cube 
+            cube.show(g, pr);
+            
         }
 
 
@@ -80,6 +83,10 @@ namespace lab6
             return new Polyhedron(faces);
         }
 
-
+        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            int i = comboBox1.SelectedIndex;
+            pr = (Projection)i;
+        }
     }
 }

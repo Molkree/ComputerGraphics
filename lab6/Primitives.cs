@@ -8,8 +8,9 @@ using System.Threading.Tasks;
 namespace lab6
 {
     public enum axis { AXIS_X, AXIS_Y, AXIS_Z };
+    public enum Projection { PERSPECTIVE = 0, ISOMETRIC, ORTHOGR_X, ORTHOGR_Y, ORTHOGR_Z };
 
-    interface Figure
+ /*   interface Figure
     {
         /// <summary>
         /// Draw figure
@@ -17,14 +18,14 @@ namespace lab6
         /// <param name="g">Where to draw</param>
         /// <param name="pen"></param>
         void show(Graphics g, Pen pen = null);
-/*        Figure translate(float x, float y, float z);
+        Figure translate(float x, float y, float z);
         Figure rotate(double angle, axis a);
         Figure scale(float kx, float ky, float kz);
-        */
+        
     }
+    */
 
-
-    public class Point3d: Figure
+    public class Point3d
     {
         public float X, Y, Z;
         public Point3d(float x, float y, float z)
@@ -41,65 +42,94 @@ namespace lab6
             Z = p.Z;
         }
 
+
+        /* ------ Projections ------ */
+
         // get point for central (perspective) projection
         public PointF make_perspective(float k = 1000)
         {
-            List<float> M = new List<float> { 1, 0, 0, 0,
+            List<float> P = new List<float> { 1, 0, 0, 0,
                                               0, 1, 0, 0,
                                               0, 0, 0, 1/k,
                                               0, 0, 0, 1 };
 
             List<float> xyz = new List<float> { X, Y, Z, 1 };
-            List<float> c = mul_matrix(xyz, 1, 4, M, 4, 4);
+            List<float> c = mul_matrix(xyz, 1, 4, P, 4, 4);
 
             return new PointF(c[0] / c[3], c[1] / c[3]);
-
         }
 
-        // get point for parallel projection
-        public PointF make_parallel()
+        // get point for isometric projection
+        public PointF make_isometric()
         {
             return new PointF(X, Y);
         }
 
         // get point for orthographic projection
-        // 0 - for x, 1 - for y, 2 - for z
-  /*      public PointF make_orthographiс(axis a)
+        public PointF make_orthographic(axis a)
         {
-            List<float> P = new List<float>(16);
-            for (int i = 0; i < P.Count; ++i)
+            List<float> P = new List<float>();
+            for (int i = 0; i < 16; ++i)
             {
                 if (i % 5 == 0) // main diag
-                    P[i] = 1;
+                    P.Add(1);
                 else
-                    P[i] = 0;
+                    P.Add(0);
             }
 
             // x
-            if (axis == 0)
+            if (a == axis.AXIS_X)
                 P[0] = 0;
             // y
-            else if (axis == 1)
+            else if (a == axis.AXIS_Y)
                 P[5] = 0;
             // z
             else
                 P[10] = 0;
 
+            List<float> xyz = new List<float> { X, Y, Z, 1 };
+            List<float> c = mul_matrix(xyz, 1, 4, P, 4, 4);
 
-        }*/
+            // x
+            if (a == axis.AXIS_X)
+                return new PointF(c[1], c[2]); // (y, z)
+            // y
+            else if (a == axis.AXIS_Y)
+                return new PointF(c[0], c[2]); // (x, z)
+            // z
+            else
+                return new PointF(c[0], c[1]); // (x, y)
+            
+        }
 
-
-        public void show(Graphics g, Pen pen = null)
+        public void show(Graphics g, Projection pr = 0, Pen pen = null)
         {
             if (pen == null)
                 pen = Pens.Black;
-            //  PointF p = make_perspective();
-            PointF p = make_parallel();
 
+            PointF p;
+            switch (pr)
+            {
+                case Projection.ISOMETRIC:
+                    p = make_isometric();
+                    break;
+                case Projection.ORTHOGR_X:
+                    p = make_orthographic(axis.AXIS_X);
+                    break;
+                case Projection.ORTHOGR_Y:
+                    p = make_orthographic(axis.AXIS_Y);
+                    break;
+                case Projection.ORTHOGR_Z:
+                    p = make_orthographic(axis.AXIS_Z);
+                    break;
+                default:
+                    p = make_perspective();
+                    break;
+            }
             g.DrawRectangle(pen, p.X, p.Y, 2, 2);
         }
 
-        // Affine transformation
+        /* ------ Affine transformation ------ */
 
         private List<float> mul_matrix(List<float> matr1, int m1, int n1, List<float> matr2, int m2, int n2)
         {
@@ -190,8 +220,8 @@ namespace lab6
 
     }
 
-    // прямая (ребро)
-    public class Edge: Figure
+    // прямая (ребро) - он нужен вообще?
+    public class Edge
     {
         public Point3d p1, p2;
         public Edge(Point3d pt1, Point3d pt2) 
@@ -215,8 +245,8 @@ namespace lab6
         public List<PointF> make_parallel()
         {
             List<PointF> res = new List<PointF>();
-            res.Add(p1.make_parallel());
-            res.Add(p2.make_parallel());
+       //     res.Add(p1.make_parallel());
+        //    res.Add(p2.make_parallel());
 
             return res;
         }
@@ -244,13 +274,15 @@ namespace lab6
     }
 
     // многоугольник (грань)
-    public class Face: Figure
+    public class Face
     {
         public List<Point3d> points;
         public Face(List<Point3d> pts)
         {
             points = new List<Point3d>(pts);
         }
+
+        /* ------ Projections ------ */
 
         // get points for central (perspective) projection
         public List<PointF> make_perspective()
@@ -259,51 +291,64 @@ namespace lab6
 
             foreach (Point3d p in points)
                 res.Add(p.make_perspective());
-           
-
+          
             return res;
         }
 
-        // get point for parallel projection
-        public List<PointF> make_parallel()
+        // get point for isometric projection
+        public List<PointF> make_isometric()
         {
             List<PointF> res = new List<PointF>();
 
             foreach (Point3d p in points)
-                res.Add(p.make_parallel());
+                res.Add(p.make_isometric());
+
+            return res;
+
+        }
+
+        // get point for orthographic projection
+        public List<PointF> make_orthographic(axis a)
+        {
+            List<PointF> res = new List<PointF>();
+
+            foreach (Point3d p in points)
+                res.Add(p.make_orthographic(a));
 
             return res;
         }
 
-        public void show_perspective(Graphics g, Pen pen)
-        {
-            var pts = make_perspective();
-            g.DrawLines(pen, pts.ToArray());
-            g.DrawLine(pen, pts[0], pts[pts.Count - 1]);
-
-        }
-
-        public void show_parallel(Graphics g, Pen pen)
-        {
-            var pts = make_parallel();
-            g.DrawLines(pen, pts.ToArray());
-            g.DrawLine(pen, pts[0], pts[pts.Count - 1]);
-
-        }
-
-        public void show(Graphics g, Pen pen = null)
+        public void show(Graphics g, Projection pr = 0, Pen pen = null)
         {
             if (pen == null)
                 pen = Pens.Black;
-         //   show_parallel(g, pen);
-            show_perspective(g, pen);
 
+            List<PointF> pts;
 
-     //       g.DrawLines(pen, points.ToArray());
-      //      g.DrawLine(pen, points[0], points[points.Count - 1]);
+            switch (pr)
+            {
+                case Projection.ISOMETRIC:
+                    pts = make_isometric();
+                    break;
+                case Projection.ORTHOGR_X:
+                    pts = make_orthographic(axis.AXIS_X);
+                    break;
+                case Projection.ORTHOGR_Y:
+                    pts = make_orthographic(axis.AXIS_Y);
+                    break;
+                case Projection.ORTHOGR_Z:
+                    pts = make_orthographic(axis.AXIS_Z);
+                    break;
+                default:
+                    pts = make_perspective();
+                    break;
+            }
 
+            g.DrawLines(pen, pts.ToArray());
+            g.DrawLine(pen, pts[0], pts[pts.Count - 1]);
         }
 
+        /* ------ Affine transformation ------ */
 
         public void translate(float x, float y, float z)
         {
@@ -329,37 +374,24 @@ namespace lab6
     }
 
     // многогранник
-    public class Polyhedron: Figure
+    public class Polyhedron
     {
-        public List<Face> faces; // ???
-        // List<PointF> vertex; // ??? 
+        public List<Face> faces;
+
         public Polyhedron(List<Face> fs)
         {
             faces = new List<Face>();
             faces.AddRange(fs);
         }
 
-        // get points for central (perspective) projection
-/*       private List<List<PointF>> make_perspective()
-        {
-            List<List<PointF>> res = new List<List<PointF>>();
-
-            foreach (Face f in faces)
-            {
-                var l = f.make_perspective();
-                res.Add(l);
-            }
-
-            return res;
-        }
-        */
-
-        public void show(Graphics g, Pen pen = null)
+        public void show(Graphics g, Projection pr = 0, Pen pen = null)
         {
             foreach (Face f in faces)
-                f.show(g, pen);
+                f.show(g, pr, pen);
 
         }
+
+        /* ------ Affine transformation ------ */
 
         public void translate(float x, float y, float z)
         {
