@@ -61,7 +61,7 @@ namespace lab6
             // back face
             foreach (var point in f.Points)
             {
-                l1.Add(new Point3d(point.X, point.Y, point.Z + cube_size));
+                l1.Add(new Point3d(point.X, point.Y, point.Z - cube_size));
             }
             Face f1 = new Face(l1);
             faces.Add(f1);
@@ -170,7 +170,7 @@ namespace lab6
                 check_all_textboxes();
                 make_rot_line();
                 figure.show(g, pr, old_fig);
-                // масштабируем и переносим относительно начала координат (сдвигом левой нижней точки в начало)
+                // масштабируем и переносим относительно начала координат (сдвигом центра в начало)
                 //
                 if (scaling_x.Text != "1" || scaling_y.Text != "1" || scaling_z.Text != "1" ||
                     trans_x.Text != "0" || trans_y.Text != "0" || trans_z.Text != "0")
