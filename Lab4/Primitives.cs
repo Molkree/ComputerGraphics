@@ -14,20 +14,19 @@ namespace Lab4
     {
         public List<PointF> points;
         public int p_type;
-        public PointF left_bot;
+        public PointF center;
         public Primitive(List<PointF> pts)
         {
-            float eps = 1E-9f;
-            left_bot = new PointF(float.MaxValue, float.MaxValue);
-            this.points = new List<PointF>(pts);
+            center = new PointF(0, 0);
+            points = new List<PointF>(pts);
             p_type = points.Count;
             foreach(var pt in points)
             {
-                if (pt.X < left_bot.X && Math.Abs(pt.X - left_bot.X)>eps)
-                    left_bot = pt;
-                else if (Math.Abs(pt.X - left_bot.X) < eps && pt.Y < left_bot.Y && Math.Abs(pt.Y - left_bot.Y) > eps)
-                    left_bot = pt;
+                center.X += pt.X;
+                center.Y += pt.Y;
             }
+            center.X /= points.Count;
+            center.Y /= points.Count;
         }
         
         public void translate(float x, float y)
