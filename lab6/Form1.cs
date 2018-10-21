@@ -77,5 +77,7 @@ namespace lab6
 
             return new Polyhedron(faces);
         }
+
+
     }
 }

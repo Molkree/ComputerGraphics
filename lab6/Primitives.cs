@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace lab6
 {
+    public enum axis { AXIS_X, AXIS_Y, AXIS_Z };
 
     interface Figure
     {
@@ -16,9 +17,13 @@ namespace lab6
         /// <param name="g">Where to draw</param>
         /// <param name="pen"></param>
         void show(Graphics g, Pen pen = null);
+/*        Figure translate(float x, float y, float z);
+        Figure rotate(double angle, axis a);
+        Figure scale(float kx, float ky, float kz);
+        */
     }
 
-    // нам вообще нужен класс точки?
+
     public class Point3d: Figure
     {
         public float X, Y, Z;
@@ -54,7 +59,7 @@ namespace lab6
 
         // get point for orthographic projection
         // 0 - for x, 1 - for y, 2 - for z
-  /*      public PointF make_orthographiс(int axis)
+  /*      public PointF make_orthographiс(axis a)
         {
             List<float> P = new List<float>(16);
             for (int i = 0; i < P.Count; ++i)
@@ -83,9 +88,102 @@ namespace lab6
         {
             if (pen == null)
                 pen = Pens.Black;
-            PointF p = make_perspective();
+            //  PointF p = make_perspective();
+            PointF p = make_parallel();
+
             g.DrawRectangle(pen, p.X, p.Y, 2, 2);
         }
+
+        // Affine transformation
+
+        private List<float> mul_matrix(List<float> matr1, int m1, int n1, List<float> matr2, int m2, int n2)
+        {
+            if (n1 != m2)
+                return new List<float>();
+            int l = m1;
+            int m = n1;
+            int n = n2;
+
+            List<float> c = new List<float>();
+            for (int i = 0; i < l * n; ++i)
+                c.Add(0f);
+
+            for (int i = 0; i < l; ++i)
+                for (int j = 0; j < n; ++j)
+                {
+                    //c[i * l + j] = 0;
+                    for (int r = 0; r < m; ++r)
+                        c[i * l + j] += matr1[i * m1 + r] * matr2[r * m2 + j];
+                }
+            return c;
+        }
+
+        public void translate(float x, float y, float z)
+        {
+            List<float> T = new List<float> { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, x, y, z, 1 };
+            List<PointF> res = new List<PointF>();
+
+            List<float> xyz = new List<float> { X, Y, Z, 1 };
+            List<float> c = mul_matrix(xyz, 1, 4, T, 4, 4);
+
+            // or return new Point3d(c[0], c[1], c[2]); ???
+            X = c[0];
+            Y = c[1];
+            Z = c[2];         
+        }
+
+        public void rotate(double angle, axis a)
+        {
+            double rangle = (Math.PI * angle) / 180; //угол в радианах
+
+            List<float> R = null;
+            
+            switch (a)
+            {
+                case axis.AXIS_X:
+                    R = new List<float> { 1, 0, 0, 0,
+                                          0, (float)Math.Cos(rangle), (float)Math.Sin(rangle), 0,
+                                          0, -1*(float)Math.Sin(rangle), (float)Math.Cos(rangle), 0,
+                                          0, 0, 0, 1};
+                    break;
+                case axis.AXIS_Y:
+                    R = new List<float> { (float)Math.Cos(rangle), 0, -1*(float)Math.Sin(rangle), 0,
+                                          0, 1, 0, 0,
+                                          (float)Math.Sin(rangle), 0, (float)Math.Cos(rangle), 0,
+                                          0, 0, 0, 1};
+                    break;
+                case axis.AXIS_Z:
+                    R = new List<float> { (float)Math.Cos(rangle), (float)Math.Sin(rangle), 0, 0,
+                                          -1*(float)Math.Sin(rangle), (float)Math.Cos(rangle), 0, 0,
+                                          0, 0, 1, 0,
+                                          0, 0, 0, 1};
+                    break;
+            }
+            
+            
+            List<float> xyz = new List<float> { X, Y, Z, 1 };
+            List<float> c = mul_matrix(xyz, 1, 4, R, 4, 4);
+            // or return new Point3d(c[0], c[1], c[2]);
+            X = c[0];
+            Y = c[1];
+            Z = c[2];
+
+        }
+
+        public void scale(float kx, float ky, float kz)
+        {
+            List<float> D = new List<float> { kx, 0, 0, 0,
+                                               0, ky, 0, 0,
+                                               0, 0, kz, 0,
+                                               0, 0, 0, 1 };
+            List<float> xyz = new List<float> { X, Y, Z, 1 };
+            List<float> c = mul_matrix(xyz, 1, 4, D, 4, 4);
+            // or return new Point3d(c[0], c[1], c[2]);
+            X = c[0];
+            Y = c[1];
+            Z = c[2];
+        }
+
 
     }
 
@@ -133,6 +231,13 @@ namespace lab6
             show_perspective(g, pen);
         }
 
+  /*      Edge translate(float x, float y, float z)
+        {
+            List<Point3d> l = new List<Point3d>();
+            foreach (Point3d in )
+        }
+        Edge rotate(double angle, axis a);
+        Edge scale(float kx, float ky, float kz);*/
     }
 
     // многоугольник (грань)
@@ -187,13 +292,36 @@ namespace lab6
         {
             if (pen == null)
                 pen = Pens.Black;
-            show_parallel(g, pen);
-          //  show_perspective(g, pen);
+         //   show_parallel(g, pen);
+            show_perspective(g, pen);
 
 
      //       g.DrawLines(pen, points.ToArray());
       //      g.DrawLine(pen, points[0], points[points.Count - 1]);
 
+        }
+
+
+        public void translate(float x, float y, float z)
+        {
+          //  List<Point3d> l = new List<Point3d>();
+            foreach (Point3d p in points)
+                p.translate(x, y, z);
+          //  return new Face(l);
+        }
+        public void rotate(double angle, axis a)
+        {
+         //   List<Point3d> l = new List<Point3d>();
+            foreach (Point3d p in points)
+                p.rotate(angle, a);
+         //   return new Face(l);
+        }
+        public void scale(float kx, float ky, float kz)
+        {
+         //   List<Point3d> l = new List<Point3d>();
+            foreach (Point3d p in points)
+                p.scale(kx, ky, kz);
+        //    return new Face(l);
         }
     }
 
@@ -227,6 +355,28 @@ namespace lab6
             foreach (Face f in faces)
                 f.show(g, pen);
 
+        }
+
+        public void translate(float x, float y, float z)
+        {
+//            List<Face> l = new List<Face>();
+            foreach (Face f in faces)
+                f.translate(x, y, z);
+//            return new Polyhedron(l);
+        }
+        public void rotate(double angle, axis a)
+        {
+//            List<Face> l = new List<Face>();
+            foreach (Face f in faces)
+                f.rotate(angle, a);
+//           return new Polyhedron(l);
+        }
+        public void scale(float kx, float ky, float kz)
+        {
+//            List<Face> l = new List<Face>();
+            foreach (Face f in faces)
+                f.scale(kx, ky, kz);
+//            return new Polyhedron(l);
         }
 
     }
