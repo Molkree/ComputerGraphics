@@ -1,11 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Globalization;
 using System.Windows.Forms;
 
 namespace lab6
@@ -28,8 +24,7 @@ namespace lab6
             comboBox2.SelectedIndex = 0;
         }
 
-
-
+        // Create cube
         private void button1_Click(object sender, EventArgs e)
         {
             int center_x = pictureBox1.ClientSize.Width / 2;
@@ -37,58 +32,66 @@ namespace lab6
 
             int size = 150;
             int z = 0;
-            List<Point3d> pts = new List<Point3d>();
-            pts.Add(new Point3d(center_x, center_y, z));
-            pts.Add(new Point3d(center_x + size, center_y, z));
-            pts.Add(new Point3d(center_x + size, center_y + size, z));
-            pts.Add(new Point3d(center_x, center_y + size, z));
+            List<Point3d> pts = new List<Point3d>
+            {
+                new Point3d(center_x, center_y, z),
+                new Point3d(center_x + size, center_y, z),
+                new Point3d(center_x + size, center_y + size, z),
+                new Point3d(center_x, center_y + size, z)
+            };
 
             Face f = new Face(pts);
 
             figure = make_cube(f);
             figure.show(g, pr);
-            
         }
 
-
-        public Polyhedron make_cube(Face f)
+        static public Polyhedron make_cube(Face f)
         {
-            List<Face> faces = new List<Face>();
-            // front face
-            faces.Add(f);
+            List<Face> faces = new List<Face>
+            {
+                // front face
+                f
+            };
 
             List<Point3d> l1 = new List<Point3d>();
                 
-            float cube_size = Math.Abs(f.points[0].X - f.points[1].X);
+            float cube_size = Math.Abs(f.Points[0].X - f.Points[1].X);
 
             // back face
-            for (int i = 0; i < f.points.Count; ++i)
+            foreach (var point in f.Points)
             {
-                l1.Add(new Point3d(f.points[i].X, f.points[i].Y, f.points[i].Z + cube_size));
-            } 
+                l1.Add(new Point3d(point.X, point.Y, point.Z + cube_size));
+            }
             Face f1 = new Face(l1);
             faces.Add(f1);
 
             // up face
-            List<Point3d> l2 = new List<Point3d>();
-            l2.Add(f1.points[0]);
-            l2.Add(f1.points[1]);
-            l2.Add(f.points[1]);
-            l2.Add(f.points[0]);        
+            List<Point3d> l2 = new List<Point3d>
+            {
+                f1.Points[0],
+                f1.Points[1],
+                f.Points[1],
+                f.Points[0]
+            };
             Face f2 = new Face(l2);
             faces.Add(f2);
 
             // down face
-            List<Point3d> l3 = new List<Point3d>();
-            l3.Add(f1.points[3]);
-            l3.Add(f1.points[2]);
-            l3.Add(f.points[2]);
-            l3.Add(f.points[3]);
+            List<Point3d> l3 = new List<Point3d>
+            {
+                f1.Points[3],
+                f1.Points[2],
+                f.Points[2],
+                f.Points[3]
+            };
             Face f3 = new Face(l3);
             faces.Add(f3);
 
-            Polyhedron cube = new Polyhedron(faces);
-            cube.cube_size = cube_size;
+            Polyhedron cube = new Polyhedron(faces)
+            {
+                Cube_size = cube_size
+            };
             return cube;
         }
 
@@ -103,7 +106,7 @@ namespace lab6
         // контроль вводимых символов
         private void textBox_KeyPress_int(object sender, KeyPressEventArgs e)
         {
-            if (!(Char.IsDigit(e.KeyChar) || e.KeyChar == '-') && e.KeyChar != Convert.ToChar(8))
+            if (!(char.IsDigit(e.KeyChar) || e.KeyChar == '-') && e.KeyChar != Convert.ToChar(8))
             {
                 e.Handled = true;
             }
@@ -111,7 +114,7 @@ namespace lab6
 
         private void textBox_KeyPress_double(object sender, KeyPressEventArgs e)
         {
-            if (!(Char.IsDigit(e.KeyChar) || e.KeyChar == '.' || e.KeyChar == ',') && e.KeyChar != Convert.ToChar(8))
+            if (!(char.IsDigit(e.KeyChar) || e.KeyChar == '.' || e.KeyChar == ',') && e.KeyChar != Convert.ToChar(8))
             {
                 e.Handled = true;
             }
@@ -119,7 +122,7 @@ namespace lab6
 
         void check_all_textboxes()
         {
-            foreach (var c in this.Controls)
+            foreach (var c in Controls)
             {
                 if (c is TextBox)
                 {
@@ -139,33 +142,33 @@ namespace lab6
             check_all_textboxes();
             make_rot_line();
             figure.show(g, pr, old_fig);
-            //масштабируем и переносим относительно начала координат (сдвигом левой нижней точки в начало)
+            // масштабируем и переносим относительно начала координат (сдвигом левой нижней точки в начало)
             //
             if (scaling_x.Text != "1" || scaling_y.Text != "1" || scaling_z.Text != "1" || 
                 trans_x.Text != "0" || trans_y.Text != "0" || trans_z.Text != "0")
             {
-                //сначала переносим в начало
-                figure.translate(-1 * figure.center.X, -1 * figure.center.Y, -1 * figure.center.Z);
-                //делаем, что нужно
-                if (scaling_x.Text != "1" || scaling_y.Text != "1")
+                // сначала переносим в начало
+                figure.translate(-1 * figure.Center.X, -1 * figure.Center.Y, -1 * figure.Center.Z);
+                // делаем, что нужно
+                if (scaling_x.Text != "1" || scaling_y.Text != "1" || scaling_z.Text != "1")
                 {
-                    float x = float.Parse(scaling_x.Text);
-                    float y = float.Parse(scaling_y.Text);
-                    float z = float.Parse(scaling_z.Text);
-                    figure.scale(x, y, x);
+                    float x = float.Parse(scaling_x.Text, CultureInfo.CurrentCulture);
+                    float y = float.Parse(scaling_y.Text, CultureInfo.CurrentCulture);
+                    float z = float.Parse(scaling_z.Text, CultureInfo.CurrentCulture);
+                    figure.scale(x, y, z);
 
                 }
-                if (trans_x.Text != "0" || trans_y.Text != "0")
+                if (trans_x.Text != "0" || trans_y.Text != "0" || trans_z.Text != "0")
                 {
-                    figure.translate(Int32.Parse(trans_x.Text),
-                                     Int32.Parse(trans_y.Text),
-                                     Int32.Parse(trans_z.Text));
+                    figure.translate(int.Parse(trans_x.Text, CultureInfo.CurrentCulture),
+                                     int.Parse(trans_y.Text, CultureInfo.CurrentCulture),
+                                     int.Parse(trans_z.Text, CultureInfo.CurrentCulture));
                 }
-                //переносим обратно
-                figure.translate(figure.center.X, figure.center.Y, figure.center.Z);
+                // переносим обратно
+                figure.translate(figure.Center.X, figure.Center.Y, figure.Center.Z);
             }
 
-            //поворачиваем относительно введенной точки rotation_point
+            // поворачиваем относительно введенной точки rotation_point
             if (rot_angle.Text != "0")
             {
  /*               Point3d rot_point 
@@ -183,16 +186,16 @@ namespace lab6
             switch (line_mod)
             {
                 case rot_line_mod.LINE_X:
-                    rot_line = new Edge(new Point3d(0, figure.center.Y, figure.center.Z),
-                                        new Point3d(pictureBox1.ClientSize.Width, figure.center.Y, figure.center.Z));
+                    rot_line = new Edge(new Point3d(0, figure.Center.Y, figure.Center.Z),
+                                        new Point3d(pictureBox1.ClientSize.Width, figure.Center.Y, figure.Center.Z));
                     break;
                 case rot_line_mod.LINE_Y:
-                    rot_line = new Edge(new Point3d(figure.center.X, 0, figure.center.Z),
-                                        new Point3d(figure.center.X, pictureBox1.ClientSize.Height, figure.center.Z));
+                    rot_line = new Edge(new Point3d(figure.Center.X, 0, figure.Center.Z),
+                                        new Point3d(figure.Center.X, pictureBox1.ClientSize.Height, figure.Center.Z));
                     break;
                 case rot_line_mod.LINE_Z:
-                    rot_line = new Edge(new Point3d(figure.center.X, figure.center.Y, 0),
-                                        new Point3d(figure.center.X, figure.center.Y, figure.cube_size));
+                    rot_line = new Edge(new Point3d(figure.Center.X, figure.Center.Y, 0),
+                                        new Point3d(figure.Center.X, figure.Center.Y, figure.Cube_size));
                     break;
             }
         }
@@ -220,5 +223,4 @@ namespace lab6
     }
 
     enum rot_line_mod { LINE_X = 0, LINE_Y, LINE_Z, OTHER };
-
 }
