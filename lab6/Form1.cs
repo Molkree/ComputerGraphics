@@ -213,7 +213,10 @@ namespace lab6
                     }
                     else
                     {
+                        float Ax = rot_line.P1.X, Ay = rot_line.P1.Y, Az = rot_line.P1.Z;
+                        figure.translate(-Ax, -Ay, -Az);
                         figure.rotate(double.Parse(rot_angle.Text, CultureInfo.CurrentCulture), (axis)line_mod, rot_line);
+                        figure.translate(Ax, Ay, Az);
                     }
                 }
 
@@ -308,15 +311,29 @@ namespace lab6
             figure.make_octaeder();
             figure.show(g, pr);
         }
-
-        private void button4_Click(object sender, EventArgs e)
+        
+        //отражение по х
+        private void button6_Click(object sender, EventArgs e)
         {
-
+            figure.show(g, pr, old_fig);
+            figure.reflectX();
+            figure.show(g, pr);
         }
 
-        private void button5_Click(object sender, EventArgs e)
+        //y
+        private void button7_Click(object sender, EventArgs e)
         {
+            figure.show(g, pr, old_fig);
+            figure.reflectY();
+            figure.show(g, pr);
+        }
 
+        //z
+        private void button8_Click(object sender, EventArgs e)
+        {
+            figure.show(g, pr, old_fig);
+            figure.reflectZ();
+            figure.show(g, pr);
         }
     }
 
