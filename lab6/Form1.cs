@@ -12,8 +12,7 @@ namespace lab6
         Pen old_fig = Pens.LightGray;
         Graphics g;
         Projection pr = 0;
-        rot_line_mod line_mod = 0;
-        Edge rot_line;
+        Axis line_mod = 0;
         Polyhedron figure = null;
 
         public Form1()
@@ -29,97 +28,10 @@ namespace lab6
         private void button1_Click(object sender, EventArgs e)
         {
             clear_button_Click(sender, e);
-    /*        int center_x = 150;
-            int center_y = 150;
-
-            int size = 150 / 2;
-            int z = -size;
-            List<Point3d> pts = new List<Point3d>
-            {
-                new Point3d(center_x - size, center_y - size, z),
-                new Point3d(center_x + size, center_y - size, z),
-                new Point3d(center_x + size, center_y + size, z),
-                new Point3d(center_x - size, center_y + size, z)
-            };
-
-            Face f = new Face(pts);
-*/
             figure = new Polyhedron();
             figure.make_cube();
 
-//            figure = make_cube(f);
             figure.show(g, pr);
-        }
-
-        static public Polyhedron make_cube(Face f)
-        {
-            List<Face> faces = new List<Face>
-            {
-                // back face
-                f
-            };
-
-            List<Point3d> l1 = new List<Point3d>();
-                
-            float cube_size = Math.Abs(f.Points[0].X - f.Points[1].X);
-
-            // front face
-            foreach (var point in f.Points)
-            {
-                l1.Add(new Point3d(point.X, point.Y, point.Z + cube_size));
-            }
-            Face f1 = new Face(l1);
-            faces.Add(f1);
-
-            // up face
-            List<Point3d> l2 = new List<Point3d>
-            {
-                new Point3d(f1.Points[0]),
-                new Point3d(f1.Points[1]),
-                new Point3d(f.Points[1]),
-                new Point3d(f.Points[0])
-            };
-            Face f2 = new Face(l2);
-            faces.Add(f2);
-
-            // down face
-            List<Point3d> l3 = new List<Point3d>
-            {
-                new Point3d(f1.Points[3]),
-                new Point3d(f1.Points[2]),
-                new Point3d(f.Points[2]),
-                new Point3d(f.Points[3])
-            };
-            Face f3 = new Face(l3);
-            faces.Add(f3);
-
-            // left face
-            List<Point3d> l4 = new List<Point3d>
-            {
-                new Point3d(f.Points[0]),
-                new Point3d(f.Points[3]),
-                new Point3d(f1.Points[3]),
-                new Point3d(f1.Points[0])
-            };
-            Face f4 = new Face(l4);
-            faces.Add(f4);
-
-            // right face
-            List<Point3d> l5 = new List<Point3d>
-            {
-                new Point3d(f.Points[1]),
-                new Point3d(f.Points[2]),
-                new Point3d(f1.Points[2]),
-                new Point3d(f1.Points[1])
-            };
-            Face f5 = new Face(l5);
-            faces.Add(f5);
-
-            Polyhedron cube = new Polyhedron(faces)
-            {
-                Cube_size = cube_size
-            };
-            return cube;
         }
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
@@ -174,7 +86,6 @@ namespace lab6
             else
             {
                 check_all_textboxes();
-                make_rot_line();
                 figure.show(g, pr, old_fig);
                 // масштабируем и переносим относительно начала координат (сдвигом центра в начало)
                 //
@@ -182,7 +93,8 @@ namespace lab6
                     trans_x.Text != "0" || trans_y.Text != "0" || trans_z.Text != "0")
                 {
                     // сначала переносим в начало
-                    figure.translate(-1 * figure.Center.X, -1 * figure.Center.Y, -1 * figure.Center.Z);
+                    float old_x = figure.Center.X, old_y = figure.Center.Y, old_z = figure.Center.Z;
+                    figure.translate(-old_x, -old_y, -old_z);
                     // делаем, что нужно
                     if (scaling_x.Text != "1" || scaling_y.Text != "1" || scaling_z.Text != "1")
                     {
@@ -199,23 +111,27 @@ namespace lab6
                                          int.Parse(trans_z.Text, CultureInfo.CurrentCulture));
                     }
                     // переносим обратно
-                    figure.translate(figure.Center.X, figure.Center.Y, figure.Center.Z);
+                    figure.translate(old_x, old_y, old_z);
                 }
 
                 // поворачиваем относительно нужной прямой
                 if (rot_angle.Text != "0")
                 {
-                    if (line_mod != rot_line_mod.OTHER)
+                    if (line_mod != Axis.OTHER)
                     {
-                        figure.translate(-1 * figure.Center.X, -1 * figure.Center.Y, -1 * figure.Center.Z);
-                        figure.rotate(double.Parse(rot_angle.Text, CultureInfo.CurrentCulture), (axis)line_mod);
-                        figure.translate(figure.Center.X, figure.Center.Y, figure.Center.Z);
+                        float old_x = figure.Center.X, old_y = figure.Center.Y, old_z = figure.Center.Z;
+                        figure.translate(-old_x, -old_y, -old_z);
+                        figure.rotate(double.Parse(rot_angle.Text, CultureInfo.CurrentCulture), line_mod);
+                        figure.translate(old_x, old_y, old_z);
                     }
                     else
                     {
+                        Edge rot_line = new Edge(
+                            new Point3d(int.Parse(rot_line_x1.Text), int.Parse(rot_line_y1.Text), int.Parse(rot_line_z1.Text)),
+                            new Point3d(int.Parse(rot_line_x2.Text), int.Parse(rot_line_y2.Text), int.Parse(rot_line_z2.Text)));
                         float Ax = rot_line.P1.X, Ay = rot_line.P1.Y, Az = rot_line.P1.Z;
                         figure.translate(-Ax, -Ay, -Az);
-                        figure.rotate(double.Parse(rot_angle.Text, CultureInfo.CurrentCulture), (axis)line_mod, rot_line);
+                        figure.rotate(double.Parse(rot_angle.Text, CultureInfo.CurrentCulture), line_mod, rot_line);
                         figure.translate(Ax, Ay, Az);
                     }
                 }
@@ -224,34 +140,10 @@ namespace lab6
             }
         }
 
-        void make_rot_line()
-        {
-            switch (line_mod)
-            {
-                case rot_line_mod.LINE_X:
-                    rot_line = new Edge(new Point3d(0, figure.Center.Y, figure.Center.Z),
-                                        new Point3d(pictureBox1.ClientSize.Width, figure.Center.Y, figure.Center.Z));
-                    break;
-                case rot_line_mod.LINE_Y:
-                    rot_line = new Edge(new Point3d(figure.Center.X, 0, figure.Center.Z),
-                                        new Point3d(figure.Center.X, pictureBox1.ClientSize.Height, figure.Center.Z));
-                    break;
-                case rot_line_mod.LINE_Z:
-                    rot_line = new Edge(new Point3d(figure.Center.X, figure.Center.Y, 0),
-                                        new Point3d(figure.Center.X, figure.Center.Y, figure.Cube_size));
-                    break;
-                case rot_line_mod.OTHER:
-                    rot_line = new Edge(
-                        new Point3d(int.Parse(rot_line_x1.Text), int.Parse(rot_line_y1.Text), int.Parse(rot_line_z1.Text)),
-                        new Point3d(int.Parse(rot_line_x2.Text), int.Parse(rot_line_y2.Text), int.Parse(rot_line_z2.Text)));
-                    break;
-            }
-        }
-
         private void comboBox2_SelectedIndexChanged(object sender, EventArgs e)
         {
-            line_mod = (rot_line_mod)(comboBox2.SelectedIndex);
-            if (line_mod == rot_line_mod.OTHER)
+            line_mod = (Axis)(comboBox2.SelectedIndex);
+            if (line_mod == Axis.OTHER)
             {
                 rot_line_x1.Enabled = true;
                 rot_line_y1.Enabled = true;
@@ -269,14 +161,6 @@ namespace lab6
                 rot_line_y2.Enabled = false;
                 rot_line_z2.Enabled = false;
             }
-        }
-
-        private void pictureBox1_MouseClick(object sender, MouseEventArgs e)
-        {
-            //if (line_mod == rot_line_mod.OTHER)
-            //{
-            //    // TODO
-            //}
         }
 
         private void clear_button_Click(object sender, EventArgs e)
@@ -352,6 +236,4 @@ namespace lab6
             figure.show(g, pr);
         }
     }
-
-    enum rot_line_mod { LINE_X = 0, LINE_Y, LINE_Z, OTHER };
 }

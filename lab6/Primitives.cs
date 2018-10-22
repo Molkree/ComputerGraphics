@@ -4,7 +4,7 @@ using System.Drawing;
 
 namespace lab6
 {
-    public enum axis { AXIS_X, AXIS_Y, AXIS_Z, OTHER };
+    public enum Axis { AXIS_X, AXIS_Y, AXIS_Z, OTHER };
     public enum Projection { PERSPECTIVE = 0, ISOMETRIC, ORTHOGR_X, ORTHOGR_Y, ORTHOGR_Z };
 
     public class Point3d
@@ -77,7 +77,7 @@ namespace lab6
         }
 
         // get point for orthographic projection
-        public PointF make_orthographic(axis a)
+        public PointF make_orthographic(Axis a)
         {
             List<float> P = new List<float>();
             for (int i = 0; i < 16; ++i)
@@ -89,10 +89,10 @@ namespace lab6
             }
 
             // x
-            if (a == axis.AXIS_X)
+            if (a == Axis.AXIS_X)
                 P[0] = 0;
             // y
-            else if (a == axis.AXIS_Y)
+            else if (a == Axis.AXIS_Y)
                 P[5] = 0;
             // z
             else
@@ -102,10 +102,10 @@ namespace lab6
             List<float> c = mul_matrix(xyz, 1, 4, P, 4, 4);
 
             // x
-            if (a == axis.AXIS_X)
+            if (a == Axis.AXIS_X)
                 return new PointF(c[1], c[2]); // (y, z)
             // y
-            else if (a == axis.AXIS_Y)
+            else if (a == Axis.AXIS_Y)
                 return new PointF(c[0], c[2]); // (x, z)
             // z
             else
@@ -124,13 +124,13 @@ namespace lab6
                     p = make_isometric();
                     break;
                 case Projection.ORTHOGR_X:
-                    p = make_orthographic(axis.AXIS_X);
+                    p = make_orthographic(Axis.AXIS_X);
                     break;
                 case Projection.ORTHOGR_Y:
-                    p = make_orthographic(axis.AXIS_Y);
+                    p = make_orthographic(Axis.AXIS_Y);
                     break;
                 case Projection.ORTHOGR_Z:
-                    p = make_orthographic(axis.AXIS_Z);
+                    p = make_orthographic(Axis.AXIS_Z);
                     break;
                 default:
                     p = make_perspective();
@@ -176,7 +176,7 @@ namespace lab6
             Z = c[2];
         }
 
-        public void rotate(double angle, axis a, Edge line = null)
+        public void rotate(double angle, Axis a, Edge line = null)
         {
             double rangle = Math.PI * angle / 180; // угол в радианах
 
@@ -186,31 +186,30 @@ namespace lab6
             float cos = (float)Math.Cos(rangle);
             switch (a)
             {
-                case axis.AXIS_X:
+                case Axis.AXIS_X:
                     R = new List<float> { 1,   0,     0,   0,
                                           0,  cos,   sin,  0,
                                           0,  -sin,  cos,  0,
                                           0,   0,     0,   1 };
                     break;
-                case axis.AXIS_Y:
+                case Axis.AXIS_Y:
                     R = new List<float> { cos,  0,  -sin,  0,
                                            0,   1,   0,    0,
                                           sin,  0,  cos,   0,
                                            0,   0,   0,    1 };
                     break;
-                case axis.AXIS_Z:
+                case Axis.AXIS_Z:
                     R = new List<float> { cos,   sin,  0,  0,
                                           -sin,  cos,  0,  0,
                                            0,     0,   1,  0,
                                            0,     0,   0,  1 };
                     break;
-                case axis.OTHER:
+                case Axis.OTHER:
                     float l = Math.Sign(line.P2.X - line.P1.X);
                     float m = Math.Sign(line.P2.Y - line.P1.Y);
                     float n = Math.Sign(line.P2.Z - line.P1.Z);
                     float length = (float)Math.Sqrt(l * l + m * m + n * n);
                     l /= length; m /= length; n /= length;
-                    float d = (float)Math.Sqrt(m * m + n * n);
 
                     R = new List<float> {  l * l + cos * (1 - l * l),   l * (1 - cos) * m + n * sin,   l * (1 - cos) * n - m * sin,  0,
                                           l * (1 - cos) * m - n * sin,   m * m + cos * (1 - m * m),    m * (1 - cos) * n + l * sin,  0,
@@ -266,7 +265,7 @@ namespace lab6
             return res;
         }
 
-        private List<PointF> make_orthographic(axis a)
+        private List<PointF> make_orthographic(Axis a)
         {
             List<PointF> res = new List<PointF>
             {
@@ -306,7 +305,7 @@ namespace lab6
             P2.translate(x, y, z);
         }
 
-        public void rotate(double angle, axis a, Edge line = null)
+        public void rotate(double angle, Axis a, Edge line = null)
         {
             P1.rotate(angle, a, line);
             P2.rotate(angle, a, line);
@@ -321,9 +320,17 @@ namespace lab6
         public List<Point3d> Points { get; }
         public Point3d Center { get; set; } = new Point3d(0, 0, 0);
 
-        public Face(List<Point3d> pts)
+        public Face(List<Point3d> pts = null)
         {
-            Points = new List<Point3d>(pts);
+            if (pts != null)
+            {
+                Points = new List<Point3d>(pts);
+                find_center();
+            }
+        }
+
+        private void find_center()
+        {
             foreach (Point3d p in Points)
             {
                 Center.X += p.X;
@@ -382,7 +389,7 @@ namespace lab6
         }
 
         // get point for orthographic projection
-        public List<PointF> make_orthographic(axis a)
+        public List<PointF> make_orthographic(Axis a)
         {
             List<PointF> res = new List<PointF>();
 
@@ -405,13 +412,13 @@ namespace lab6
                     pts = make_isometric();
                     break;
                 case Projection.ORTHOGR_X:
-                    pts = make_orthographic(axis.AXIS_X);
+                    pts = make_orthographic(Axis.AXIS_X);
                     break;
                 case Projection.ORTHOGR_Y:
-                    pts = make_orthographic(axis.AXIS_Y);
+                    pts = make_orthographic(Axis.AXIS_Y);
                     break;
                 case Projection.ORTHOGR_Z:
-                    pts = make_orthographic(axis.AXIS_Z);
+                    pts = make_orthographic(Axis.AXIS_Z);
                     break;
                 default:
                     pts = make_perspective();
@@ -428,16 +435,21 @@ namespace lab6
         {
             foreach (Point3d p in Points)
                 p.translate(x, y, z);
+            find_center();
         }
-        public void rotate(double angle, axis a, Edge line = null)
+
+        public void rotate(double angle, Axis a, Edge line = null)
         {
             foreach (Point3d p in Points)
                 p.rotate(angle, a, line);
+            find_center();
         }
+
         public void scale(float kx, float ky, float kz)
         {
             foreach (Point3d p in Points)
                 p.scale(kx, ky, kz);
+            find_center();
         }
     }
 
@@ -453,7 +465,6 @@ namespace lab6
             if (fs != null)
             {
                 Faces = new List<Face>(fs);
-
                 find_center();
             }
         }
@@ -469,7 +480,6 @@ namespace lab6
             Center.X /= Faces.Count;
             Center.Y /= Faces.Count;
             Center.Z /= Faces.Count;
-       
         }
 
         public void show(Graphics g, Projection pr = 0, Pen pen = null)
@@ -484,16 +494,21 @@ namespace lab6
         {
             foreach (Face f in Faces)
                 f.translate(x, y, z);
+            find_center();
         }
-        public void rotate(double angle, axis a, Edge line = null)
+
+        public void rotate(double angle, Axis a, Edge line = null)
         {
             foreach (Face f in Faces)
                 f.rotate(angle, a, line);
+            find_center();
         }
+
         public void scale(float kx, float ky, float kz)
         {
             foreach (Face f in Faces)
                 f.scale(kx, ky, kz);
+            find_center();
         }
         
         public void reflectX()
@@ -503,6 +518,7 @@ namespace lab6
                 foreach (var f in Faces)
                     f.reflectX();
         }
+
         public void reflectY()
         {
             Center.Y = -Center.Y;
@@ -510,6 +526,7 @@ namespace lab6
                 foreach (var f in Faces)
                     f.reflectY();
         }
+
         public void reflectZ()
         {
             Center.Z = -Center.Z;
@@ -524,7 +541,6 @@ namespace lab6
         {
             if (f == null)
             {
-
                 f = new Face(
                     new List<Point3d>
                     {
@@ -534,10 +550,7 @@ namespace lab6
                         new Point3d(-50, 50, 0)
                     }
                );
-
-                
             }
-
 
             Faces = new List<Face>
             {
@@ -545,10 +558,8 @@ namespace lab6
                 f
             };
 
-            List<Point3d> l1 = new List<Point3d>();
-
             float cube_size = Math.Abs(f.Points[0].X - f.Points[1].X);
-
+            List<Point3d> l1 = new List<Point3d>();
             // front face
             foreach (var point in f.Points)
             {
@@ -564,7 +575,6 @@ namespace lab6
                 new Point3d(f.Points[1]),   // right up
                 new Point3d(f1.Points[1]),  // right down
                 new Point3d(f1.Points[0]),  // left down
-                
             };
             Face f2 = new Face(l2);
             Faces.Add(f2);
@@ -575,8 +585,7 @@ namespace lab6
                 new Point3d(f.Points[3]),
                 new Point3d(f.Points[2]),
                 new Point3d(f1.Points[2]),
-                new Point3d(f1.Points[3]),
-                
+                new Point3d(f1.Points[3]),  
             };
             Face f3 = new Face(l3);
             Faces.Add(f3);
@@ -615,7 +624,6 @@ namespace lab6
                 cube.make_cube();
             }
             Face f0 = new Face(
-
                 new List<Point3d>
                 {
                     new Point3d(cube.Faces[0].Points[0]),
@@ -625,7 +633,6 @@ namespace lab6
             );
 
             Face f1 = new Face(
-
                 new List<Point3d>
                 {
                     new Point3d(cube.Faces[1].Points[3]),
@@ -635,7 +642,6 @@ namespace lab6
             );
 
             Face f2 = new Face(
-
                 new List<Point3d>
                 {
                     new Point3d(cube.Faces[0].Points[2]),
@@ -645,7 +651,6 @@ namespace lab6
             );
 
             Face f3 = new Face(
-
                 new List<Point3d>
                 {
                     new Point3d(cube.Faces[0].Points[2]),
@@ -667,9 +672,7 @@ namespace lab6
             }
 
             // up
-
             Face f0 = new Face(
-
                 new List<Point3d>
                 {
                     new Point3d(cube.Faces[2].Center),
@@ -679,7 +682,6 @@ namespace lab6
             );
 
             Face f1 = new Face(
-
                 new List<Point3d>
                 {
                     new Point3d(cube.Faces[2].Center),
@@ -689,7 +691,6 @@ namespace lab6
             );
 
             Face f2 = new Face(
-
                 new List<Point3d>
                 {
                     new Point3d(cube.Faces[2].Center),
@@ -699,7 +700,6 @@ namespace lab6
             );
 
             Face f3 = new Face(
-
                 new List<Point3d>
                 {
                     new Point3d(cube.Faces[2].Center),
@@ -709,9 +709,7 @@ namespace lab6
             );
 
             // down
-
             Face f4 = new Face(
-
                 new List<Point3d>
                 {
                     new Point3d(cube.Faces[3].Center),
@@ -721,7 +719,6 @@ namespace lab6
             );
 
             Face f5 = new Face(
-
                 new List<Point3d>
                 {
                     new Point3d(cube.Faces[3].Center),
@@ -731,7 +728,6 @@ namespace lab6
             );
 
             Face f6 = new Face(
-
                 new List<Point3d>
                 {
                     new Point3d(cube.Faces[3].Center),
@@ -741,7 +737,6 @@ namespace lab6
             );
 
             Face f7 = new Face(
-
                 new List<Point3d>
                 {
                     new Point3d(cube.Faces[3].Center),
@@ -792,14 +787,12 @@ namespace lab6
             for (int i = 0; i < 5; ++i)
             {
                 Faces.Add(
-                    new Face( new List<Point3d>
+                    new Face(new List<Point3d>
                     {
                         new Point3d(p_up),
                         new Point3d(up_points[i]),
                         new Point3d(up_points[(i+1) % 5]),
-                    }
-                        )
-                    
+                    })
                     );
             }
 
@@ -812,12 +805,9 @@ namespace lab6
                         new Point3d(p_down),
                         new Point3d(down_points[i]),
                         new Point3d(down_points[(i+1) % 5]),
-                    }
-                        )
-
+                    })
                     );
             }
-
 
             // vertical
             for (int i = 0; i < 5; ++i)
@@ -829,8 +819,7 @@ namespace lab6
                         new Point3d(up_points[i]),
                         new Point3d(up_points[(i+1) % 5]),
                         new Point3d(down_points[(i+1) % 5])
-                    }
-                        )
+                    })
                     );
 
                 // triangle /\
@@ -840,18 +829,11 @@ namespace lab6
                         new Point3d(up_points[i]),
                         new Point3d(down_points[i]),
                         new Point3d(down_points[(i+1) % 5])
-                    }
-                        )
+                    })
                     );
-
-                
             }
 
             find_center();
-
-            /*
-             Faces = new List<Face> { f0, f1, f2, f3, f4, f5, f6, f7 };
-             find_center();*/
         }
 
         public void make_dodecaeder()
