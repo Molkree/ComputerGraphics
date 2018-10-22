@@ -106,6 +106,7 @@ namespace Lab5_task1
 
         static Random randomizer = new Random();
         private int stdDev;
+        Color tree_color = Color.Green;
         private List<Line> calculate_lines(string fractal)
         {
             int len = 50;
@@ -113,7 +114,6 @@ namespace Lab5_task1
             List<Line> lines = new List<Line>();
             double direction = -start_angle;
             float width = 5;
-            Color tree_color = Color.Green;
 
             Stack<Tuple<PointF, double, float, Color>> stack = new Stack<Tuple<PointF, double, float, Color>>();
             for (int i = 0; i < fractal.Length; ++i)
@@ -225,6 +225,18 @@ namespace Lab5_task1
                 label4.Text = "On";
             else
                 label4.Text = "Off";
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            if (colorDialog1.ShowDialog() == DialogResult.Cancel)
+                return;
+            tree_color = colorDialog1.Color;
+            label6.BackColor = tree_color;
+            if (tree_color.ToArgb() == Color.Black.ToArgb())
+                label6.ForeColor = Color.White;
+            else label6.ForeColor = Color.Black;
+
         }
     }
 }

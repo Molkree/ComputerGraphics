@@ -40,6 +40,9 @@
             this.label4 = new System.Windows.Forms.Label();
             this.numericUpDown2 = new System.Windows.Forms.NumericUpDown();
             this.label5 = new System.Windows.Forms.Label();
+            this.colorDialog1 = new System.Windows.Forms.ColorDialog();
+            this.label6 = new System.Windows.Forms.Label();
+            this.button4 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).BeginInit();
@@ -47,7 +50,7 @@
             // 
             // pictureBox1
             // 
-            this.pictureBox1.Location = new System.Drawing.Point(120, 12);
+            this.pictureBox1.Location = new System.Drawing.Point(125, 13);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(1150, 679);
             this.pictureBox1.TabIndex = 0;
@@ -151,11 +154,34 @@
             this.label5.TabIndex = 11;
             this.label5.Text = "StDev";
             // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.BackColor = System.Drawing.Color.Green;
+            this.label6.Location = new System.Drawing.Point(37, 445);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(41, 17);
+            this.label6.TabIndex = 12;
+            this.label6.Text = "Color";
+            // 
+            // button4
+            // 
+            this.button4.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.7F);
+            this.button4.Location = new System.Drawing.Point(7, 465);
+            this.button4.Name = "button4";
+            this.button4.Size = new System.Drawing.Size(107, 34);
+            this.button4.TabIndex = 13;
+            this.button4.Text = "Change color";
+            this.button4.UseVisualStyleBackColor = true;
+            this.button4.Click += new System.EventHandler(this.button4_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1282, 703);
+            this.Controls.Add(this.button4);
+            this.Controls.Add(this.label6);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.numericUpDown2);
             this.Controls.Add(this.label4);
@@ -191,6 +217,9 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.NumericUpDown numericUpDown2;
         private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.ColorDialog colorDialog1;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Button button4;
     }
 }
 
