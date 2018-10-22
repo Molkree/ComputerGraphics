@@ -59,6 +59,21 @@ namespace Lab5_task1
             }
         }
 
+        private class Line
+        {
+            public PointF P1, P2;
+            public float thickness;
+            public Color branch_color;
+
+            public Line(PointF p1, PointF p2, float width, Color color = default(Color))
+            {
+                P1 = p1;
+                P2 = p2;
+                thickness = width;
+                branch_color = color;
+            }
+        }
+
         private void button2_Click(object sender, EventArgs e)
         {
             var watch = System.Diagnostics.Stopwatch.StartNew();
@@ -80,33 +95,39 @@ namespace Lab5_task1
                 fractal = next_level;
             }
 
-            List<PointF> points = calculate_points(fractal);
-            if (points.Count < 2)
+            List<Line> lines = calculate_lines(fractal);
+            if (lines.Count < 1)
                 return;
-            draw_fractal(points);
+            draw_fractal(lines);
             watch.Stop();
             var elapsedMs = watch.ElapsedMilliseconds;
             label3.Text = (elapsedMs / 1000.0).ToString(CultureInfo.CurrentCulture);
         }
 
         static Random randomizer = new Random();
-        private int stdDev = 5;
-        private List<PointF> calculate_points(string fractal)
+        private int stdDev;
+        private List<Line> calculate_lines(string fractal)
         {
-            int len = 10;
-            List<PointF> points = new List<PointF> { new PointF(pictureBox1.Width / 2, pictureBox1.Height / 2) };
+            int len = 50;
+            PointF prev_point = new PointF(pictureBox1.Width / 2, pictureBox1.Height / 2);
+            List<Line> lines = new List<Line>();
             double direction = -start_angle;
+            float width = 5;
+            Color tree_color = Color.Green;
 
-            Stack<Tuple<PointF, double>> stack = new Stack<Tuple<PointF, double>>();
+            Stack<Tuple<PointF, double, float, Color>> stack = new Stack<Tuple<PointF, double, float, Color>>();
             for (int i = 0; i < fractal.Length; ++i)
                 switch (fractal[i])
                 {
                     case 'F':
-                        PointF p = points.Last();
+                        PointF p = prev_point;
                         p.X += (float)(len * Math.Cos(direction * Math.PI / 180.0));
                         p.Y += (float)(len * Math.Sin(direction * Math.PI / 180.0));
-                        points.Add(p);
-                        points.Add(p);
+                        if (!isRandom)
+                            lines.Add(new Line(prev_point, p, width));
+                        else
+                            lines.Add(new Line(prev_point, p, width, tree_color));
+                        prev_point = p;
                         break;
                     case '+':
                         if (isRandom)
@@ -141,41 +162,59 @@ namespace Lab5_task1
                         }
                         break;
                     case '[':
-                        stack.Push(new Tuple<PointF, double>(points.Last(), direction));
+                        stack.Push(new Tuple<PointF, double, float, Color>(prev_point, direction, width, tree_color));
+                        width -= 1;
+                        tree_color = ControlPaint.Light(tree_color, 0.2f);
                         break;
                     case ']':
                         direction = stack.Peek().Item2;
-                        points.Add(points.Last());
-                        points.Add(stack.Peek().Item1);
+                        prev_point = stack.Peek().Item1;
+                        width = stack.Peek().Item3;
+                        tree_color = stack.Peek().Item4;
                         stack.Pop();
                         break;
                     default:
                         break;
                 }
-            return points;
+            return lines;
         }
 
-        private void draw_fractal(List<PointF> points)
+        private void draw_fractal(List<Line> lines)
         {
-            float min_x = points.Min(p => p.X);
-            float min_y = points.Min(p => p.Y);
-            float max_x = points.Max(p => p.X);
-            float max_y = points.Max(p => p.Y);
-
-            points = points.Select(p =>
+            float min_x = float.MaxValue, min_y = float.MaxValue, max_x = float.MinValue, max_y = float.MinValue;
+            foreach (Line line in lines)
             {
-                if (max_x != min_x)
-                    p.X = (pictureBox1.Width - 1) * (p.X - min_x) / (max_x - min_x);
-                if (max_y != min_y)
-                    p.Y = (pictureBox1.Height - 1) * (p.Y - min_y) / (max_y - min_y);
-                return p;
+                min_x = Math.Min(min_x, Math.Min(line.P1.X, line.P2.X));
+                min_y = Math.Min(min_y, Math.Min(line.P1.Y, line.P2.Y));
+                max_x = Math.Max(max_x, Math.Max(line.P1.X, line.P2.X));
+                max_y = Math.Max(max_y, Math.Max(line.P1.Y, line.P2.Y));
+            }
+
+            lines = lines.Select(line =>
+            {
+                if (max_x != min_x && (pictureBox1.ClientSize.Width < max_x || min_x < 0))
+                {
+                    line.P1.X = (pictureBox1.Width - 1) * (line.P1.X - min_x) / (max_x - min_x);
+                    line.P2.X = (pictureBox1.Width - 1) * (line.P2.X - min_x) / (max_x - min_x);
+                }
+                if (max_y != min_y && (pictureBox1.ClientSize.Height < max_y || min_y < 0))
+                {
+                    line.P1.Y = (pictureBox1.Height - 1) * (line.P1.Y - min_y) / (max_y - min_y);
+                    line.P2.Y = (pictureBox1.Height - 1) * (line.P2.Y - min_y) / (max_y - min_y);
+                }
+                return line;
             }).ToList();
 
             Clear();
             g = Graphics.FromImage(pictureBox1.Image);
-            using (Pen pen = new Pen(Color.Black, 1))
-                for (int i = 1; i < points.Count; i += 2)
-                    g.DrawLine(pen, points[i - 1], points[i]);
+            if (isRandom)
+                foreach (Line line in lines)
+                    using (Pen pen = new Pen(line.branch_color, line.thickness))
+                        g.DrawLine(pen, line.P1, line.P2);
+            else
+                using (Pen pen = new Pen(Color.Black, 1))
+                    foreach (Line line in lines)
+                        g.DrawLine(pen, line.P1, line.P2);
             pictureBox1.Refresh();
         }
 
