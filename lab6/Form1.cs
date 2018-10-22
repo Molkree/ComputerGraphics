@@ -196,15 +196,13 @@ namespace lab6
                     figure.translate(figure.Center.X, figure.Center.Y, figure.Center.Z);
                 }
 
-                // поворачиваем относительно введенной точки rotation_point
+                // поворачиваем относительно нужной прямой
                 if (rot_angle.Text != "0")
                 {
-                    /*               Point3d rot_point 
-                                   double r = Double.Parse(rot_angle.Text);
-                                   figure.translate(-1 * rot_x, -1 * rotation_point.Y);
-                                   pr.rotate(r);
-                                   pr.translate(rotation_point.X, rotation_point.Y);
-                      */
+                    if (line_mod != rot_line_mod.OTHER)
+                        figure.rotate(double.Parse(rot_angle.Text, CultureInfo.CurrentCulture), (axis)line_mod);
+                    else
+                        throw new NotImplementedException("Implement for user defined lines!");
                 }
 
                 figure.show(g, pr, new_fig);

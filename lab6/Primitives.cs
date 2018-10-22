@@ -46,8 +46,8 @@ namespace lab6
         // get point for isometric projection
         public PointF make_isometric()
         {
-            double r_phi = Math.Asin(Math.Tan((Math.PI * 30) / 180));
-            double r_psi = (Math.PI * 45) / 180;
+            double r_phi = Math.Asin(Math.Tan(Math.PI * 30 / 180));
+            double r_psi = Math.PI * 45 / 180;
             float cos_phi = (float)Math.Cos(r_phi);
             float sin_phi = (float)Math.Sin(r_phi);
             float cos_psi = (float)Math.Cos(r_psi);
@@ -166,7 +166,7 @@ namespace lab6
 
         public void rotate(double angle, axis a)
         {
-            double rangle = (Math.PI * angle) / 180; // угол в радианах
+            double rangle = Math.PI * angle / 180; // угол в радианах
 
             List<float> R = null;
 
