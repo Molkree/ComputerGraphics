@@ -308,6 +308,16 @@ namespace lab6
             figure.make_octaeder();
             figure.show(g, pr);
         }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 
     enum rot_line_mod { LINE_X = 0, LINE_Y, LINE_Z, OTHER };

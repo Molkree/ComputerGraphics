@@ -338,6 +338,7 @@
             this.button4.TabIndex = 50;
             this.button4.Text = "Икосаэдр";
             this.button4.UseVisualStyleBackColor = true;
+            this.button4.Click += new System.EventHandler(this.button4_Click);
             // 
             // button5
             // 
@@ -347,6 +348,7 @@
             this.button5.TabIndex = 51;
             this.button5.Text = "Додекаэдр";
             this.button5.UseVisualStyleBackColor = true;
+            this.button5.Click += new System.EventHandler(this.button5_Click);
             // 
             // button6
             // 
