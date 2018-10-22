@@ -27,6 +27,18 @@ namespace lab6
             Z = p.Z;
         }
 
+        public void reflectX()
+        {
+            X = -X;
+        }
+        public void reflectY()
+        {
+            Y = -Y;
+        }
+        public void reflectZ()
+        {
+            Z = -Z;
+        }
         /* ------ Projections ------ */
 
         // get point for central (perspective) projection
@@ -323,6 +335,28 @@ namespace lab6
             Center.Z /= Points.Count;
         }
 
+        public void reflectX()
+        {
+            Center.X = -Center.X;
+            if (Points != null)
+                foreach (var p in Points)
+                    p.reflectX();
+        }
+        public void reflectY()
+        {
+            Center.Y = -Center.Y;
+            if (Points != null)
+                foreach (var p in Points)
+                    p.reflectY();
+        }
+        public void reflectZ()
+        {
+            Center.Z = -Center.Z;
+            if (Points != null)
+                foreach (var p in Points)
+                    p.reflectZ();
+        }
+
         /* ------ Projections ------ */
 
         // get points for central (perspective) projection
@@ -460,6 +494,28 @@ namespace lab6
         {
             foreach (Face f in Faces)
                 f.scale(kx, ky, kz);
+        }
+        
+        public void reflectX()
+        {
+            Center.X = -Center.X;
+            if (Faces != null )
+                foreach (var f in Faces)
+                    f.reflectX();
+        }
+        public void reflectY()
+        {
+            Center.Y = -Center.Y;
+            if (Faces != null)
+                foreach (var f in Faces)
+                    f.reflectY();
+        }
+        public void reflectZ()
+        {
+            Center.Z = -Center.Z;
+            if (Faces != null)
+                foreach (var f in Faces)
+                    f.reflectZ();
         }
 
         /* ------ Figures ------- */
