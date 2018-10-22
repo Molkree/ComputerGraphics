@@ -209,12 +209,7 @@ namespace lab6
                         figure.rotate(double.Parse(rot_angle.Text, CultureInfo.CurrentCulture), (axis)line_mod);
                     else
                     {
-                        float line_x = rot_line.P1.X, line_y = rot_line.P1.Y, line_z = rot_line.P1.Z;
-                        figure.translate(-line_x, -line_y, -line_z);
-                        rot_line.translate(-line_x, -line_y, -line_z);
                         figure.rotate(double.Parse(rot_angle.Text, CultureInfo.CurrentCulture), (axis)line_mod, rot_line);
-                        rot_line.translate(line_x, line_y, line_z);
-                        figure.translate(line_x, line_y, line_z);
                     }
                 }
 
