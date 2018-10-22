@@ -161,7 +161,7 @@ namespace lab6
 
             X = c[0];
             Y = c[1];
-            Z = c[2];         
+            Z = c[2];
         }
 
         public void rotate(double angle, axis a, Edge line = null)
@@ -260,13 +260,13 @@ namespace lab6
         }
     }
 
-    // прямая (ребро) - он нужен вообще?
+
     public class Edge
     {
         public Point3d P1 { get; set; }
         public Point3d P2 { get; set; }
 
-        public Edge(Point3d pt1, Point3d pt2) 
+        public Edge(Point3d pt1, Point3d pt2)
         {
             P1 = new Point3d(pt1);
             P2 = new Point3d(pt2);
@@ -284,15 +284,26 @@ namespace lab6
             return res;
         }
 
-        // get point for parallel projection
-        static public List<PointF> make_parallel()
+        private List<PointF> make_orthographic(axis a)
         {
-            List<PointF> res = new List<PointF>();
-            //res.Add(p1.make_parallel());
-            //res.Add(p2.make_parallel());
-
+            List<PointF> res = new List<PointF>
+            {
+                P1.make_orthographic(a),
+                P2.make_orthographic(a)
+            };
             return res;
         }
+
+        private List<PointF> make_isometric()
+        {
+            List<PointF> res = new List<PointF>
+            {
+                P1.make_isometric(),
+                P2.make_isometric()
+            };
+            return res;
+        }
+
 
         private void show_perspective(Graphics g, Pen pen)
         {
@@ -429,14 +440,22 @@ namespace lab6
     // многогранник
     public class Polyhedron
     {
-        public List<Face> Faces { get; }
+        public List<Face> Faces { get; set; } = null;
         public Point3d Center { get; set; } = new Point3d(0, 0, 0);
         public float Cube_size { get; set; }
 
-        public Polyhedron(List<Face> fs)
+        public Polyhedron(List<Face> fs = null)
         {
-            Faces = new List<Face>(fs);
+            if (fs != null)
+            {
+                Faces = new List<Face>(fs);
 
+                find_center();
+            }
+        }
+
+        private void find_center()
+        {
             foreach (Face f in Faces)
             {
                 Center.X += f.Center.X;
@@ -446,6 +465,7 @@ namespace lab6
             Center.X /= Faces.Count;
             Center.Y /= Faces.Count;
             Center.Z /= Faces.Count;
+       
         }
 
         public void show(Graphics g, Projection pr = 0, Pen pen = null)
@@ -470,6 +490,146 @@ namespace lab6
         {
             foreach (Face f in Faces)
                 f.scale(kx, ky, kz);
+        }
+
+        /* ------ Figures ------- */
+
+        public void make_cube(Face f = null)
+        {
+            if (f == null)
+            {
+
+                f = new Face(
+                    new List<Point3d>
+                    {
+                        new Point3d(-50, -50, 0),
+                        new Point3d(50, -50, 0),
+                        new Point3d(50, 50, 0),
+                        new Point3d(-50, 50, 0)
+                    }
+               );
+
+                
+            }
+
+
+            Faces = new List<Face>
+            {
+                // back face
+                f
+            };
+
+            List<Point3d> l1 = new List<Point3d>();
+
+            float cube_size = Math.Abs(f.Points[0].X - f.Points[1].X);
+
+            // front face
+            foreach (var point in f.Points)
+            {
+                l1.Add(new Point3d(point.X, point.Y, point.Z + cube_size));
+            }
+            Face f1 = new Face(l1);
+            Faces.Add(f1);
+
+            // up face
+            List<Point3d> l2 = new List<Point3d>
+            {
+                new Point3d(f.Points[0]),   // left up
+                new Point3d(f.Points[1]),   // right up
+                new Point3d(f1.Points[1]),  // right down
+                new Point3d(f1.Points[0]),  // left down
+                
+            };
+            Face f2 = new Face(l2);
+            Faces.Add(f2);
+
+            // down face
+            List<Point3d> l3 = new List<Point3d>
+            {
+                new Point3d(f.Points[3]),
+                new Point3d(f.Points[2]),
+                new Point3d(f1.Points[2]),
+                new Point3d(f1.Points[3]),
+                
+            };
+            Face f3 = new Face(l3);
+            Faces.Add(f3);
+
+            // left face
+            List<Point3d> l4 = new List<Point3d>
+            {
+                new Point3d(f.Points[0]),
+                new Point3d(f1.Points[0]),
+                new Point3d(f1.Points[3]),
+                new Point3d(f.Points[3])
+            };
+            Face f4 = new Face(l4);
+            Faces.Add(f4);
+
+            // right face
+            List<Point3d> l5 = new List<Point3d>
+            {
+                new Point3d(f1.Points[1]),
+                new Point3d(f.Points[1]),
+                new Point3d(f.Points[2]),
+                new Point3d(f1.Points[2])
+            };
+            Face f5 = new Face(l5);
+            Faces.Add(f5);
+
+            Cube_size = cube_size;
+            find_center();
+        }
+
+        public void make_tetraedr(Polyhedron cube = null)
+        {
+            if (cube == null)
+            {
+                cube = new Polyhedron();
+                cube.make_cube();
+            }
+            Face f0 = new Face(
+
+                new List<Point3d>
+                {
+                    new Point3d(cube.Faces[0].Points[0]),
+                    new Point3d(cube.Faces[1].Points[1]),
+                    new Point3d(cube.Faces[1].Points[3])                
+                }
+            );
+
+            Face f1 = new Face(
+
+                new List<Point3d>
+                {
+                    new Point3d(cube.Faces[1].Points[3]),
+                    new Point3d(cube.Faces[1].Points[1]),
+                    new Point3d(cube.Faces[0].Points[2])
+                }
+            );
+
+            Face f2 = new Face(
+
+                new List<Point3d>
+                {
+                    new Point3d(cube.Faces[0].Points[2]),
+                    new Point3d(cube.Faces[1].Points[1]),
+                    new Point3d(cube.Faces[0].Points[0])
+                }
+            );
+
+            Face f3 = new Face(
+
+                new List<Point3d>
+                {
+                    new Point3d(cube.Faces[0].Points[2]),
+                    new Point3d(cube.Faces[0].Points[0]),
+                    new Point3d(cube.Faces[1].Points[3])
+                }
+            );
+
+            Faces = new List<Face> { f0, f1, f2, f3 };
+            find_center();
         }
     }
 }

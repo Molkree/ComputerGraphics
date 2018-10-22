@@ -44,7 +44,10 @@ namespace lab6
 
             Face f = new Face(pts);
 
-            figure = make_cube(f);
+            figure = new Polyhedron();
+            figure.make_cube(f);
+
+//            figure = make_cube(f);
             figure.show(g, pr);
         }
 
@@ -289,6 +292,14 @@ namespace lab6
                 }
             }
            g.Clear(Color.White);
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            g.Clear(Color.White);
+            figure = new Polyhedron();
+            figure.make_tetraedr();
+            figure.show(g, pr);
         }
     }
 
