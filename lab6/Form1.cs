@@ -29,7 +29,7 @@ namespace lab6
         private void button1_Click(object sender, EventArgs e)
         {
             clear_button_Click(sender, e);
-            int center_x = 150;
+     /*       int center_x = 150;
             int center_y = 150;
 
             int size = 150 / 2;
@@ -43,9 +43,9 @@ namespace lab6
             };
 
             Face f = new Face(pts);
-
+*/
             figure = new Polyhedron();
-            figure.make_cube(f);
+            figure.make_cube();
 
 //            figure = make_cube(f);
             figure.show(g, pr);
@@ -207,7 +207,8 @@ namespace lab6
                 {
                     if (line_mod != rot_line_mod.OTHER)
                     {
-                        figure.rotate(double.Parse(rot_angle.Text, CultureInfo.CurrentCulture), (axis)line_mod);
+                        
+                        figure.rotate(double.Parse(rot_angle.Text, CultureInfo.CurrentCulture), (axis)line_mod, rot_line);
                     }
                     else
                     {
@@ -241,6 +242,8 @@ namespace lab6
                         new Point3d(int.Parse(rot_line_x2.Text), int.Parse(rot_line_y2.Text), int.Parse(rot_line_z2.Text)));
                     break;
             }
+
+            rot_line.show(g, Pens.Red);
         }
 
         private void comboBox2_SelectedIndexChanged(object sender, EventArgs e)
@@ -295,7 +298,15 @@ namespace lab6
         {
             g.Clear(Color.White);
             figure = new Polyhedron();
-            figure.make_tetraedr();
+            figure.make_tetraeder();
+            figure.show(g, pr);
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            g.Clear(Color.White);
+            figure = new Polyhedron();
+            figure.make_octaeder();
             figure.show(g, pr);
         }
     }

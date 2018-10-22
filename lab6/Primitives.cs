@@ -551,7 +551,7 @@ namespace lab6
             find_center();
         }
 
-        public void make_tetraedr(Polyhedron cube = null)
+        public void make_tetraeder(Polyhedron cube = null)
         {
             if (cube == null)
             {
@@ -599,6 +599,102 @@ namespace lab6
             );
 
             Faces = new List<Face> { f0, f1, f2, f3 };
+            find_center();
+        }
+
+        public void make_octaeder(Polyhedron cube = null)
+        {
+            if (cube == null)
+            {
+                cube = new Polyhedron();
+                cube.make_cube();
+            }
+
+            // up
+
+            Face f0 = new Face(
+
+                new List<Point3d>
+                {
+                    new Point3d(cube.Faces[2].Center),
+                    new Point3d(cube.Faces[1].Center),
+                    new Point3d(cube.Faces[4].Center)
+                }
+            );
+
+            Face f1 = new Face(
+
+                new List<Point3d>
+                {
+                    new Point3d(cube.Faces[2].Center),
+                    new Point3d(cube.Faces[1].Center),
+                    new Point3d(cube.Faces[5].Center)
+                }
+            );
+
+            Face f2 = new Face(
+
+                new List<Point3d>
+                {
+                    new Point3d(cube.Faces[2].Center),
+                    new Point3d(cube.Faces[5].Center),
+                    new Point3d(cube.Faces[0].Center)
+                }
+            );
+
+            Face f3 = new Face(
+
+                new List<Point3d>
+                {
+                    new Point3d(cube.Faces[2].Center),
+                    new Point3d(cube.Faces[0].Center),
+                    new Point3d(cube.Faces[4].Center)
+                }
+            );
+
+            // down
+
+            Face f4 = new Face(
+
+                new List<Point3d>
+                {
+                    new Point3d(cube.Faces[3].Center),
+                    new Point3d(cube.Faces[1].Center),
+                    new Point3d(cube.Faces[4].Center)
+                }
+            );
+
+            Face f5 = new Face(
+
+                new List<Point3d>
+                {
+                    new Point3d(cube.Faces[3].Center),
+                    new Point3d(cube.Faces[1].Center),
+                    new Point3d(cube.Faces[5].Center)
+                }
+            );
+
+            Face f6 = new Face(
+
+                new List<Point3d>
+                {
+                    new Point3d(cube.Faces[3].Center),
+                    new Point3d(cube.Faces[5].Center),
+                    new Point3d(cube.Faces[0].Center)
+                }
+            );
+
+            Face f7 = new Face(
+
+                new List<Point3d>
+                {
+                    new Point3d(cube.Faces[3].Center),
+                    new Point3d(cube.Faces[0].Center),
+                    new Point3d(cube.Faces[4].Center)
+                }
+            );
+
+            Faces = new List<Face> { f0, f1, f2, f3, f4, f5, f6, f7 };
             find_center();
         }
     }
