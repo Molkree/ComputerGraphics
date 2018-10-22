@@ -236,7 +236,6 @@ namespace Lab5_task1
             if (tree_color.ToArgb() == Color.Black.ToArgb())
                 label6.ForeColor = Color.White;
             else label6.ForeColor = Color.Black;
-
         }
     }
 }
