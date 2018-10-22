@@ -206,7 +206,11 @@ namespace lab6
                 if (rot_angle.Text != "0")
                 {
                     if (line_mod != rot_line_mod.OTHER)
+                    {
+                        figure.translate(-1 * figure.Center.X, -1 * figure.Center.Y, -1 * figure.Center.Z);
                         figure.rotate(double.Parse(rot_angle.Text, CultureInfo.CurrentCulture), (axis)line_mod);
+                        figure.translate(figure.Center.X, figure.Center.Y, figure.Center.Z);
+                    }
                     else
                     {
                         figure.rotate(double.Parse(rot_angle.Text, CultureInfo.CurrentCulture), (axis)line_mod, rot_line);
