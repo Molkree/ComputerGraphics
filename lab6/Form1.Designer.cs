@@ -55,6 +55,12 @@
             this.rot_line_x2 = new System.Windows.Forms.TextBox();
             this.button2 = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
+            this.button4 = new System.Windows.Forms.Button();
+            this.button5 = new System.Windows.Forms.Button();
+            this.button6 = new System.Windows.Forms.Button();
+            this.button7 = new System.Windows.Forms.Button();
+            this.button8 = new System.Windows.Forms.Button();
+            this.label4 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -70,11 +76,11 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(12, 450);
+            this.button1.Location = new System.Drawing.Point(12, 419);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(64, 39);
             this.button1.TabIndex = 1;
-            this.button1.Text = "Сделать кубик";
+            this.button1.Text = "Гексаэдр";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
@@ -203,7 +209,7 @@
             // 
             // button_exec
             // 
-            this.button_exec.Location = new System.Drawing.Point(12, 288);
+            this.button_exec.Location = new System.Drawing.Point(12, 300);
             this.button_exec.Name = "button_exec";
             this.button_exec.Size = new System.Drawing.Size(75, 23);
             this.button_exec.TabIndex = 37;
@@ -236,7 +242,7 @@
             // 
             // clear_button
             // 
-            this.clear_button.Location = new System.Drawing.Point(15, 413);
+            this.clear_button.Location = new System.Drawing.Point(93, 300);
             this.clear_button.Name = "clear_button";
             this.clear_button.Size = new System.Drawing.Size(75, 23);
             this.clear_button.TabIndex = 41;
@@ -248,7 +254,7 @@
             // 
             this.rot_line_x1.Enabled = false;
             this.rot_line_x1.Location = new System.Drawing.Point(12, 238);
-            this.rot_line_x1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.rot_line_x1.Margin = new System.Windows.Forms.Padding(2);
             this.rot_line_x1.Name = "rot_line_x1";
             this.rot_line_x1.Size = new System.Drawing.Size(52, 20);
             this.rot_line_x1.TabIndex = 42;
@@ -258,7 +264,7 @@
             // 
             this.rot_line_y1.Enabled = false;
             this.rot_line_y1.Location = new System.Drawing.Point(87, 238);
-            this.rot_line_y1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.rot_line_y1.Margin = new System.Windows.Forms.Padding(2);
             this.rot_line_y1.Name = "rot_line_y1";
             this.rot_line_y1.Size = new System.Drawing.Size(52, 20);
             this.rot_line_y1.TabIndex = 43;
@@ -268,7 +274,7 @@
             // 
             this.rot_line_z1.Enabled = false;
             this.rot_line_z1.Location = new System.Drawing.Point(167, 238);
-            this.rot_line_z1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.rot_line_z1.Margin = new System.Windows.Forms.Padding(2);
             this.rot_line_z1.Name = "rot_line_z1";
             this.rot_line_z1.Size = new System.Drawing.Size(53, 20);
             this.rot_line_z1.TabIndex = 44;
@@ -278,7 +284,7 @@
             // 
             this.rot_line_z2.Enabled = false;
             this.rot_line_z2.Location = new System.Drawing.Point(167, 264);
-            this.rot_line_z2.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.rot_line_z2.Margin = new System.Windows.Forms.Padding(2);
             this.rot_line_z2.Name = "rot_line_z2";
             this.rot_line_z2.Size = new System.Drawing.Size(53, 20);
             this.rot_line_z2.TabIndex = 47;
@@ -288,7 +294,7 @@
             // 
             this.rot_line_y2.Enabled = false;
             this.rot_line_y2.Location = new System.Drawing.Point(87, 264);
-            this.rot_line_y2.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.rot_line_y2.Margin = new System.Windows.Forms.Padding(2);
             this.rot_line_y2.Name = "rot_line_y2";
             this.rot_line_y2.Size = new System.Drawing.Size(52, 20);
             this.rot_line_y2.TabIndex = 46;
@@ -298,7 +304,7 @@
             // 
             this.rot_line_x2.Enabled = false;
             this.rot_line_x2.Location = new System.Drawing.Point(12, 264);
-            this.rot_line_x2.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.rot_line_x2.Margin = new System.Windows.Forms.Padding(2);
             this.rot_line_x2.Name = "rot_line_x2";
             this.rot_line_x2.Size = new System.Drawing.Size(52, 20);
             this.rot_line_x2.TabIndex = 45;
@@ -306,9 +312,9 @@
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(82, 450);
+            this.button2.Location = new System.Drawing.Point(152, 419);
             this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(68, 39);
+            this.button2.Size = new System.Drawing.Size(64, 39);
             this.button2.TabIndex = 48;
             this.button2.Text = "Тетраэдр";
             this.button2.UseVisualStyleBackColor = true;
@@ -316,19 +322,79 @@
             // 
             // button3
             // 
-            this.button3.Location = new System.Drawing.Point(156, 450);
+            this.button3.Location = new System.Drawing.Point(82, 419);
             this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(68, 39);
+            this.button3.Size = new System.Drawing.Size(64, 39);
             this.button3.TabIndex = 49;
             this.button3.Text = "Октаэдр";
             this.button3.UseVisualStyleBackColor = true;
             this.button3.Click += new System.EventHandler(this.button3_Click);
+            // 
+            // button4
+            // 
+            this.button4.Location = new System.Drawing.Point(34, 464);
+            this.button4.Name = "button4";
+            this.button4.Size = new System.Drawing.Size(75, 39);
+            this.button4.TabIndex = 50;
+            this.button4.Text = "Икосаэдр";
+            this.button4.UseVisualStyleBackColor = true;
+            // 
+            // button5
+            // 
+            this.button5.Location = new System.Drawing.Point(115, 464);
+            this.button5.Name = "button5";
+            this.button5.Size = new System.Drawing.Size(72, 39);
+            this.button5.TabIndex = 51;
+            this.button5.Text = "Додекаэдр";
+            this.button5.UseVisualStyleBackColor = true;
+            // 
+            // button6
+            // 
+            this.button6.Location = new System.Drawing.Point(12, 367);
+            this.button6.Name = "button6";
+            this.button6.Size = new System.Drawing.Size(52, 23);
+            this.button6.TabIndex = 52;
+            this.button6.Text = "X";
+            this.button6.UseVisualStyleBackColor = true;
+            // 
+            // button7
+            // 
+            this.button7.Location = new System.Drawing.Point(70, 367);
+            this.button7.Name = "button7";
+            this.button7.Size = new System.Drawing.Size(52, 23);
+            this.button7.TabIndex = 53;
+            this.button7.Text = "Y";
+            this.button7.UseVisualStyleBackColor = true;
+            // 
+            // button8
+            // 
+            this.button8.Location = new System.Drawing.Point(128, 367);
+            this.button8.Name = "button8";
+            this.button8.Size = new System.Drawing.Size(52, 23);
+            this.button8.TabIndex = 54;
+            this.button8.Text = "Z";
+            this.button8.UseVisualStyleBackColor = true;
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(15, 351);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(73, 13);
+            this.label4.TabIndex = 55;
+            this.label4.Text = "Отразить по:";
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(869, 515);
+            this.Controls.Add(this.label4);
+            this.Controls.Add(this.button8);
+            this.Controls.Add(this.button7);
+            this.Controls.Add(this.button6);
+            this.Controls.Add(this.button5);
+            this.Controls.Add(this.button4);
             this.Controls.Add(this.button3);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.rot_line_z2);
@@ -393,6 +459,12 @@
         private System.Windows.Forms.TextBox rot_line_x2;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.Button button4;
+        private System.Windows.Forms.Button button5;
+        private System.Windows.Forms.Button button6;
+        private System.Windows.Forms.Button button7;
+        private System.Windows.Forms.Button button8;
+        private System.Windows.Forms.Label label4;
     }
 }
 
