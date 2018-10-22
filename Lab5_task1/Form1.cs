@@ -14,6 +14,7 @@ namespace Lab5_task1
         double angle;
         double start_angle;
         Dictionary<char, string> rules;
+        bool isRandom = false;
 
         Graphics g;
         public Form1()
@@ -63,6 +64,7 @@ namespace Lab5_task1
             var watch = System.Diagnostics.Stopwatch.StartNew();
             if (axiom == null)
                 return;
+            stdDev = (int)numericUpDown2.Value;
             string fractal = axiom;
             for (int i = 0; i < numericUpDown1.Value; ++i)
             {
@@ -87,6 +89,8 @@ namespace Lab5_task1
             label3.Text = (elapsedMs / 1000.0).ToString(CultureInfo.CurrentCulture);
         }
 
+        static Random randomizer = new Random();
+        private int stdDev = 5;
         private List<PointF> calculate_points(string fractal)
         {
             int len = 10;
@@ -105,10 +109,36 @@ namespace Lab5_task1
                         points.Add(p);
                         break;
                     case '+':
-                        direction = (direction + angle) % 360;
+                        if (isRandom)
+                        {
+                            double u1 = 1.0 - randomizer.NextDouble(); //uniform(0,1] random doubles
+                            double u2 = 1.0 - randomizer.NextDouble();
+                            double randStdNormal = Math.Sqrt(-2.0 * Math.Log(u1)) *
+                                         Math.Sin(2.0 * Math.PI * u2); //random normal(0,1)
+                            double rand_angle =
+                                         angle + stdDev * randStdNormal;
+                            direction = (direction + rand_angle) % 360;
+                        }
+                        else
+                        {
+                            direction = (direction + angle) % 360;
+                        }
                         break;
                     case '-':
-                        direction = (direction - angle) % 360;
+                        if (isRandom)
+                        {
+                            double u1 = 1.0 - randomizer.NextDouble(); //uniform(0,1] random doubles
+                            double u2 = 1.0 - randomizer.NextDouble();
+                            double randStdNormal = Math.Sqrt(-2.0 * Math.Log(u1)) *
+                                         Math.Sin(2.0 * Math.PI * u2); //random normal(0,1)
+                            double rand_angle =
+                                         angle + stdDev * randStdNormal;
+                            direction = (direction - rand_angle) % 360;
+                        }
+                        else
+                        {
+                            direction = (direction - angle) % 360;
+                        }
                         break;
                     case '[':
                         stack.Push(new Tuple<PointF, double>(points.Last(), direction));
@@ -147,6 +177,15 @@ namespace Lab5_task1
                 for (int i = 1; i < points.Count; i += 2)
                     g.DrawLine(pen, points[i - 1], points[i]);
             pictureBox1.Refresh();
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            isRandom = !isRandom;
+            if (isRandom)
+                label4.Text = "On";
+            else
+                label4.Text = "Off";
         }
     }
 }
