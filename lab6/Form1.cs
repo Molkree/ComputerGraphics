@@ -20,6 +20,7 @@ namespace lab6
         {
             InitializeComponent();
             g = pictureBox1.CreateGraphics();
+            g.TranslateTransform(pictureBox1.ClientSize.Width / 2, pictureBox1.ClientSize.Height / 2);
             comboBox1.SelectedIndex = 0;
             comboBox2.SelectedIndex = 0;
         }
@@ -28,11 +29,11 @@ namespace lab6
         private void button1_Click(object sender, EventArgs e)
         {
             clear_button_Click(sender, e);
-            int center_x = pictureBox1.ClientSize.Width / 2;
-            int center_y = pictureBox1.ClientSize.Height / 2;
+            int center_x = 150;
+            int center_y = 150;
 
             int size = 150 / 2;
-            int z = 0;
+            int z = -size;
             List<Point3d> pts = new List<Point3d>
             {
                 new Point3d(center_x - size, center_y - size, z),
