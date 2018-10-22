@@ -753,5 +753,244 @@ namespace lab6
             Faces = new List<Face> { f0, f1, f2, f3, f4, f5, f6, f7 };
             find_center();
         }
+
+        public void make_ikosaeder()
+        {
+            Faces = new List<Face>();
+
+            float size = 100;
+
+            float r = size * (float)Math.Sqrt(3) / 4;   // половина высоты правильного треугольника
+
+
+            Point3d up_center = new Point3d(0, -r, 0);  // center of upper circle
+            Point3d down_center = new Point3d(0, r, 0); // center of lower circle
+
+            // up
+            double a = Math.PI / 2;
+            List<Point3d> up_points = new List<Point3d>();
+            for (int i = 0; i < 5; ++i)
+            {
+                up_points.Add( new Point3d(up_center.X + r * (float)Math.Cos(a), up_center.Y, up_center.Z - r * (float)Math.Sin(a)));
+                a += 2 * Math.PI / 5;
+            }
+            // down
+            a = Math.PI / 2 - Math.PI / 5;
+            List<Point3d> down_points = new List<Point3d>();
+            for (int i = 0; i < 5; ++i)
+            {
+                down_points.Add(new Point3d(down_center.X + r * (float)Math.Cos(a), down_center.Y, down_center.Z - r * (float)Math.Sin(a)));
+                a += 2 * Math.PI / 5;
+            }
+
+            var R = Math.Sqrt(2*(5 + Math.Sqrt(5))) * size / 4; // радиус описанной сферы
+
+            Point3d p_up = new Point3d(up_center.X, (float)(-R), up_center.Z);
+            Point3d p_down = new Point3d(down_center.X, (float)R, down_center.Z);
+
+            // upper faces
+            for (int i = 0; i < 5; ++i)
+            {
+                Faces.Add(
+                    new Face( new List<Point3d>
+                    {
+                        new Point3d(p_up),
+                        new Point3d(up_points[i]),
+                        new Point3d(up_points[(i+1) % 5]),
+                    }
+                        )
+                    
+                    );
+            }
+
+            // lower faces
+            for (int i = 0; i < 5; ++i)
+            {
+                Faces.Add(
+                    new Face(new List<Point3d>
+                    {
+                        new Point3d(p_down),
+                        new Point3d(down_points[i]),
+                        new Point3d(down_points[(i+1) % 5]),
+                    }
+                        )
+
+                    );
+            }
+
+
+            // vertical
+            for (int i = 0; i < 5; ++i)
+            {
+                // triangle \/
+                Faces.Add(
+                    new Face(new List<Point3d>
+                    {
+                        new Point3d(up_points[i]),
+                        new Point3d(up_points[(i+1) % 5]),
+                        new Point3d(down_points[(i+1) % 5])
+                    }
+                        )
+                    );
+
+                // triangle /\
+                Faces.Add(
+                    new Face(new List<Point3d>
+                    {
+                        new Point3d(up_points[i]),
+                        new Point3d(down_points[i]),
+                        new Point3d(down_points[(i+1) % 5])
+                    }
+                        )
+                    );
+
+                
+            }
+
+            find_center();
+
+            /*
+             Faces = new List<Face> { f0, f1, f2, f3, f4, f5, f6, f7 };
+             find_center();*/
+        }
+
+        public void make_dodecaeder()
+        {
+            Faces = new List<Face>();
+            Polyhedron ik = new Polyhedron();
+            ik.make_ikosaeder();
+
+            List<Point3d> pts = new List<Point3d>();
+            foreach (Face f in ik.Faces)
+            {
+                pts.Add(f.Center);
+            }
+
+            // up
+            Faces.Add(new Face(new List<Point3d>
+            {
+                new Point3d(pts[0]),
+                new Point3d(pts[1]),
+                new Point3d(pts[2]),
+                new Point3d(pts[3]),
+                new Point3d(pts[4])
+            }));
+
+            // down
+            Faces.Add(new Face(new List<Point3d>
+            {
+                new Point3d(pts[5]),
+                new Point3d(pts[6]),
+                new Point3d(pts[7]),
+                new Point3d(pts[8]),
+                new Point3d(pts[9])
+            }));
+
+            // side / up
+       /*     for (int i = 0; i < 5; ++i)
+            {
+                Faces.Add(new Face(new List<Point3d>
+                {
+                    new Point3d(pts[i]),
+                    new Point3d(pts[(i + 1) % 5]),
+                    new Point3d(pts[(i == 4) ? 10 : i + 11]),
+                    new Point3d(pts[i + 15]),
+                    new Point3d(pts[i + 10])
+                }));
+            }*/
+            Faces.Add(new Face(new List<Point3d>
+            {
+                new Point3d(pts[0]),
+                new Point3d(pts[1]),
+                new Point3d(pts[12]),
+                new Point3d(pts[11]),
+                new Point3d(pts[10])
+            }));
+            Faces.Add(new Face(new List<Point3d>
+            {
+                new Point3d(pts[1]),
+                new Point3d(pts[2]),
+                new Point3d(pts[14]),
+                new Point3d(pts[13]),
+                new Point3d(pts[12])
+            }));
+            Faces.Add(new Face(new List<Point3d>
+            {
+                new Point3d(pts[2]),
+                new Point3d(pts[3]),
+                new Point3d(pts[16]),
+                new Point3d(pts[15]),
+                new Point3d(pts[14])
+            }));
+            Faces.Add(new Face(new List<Point3d>
+            {
+                new Point3d(pts[3]),
+                new Point3d(pts[4]),
+                new Point3d(pts[18]),
+                new Point3d(pts[17]),
+                new Point3d(pts[16])
+            }));
+            Faces.Add(new Face(new List<Point3d>
+            {
+                new Point3d(pts[4]),
+                new Point3d(pts[0]),
+                new Point3d(pts[10]),
+                new Point3d(pts[19]),
+                new Point3d(pts[18])
+            }));
+
+            // side / down
+   /*         for (int i = 5; i < 10; ++i)
+            {
+                Faces.Add(new Face(new List<Point3d>
+                {
+                    new Point3d(pts[i]),
+                    new Point3d(pts[(i == 9) ? 5 : i + 1]),
+                    new Point3d(pts[(i == 9) ? 15 : i + 11]),
+                    new Point3d(pts[(i == 9) ? 10 : i + 6]),
+                    new Point3d(pts[i + 10])
+                }));
+            }*/
+            Faces.Add(new Face(new List<Point3d>
+            {
+                new Point3d(pts[5]),
+                new Point3d(pts[6]),
+                new Point3d(pts[19]),
+                new Point3d(pts[10]),
+                new Point3d(pts[11])
+            }));
+            Faces.Add(new Face(new List<Point3d>
+            {
+                new Point3d(pts[6]),
+                new Point3d(pts[7]),
+                new Point3d(pts[15]),
+                new Point3d(pts[14]),
+                new Point3d(pts[13])
+            }));
+            Faces.Add(new Face(new List<Point3d>
+            {
+                new Point3d(pts[7]),
+                new Point3d(pts[8]),
+                new Point3d(pts[17]),
+                new Point3d(pts[16]),
+                new Point3d(pts[15])
+            }));
+            Faces.Add(new Face(new List<Point3d>
+            {
+                new Point3d(pts[8]),
+                new Point3d(pts[9]),
+                new Point3d(pts[19]),
+                new Point3d(pts[18]),
+                new Point3d(pts[17])
+            }));
+            Faces.Add(new Face(new List<Point3d>
+            {
+                new Point3d(pts[9]),
+                new Point3d(pts[5]),
+                new Point3d(pts[11]),
+                new Point3d(pts[10]),
+                new Point3d(pts[19])
+            }));
+        }
     }
 }

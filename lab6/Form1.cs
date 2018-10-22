@@ -311,7 +311,23 @@ namespace lab6
             figure.make_octaeder();
             figure.show(g, pr);
         }
-        
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            g.Clear(Color.White);
+            figure = new Polyhedron();
+            figure.make_ikosaeder();
+            figure.show(g, pr);
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            g.Clear(Color.White);
+            figure = new Polyhedron();
+            figure.make_dodecaeder();
+            figure.show(g, pr);
+        }
+
         //отражение по х
         private void button6_Click(object sender, EventArgs e)
         {
