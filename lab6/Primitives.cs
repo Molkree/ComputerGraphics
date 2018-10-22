@@ -170,36 +170,62 @@ namespace lab6
 
             List<float> R = null;
 
+            float cos_psi = 0, cos_phi = 0;
             float sin = (float)Math.Sin(rangle);
             float cos = (float)Math.Cos(rangle);
             switch (a)
             {
                 case axis.AXIS_X:
-                    R = new List<float> { 1,  0,    0,  0,
-                                          0, cos,  sin, 0,
-                                          0, -sin, cos, 0,
-                                          0,  0,    0,  1 };
+                    R = new List<float> { 1,   0,     0,   0,
+                                          0,  cos,   sin,  0,
+                                          0,  -sin,  cos,  0,
+                                          0,   0,     0,   1 };
                     break;
                 case axis.AXIS_Y:
-                    R = new List<float> { cos, 0, -sin, 0,
-                                           0,  1,  0,   0,
-                                          sin, 0, cos,  0,
-                                          0,   0,  0,   1 };
+                    R = new List<float> { cos,  0,  -sin,  0,
+                                           0,   1,   0,    0,
+                                          sin,  0,  cos,   0,
+                                           0,   0,   0,    1 };
                     break;
                 case axis.AXIS_Z:
-                    R = new List<float> { cos,  sin, 0, 0,
-                                          -sin, cos, 0, 0,
-                                           0,    0,  1, 0,
-                                           0,    0,  0, 1 };
+                    R = new List<float> { cos,   sin,  0,  0,
+                                          -sin,  cos,  0,  0,
+                                           0,     0,   1,  0,
+                                           0,     0,   0,  1 };
                     break;
                 case axis.OTHER:
-                    float l = line.P2.X - line.P1.X;
-                    float m = line.P2.Y - line.P1.Y;
-                    float n = line.P2.Z - line.P1.Z;
-                    R = new List<float> { l * l + cos * (1 - l * l),  l * (1 - cos) * m + n * sin,  l * (1 - cos) * n - m * sin,  0,
-                                          l * (1 - cos) * m - n * sin,  m * m + cos * (1 - m * m),  m * (1 - cos) * n + l * sin,  0,
-                                          l * (1 - cos) * n + m * sin,  m * (1 - cos) * n - l * sin,  n * n + cos * (1 - n * n),  0,
-                                          0,                            0,                            0,                          1 };
+                    //float l = Math.Sign(line.P2.X - line.P1.X);
+                    float m = Math.Sign(line.P2.Y - line.P1.Y);
+                    float n = Math.Sign(line.P2.Z - line.P1.Z);
+                    float d = (float)Math.Sqrt(m * m + n * n);
+                    cos_psi = d != 0 ? n / d : n;
+                    line.rotate(Math.Acos(cos_psi), axis.AXIS_Y);
+                    rotate(Math.Acos(cos_psi), axis.AXIS_Y);
+
+                    float l = Math.Sign(line.P2.X - line.P1.X);
+                    cos_phi = l;
+                    line.rotate(Math.Acos(cos_phi), axis.AXIS_X);
+                    rotate(Math.Acos(cos_phi), axis.AXIS_X);
+                    //List<float> R_x = new List<float> { 1,    0,       0,    0,
+                    //                                    0,  n / d,   m / d,  0,
+                    //                                    0,  -m / d,  n / d,  0,
+                    //                                    0,    0,       0,    1 };
+                    //List<float> R_y = new List<float> { l,   0,  d,  0,
+                    //                                    0,   1,  0,  0,
+                    //                                    -d,  0,  l,  0,
+                    //                                    0,   0,  0,  1 };
+                    List<float> R_z = new List<float> { cos,   sin,  0,  0,
+                                                        -sin,  cos,  0,  0,
+                                                         0,     0,   1,  0,
+                                                         0,     0,   0,  1 };
+                    R = R_z;
+                    //R = mul_matrix(R_x, 4, 4, R_y, 4, 4);
+                    //R = mul_matrix(R, 4, 4, R_z, 4, 4);
+
+                    //R = new List<float> { l * l + cos * (1 - l * l),  l * (1 - cos) * m + n * sin,  l * (1 - cos) * n - m * sin,  0,
+                    //                      l * (1 - cos) * m - n * sin,  m * m + cos * (1 - m * m),  m * (1 - cos) * n + l * sin,  0,
+                    //                      l * (1 - cos) * n + m * sin,  m * (1 - cos) * n - l * sin,  n * n + cos * (1 - n * n),  0,
+                    //                      0,                            0,                            0,                          1 };
 
                     break;
             }
@@ -209,6 +235,14 @@ namespace lab6
             X = c[0];
             Y = c[1];
             Z = c[2];
+
+            if (a == axis.OTHER)
+            {
+                line.rotate(-Math.Acos(cos_phi), axis.AXIS_X);
+                rotate(-Math.Acos(cos_phi), axis.AXIS_X);
+                line.rotate(-Math.Acos(cos_psi), axis.AXIS_Y);
+                rotate(-Math.Acos(cos_psi), axis.AXIS_Y);
+            }
         }
 
         public void scale(float kx, float ky, float kz)
@@ -273,13 +307,19 @@ namespace lab6
             show_perspective(g, pen);
         }
 
-  /*      Edge translate(float x, float y, float z)
+        public void translate(float x, float y, float z)
         {
-            List<Point3d> l = new List<Point3d>();
-            foreach (Point3d in )
+            P1.translate(x, y, z);
+            P2.translate(x, y, z);
         }
-        Edge rotate(double angle, axis a);
-        Edge scale(float kx, float ky, float kz);*/
+
+        public void rotate(double angle, axis a, Edge line = null)
+        {
+            P1.rotate(angle, a, line);
+            P2.rotate(angle, a, line);
+        }
+
+        //Edge scale(float kx, float ky, float kz);
     }
 
     // многоугольник (грань)
