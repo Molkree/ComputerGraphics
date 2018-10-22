@@ -311,6 +311,30 @@ namespace lab6
             figure.make_octaeder();
             figure.show(g, pr);
         }
+        
+        //отражение по х
+        private void button6_Click(object sender, EventArgs e)
+        {
+            figure.show(g, pr, old_fig);
+            figure.reflectX();
+            figure.show(g, pr);
+        }
+
+        //y
+        private void button7_Click(object sender, EventArgs e)
+        {
+            figure.show(g, pr, old_fig);
+            figure.reflectY();
+            figure.show(g, pr);
+        }
+
+        //z
+        private void button8_Click(object sender, EventArgs e)
+        {
+            figure.show(g, pr, old_fig);
+            figure.reflectZ();
+            figure.show(g, pr);
+        }
     }
 
     enum rot_line_mod { LINE_X = 0, LINE_Y, LINE_Z, OTHER };
