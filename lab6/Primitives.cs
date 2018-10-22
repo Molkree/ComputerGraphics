@@ -212,10 +212,10 @@ namespace lab6
                     l /= length; m /= length; n /= length;
                     float d = (float)Math.Sqrt(m * m + n * n);
 
-                    R = new List<float> { l * l + cos * (1 - l * l),  l * (1 - cos) * m + n * sin,  l * (1 - cos) * n - m * sin,  0,
-                                          l * (1 - cos) * m - n * sin,  m * m + cos * (1 - m * m),  m * (1 - cos) * n + l * sin,  0,
-                                          l * (1 - cos) * n + m * sin,  m * (1 - cos) * n - l * sin,  n * n + cos * (1 - n * n),  0,
-                                          0,                            0,                            0,                          1 };
+                    R = new List<float> {  l * l + cos * (1 - l * l),   l * (1 - cos) * m + n * sin,   l * (1 - cos) * n - m * sin,  0,
+                                          l * (1 - cos) * m - n * sin,   m * m + cos * (1 - m * m),    m * (1 - cos) * n + l * sin,  0,
+                                          l * (1 - cos) * n + m * sin,  m * (1 - cos) * n - l * sin,    n * n + cos * (1 - n * n),   0,
+                                                       0,                            0,                             0,               1 };
 
                     break;
             }
