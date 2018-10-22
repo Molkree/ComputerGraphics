@@ -213,7 +213,10 @@ namespace lab6
                     }
                     else
                     {
+                        float Ax = rot_line.P1.X, Ay = rot_line.P1.Y, Az = rot_line.P1.Z;
+                        figure.translate(-Ax, -Ay, -Az);
                         figure.rotate(double.Parse(rot_angle.Text, CultureInfo.CurrentCulture), (axis)line_mod, rot_line);
+                        figure.translate(Ax, Ay, Az);
                     }
                 }
 
