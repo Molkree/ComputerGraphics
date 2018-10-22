@@ -27,6 +27,7 @@ namespace lab6
         // Create cube
         private void button1_Click(object sender, EventArgs e)
         {
+            clear_button_Click(sender, e);
             int center_x = pictureBox1.ClientSize.Width / 2;
             int center_y = pictureBox1.ClientSize.Height / 2;
 
@@ -151,7 +152,8 @@ namespace lab6
                     TextBox t = c as TextBox;
                     if (t.Text == "")
                     {
-                        if (t.Name == "scaling_x" || t.Name == "scaling_y" || t.Name == "scaling_z")
+                        if (t.Name == "scaling_x" || t.Name == "scaling_y" || t.Name == "scaling_z" || t.Name == "rot_line_x2" ||
+                            t.Name == "rot_line_y2" || t.Name == "rot_line_z2")
                             t.Text = "1";
                         else t.Text = "0";
                     }
@@ -202,7 +204,7 @@ namespace lab6
                     if (line_mod != rot_line_mod.OTHER)
                         figure.rotate(double.Parse(rot_angle.Text, CultureInfo.CurrentCulture), (axis)line_mod);
                     else
-                        throw new NotImplementedException("Implement for user defined lines!");
+                        figure.rotate(double.Parse(rot_angle.Text, CultureInfo.CurrentCulture), (axis)line_mod, rot_line);
                 }
 
                 figure.show(g, pr, new_fig);
@@ -225,22 +227,43 @@ namespace lab6
                     rot_line = new Edge(new Point3d(figure.Center.X, figure.Center.Y, 0),
                                         new Point3d(figure.Center.X, figure.Center.Y, figure.Cube_size));
                     break;
+                case rot_line_mod.OTHER:
+                    rot_line = new Edge(
+                        new Point3d(int.Parse(rot_line_x1.Text), int.Parse(rot_line_y1.Text), int.Parse(rot_line_z1.Text)),
+                        new Point3d(int.Parse(rot_line_x2.Text), int.Parse(rot_line_y2.Text), int.Parse(rot_line_z2.Text)));
+                    break;
             }
         }
 
         private void comboBox2_SelectedIndexChanged(object sender, EventArgs e)
         {
             line_mod = (rot_line_mod)(comboBox2.SelectedIndex);
-            
-
+            if (line_mod == rot_line_mod.OTHER)
+            {
+                rot_line_x1.Enabled = true;
+                rot_line_y1.Enabled = true;
+                rot_line_z1.Enabled = true;
+                rot_line_x2.Enabled = true;
+                rot_line_y2.Enabled = true;
+                rot_line_z2.Enabled = true;
+            }
+            else
+            {
+                rot_line_x1.Enabled = false;
+                rot_line_y1.Enabled = false;
+                rot_line_z1.Enabled = false;
+                rot_line_x2.Enabled = false;
+                rot_line_y2.Enabled = false;
+                rot_line_z2.Enabled = false;
+            }
         }
 
         private void pictureBox1_MouseClick(object sender, MouseEventArgs e)
         {
-            if (line_mod == rot_line_mod.OTHER)
-            {
-                // TODO
-            }
+            //if (line_mod == rot_line_mod.OTHER)
+            //{
+            //    // TODO
+            //}
         }
 
         private void clear_button_Click(object sender, EventArgs e)
@@ -250,7 +273,8 @@ namespace lab6
                 if (c is TextBox)
                 {
                     TextBox t = c as TextBox;
-                    if (t.Name == "scaling_x" || t.Name == "scaling_y" || t.Name == "scaling_z")
+                    if (t.Name == "scaling_x" || t.Name == "scaling_y" || t.Name == "scaling_z" || t.Name == "rot_line_x2" ||
+                            t.Name == "rot_line_y2" || t.Name == "rot_line_z2")
                             t.Text = "1";
                     else t.Text = "0";
                     

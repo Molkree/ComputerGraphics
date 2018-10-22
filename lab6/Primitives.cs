@@ -4,7 +4,7 @@ using System.Drawing;
 
 namespace lab6
 {
-    public enum axis { AXIS_X, AXIS_Y, AXIS_Z };
+    public enum axis { AXIS_X, AXIS_Y, AXIS_Z, OTHER };
     public enum Projection { PERSPECTIVE = 0, ISOMETRIC, ORTHOGR_X, ORTHOGR_Y, ORTHOGR_Z };
 
     public class Point3d
@@ -164,7 +164,7 @@ namespace lab6
             Z = c[2];         
         }
 
-        public void rotate(double angle, axis a)
+        public void rotate(double angle, axis a, Edge line = null)
         {
             double rangle = Math.PI * angle / 180; // угол в радианах
 
@@ -191,6 +191,16 @@ namespace lab6
                                           -sin, cos, 0, 0,
                                            0,    0,  1, 0,
                                            0,    0,  0, 1 };
+                    break;
+                case axis.OTHER:
+                    float l = line.P2.X - line.P1.X;
+                    float m = line.P2.Y - line.P1.Y;
+                    float n = line.P2.Z - line.P1.Z;
+                    R = new List<float> { l * l + cos * (1 - l * l),  l * (1 - cos) * m + n * sin,  l * (1 - cos) * n - m * sin,  0,
+                                          l * (1 - cos) * m - n * sin,  m * m + cos * (1 - m * m),  m * (1 - cos) * n + l * sin,  0,
+                                          l * (1 - cos) * n + m * sin,  m * (1 - cos) * n - l * sin,  n * n + cos * (1 - n * n),  0,
+                                          0,                            0,                            0,                          1 };
+
                     break;
             }
             List<float> xyz = new List<float> { X, Y, Z, 1 };
@@ -364,10 +374,10 @@ namespace lab6
             foreach (Point3d p in Points)
                 p.translate(x, y, z);
         }
-        public void rotate(double angle, axis a)
+        public void rotate(double angle, axis a, Edge line = null)
         {
             foreach (Point3d p in Points)
-                p.rotate(angle, a);
+                p.rotate(angle, a, line);
         }
         public void scale(float kx, float ky, float kz)
         {
@@ -411,10 +421,10 @@ namespace lab6
             foreach (Face f in Faces)
                 f.translate(x, y, z);
         }
-        public void rotate(double angle, axis a)
+        public void rotate(double angle, axis a, Edge line = null)
         {
             foreach (Face f in Faces)
-                f.rotate(angle, a);
+                f.rotate(angle, a, line);
         }
         public void scale(float kx, float ky, float kz)
         {
