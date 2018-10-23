@@ -331,6 +331,9 @@ namespace lab6
 
         private void find_center()
         {
+            Center.X = 0;
+            Center.Y = 0;
+            Center.Z = 0;
             foreach (Point3d p in Points)
             {
                 Center.X += p.X;
@@ -435,7 +438,7 @@ namespace lab6
         {
             foreach (Point3d p in Points)
                 p.translate(x, y, z);
-            find_center();
+            Center.translate(x, y, z);
         }
 
         public void rotate(double angle, Axis a, Edge line = null)
@@ -471,6 +474,9 @@ namespace lab6
 
         private void find_center()
         {
+            Center.X = 0;
+            Center.Y = 0;
+            Center.Z = 0;
             foreach (Face f in Faces)
             {
                 Center.X += f.Center.X;
@@ -494,7 +500,7 @@ namespace lab6
         {
             foreach (Face f in Faces)
                 f.translate(x, y, z);
-            find_center();
+            Center.translate(x, y, z);
         }
 
         public void rotate(double angle, Axis a, Edge line = null)
