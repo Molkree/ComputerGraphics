@@ -20,6 +20,7 @@ namespace lab6
             InitializeComponent();
             g = pictureBox1.CreateGraphics();
             g.TranslateTransform(pictureBox1.ClientSize.Width / 2, pictureBox1.ClientSize.Height / 2);
+            g.ScaleTransform(1, -1);
             comboBox1.SelectedIndex = 0;
             comboBox2.SelectedIndex = 0;
         }
