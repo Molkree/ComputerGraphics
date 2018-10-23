@@ -177,6 +177,7 @@ namespace lab6
                     
                 }
             }
+           figure = null;
            g.Clear(Color.White);
         }
 

@@ -755,11 +755,12 @@ namespace lab6
 
             float size = 100;
 
-            float r = size * (float)Math.Sqrt(3) / 4;   // половина высоты правильного треугольника
+            float r1 = size * (float)Math.Sqrt(3) / 4;   // половина высоты правильного треугольника - для высоты цилиндра
+            float r = size * (3 + (float)Math.Sqrt(5)) / (4 * (float)Math.Sqrt(3)); // радиус вписанной сферы - для правильных пятиугольников
 
 
-            Point3d up_center = new Point3d(0, -r, 0);  // center of upper circle
-            Point3d down_center = new Point3d(0, r, 0); // center of lower circle
+            Point3d up_center = new Point3d(0, -r1, 0);  // центр верхней окружности
+            Point3d down_center = new Point3d(0, r1, 0); // центр нижней окружности
 
             // up
             double a = Math.PI / 2;
@@ -778,7 +779,7 @@ namespace lab6
                 a += 2 * Math.PI / 5;
             }
 
-            var R = Math.Sqrt(2*(5 + Math.Sqrt(5))) * size / 4; // радиус описанной сферы
+            var R = Math.Sqrt(2*(5 + Math.Sqrt(5))) * size / 4; // радиус описанной сферы - для пирамидок над цилиндром
 
             Point3d p_up = new Point3d(up_center.X, (float)(-R), up_center.Z);
             Point3d p_down = new Point3d(down_center.X, (float)R, down_center.Z);
@@ -808,7 +809,7 @@ namespace lab6
                     })
                     );
             }
-
+            
             // vertical
             for (int i = 0; i < 5; ++i)
             {
@@ -832,7 +833,7 @@ namespace lab6
                     })
                     );
             }
-
+            
             find_center();
         }
 
@@ -869,31 +870,31 @@ namespace lab6
             }));
 
             // side / up
-       /*     for (int i = 0; i < 5; ++i)
+            for (int i = 0; i < 5; ++i)
             {
                 Faces.Add(new Face(new List<Point3d>
                 {
                     new Point3d(pts[i]),
                     new Point3d(pts[(i + 1) % 5]),
-                    new Point3d(pts[(i == 4) ? 10 : i + 11]),
-                    new Point3d(pts[i + 15]),
-                    new Point3d(pts[i + 10])
+                    new Point3d(pts[(i == 4) ? 10 : 2*i + 12]),
+                    new Point3d(pts[(i == 4) ? 11 : 2*i + 13]),
+                    new Point3d(pts[2*i + 10])
                 }));
-            }*/
-            Faces.Add(new Face(new List<Point3d>
+            }
+ /*          Faces.Add(new Face(new List<Point3d>
             {
                 new Point3d(pts[0]),
                 new Point3d(pts[1]),
                 new Point3d(pts[12]),
-                new Point3d(pts[11]),
+                new Point3d(pts[13]),
                 new Point3d(pts[10])
             }));
-            Faces.Add(new Face(new List<Point3d>
+             Faces.Add(new Face(new List<Point3d>
             {
                 new Point3d(pts[1]),
                 new Point3d(pts[2]),
                 new Point3d(pts[14]),
-                new Point3d(pts[13]),
+                new Point3d(pts[15]),
                 new Point3d(pts[12])
             }));
             Faces.Add(new Face(new List<Point3d>
@@ -901,7 +902,7 @@ namespace lab6
                 new Point3d(pts[2]),
                 new Point3d(pts[3]),
                 new Point3d(pts[16]),
-                new Point3d(pts[15]),
+                new Point3d(pts[17]),
                 new Point3d(pts[14])
             }));
             Faces.Add(new Face(new List<Point3d>
@@ -909,7 +910,7 @@ namespace lab6
                 new Point3d(pts[3]),
                 new Point3d(pts[4]),
                 new Point3d(pts[18]),
-                new Point3d(pts[17]),
+                new Point3d(pts[19]),
                 new Point3d(pts[16])
             }));
             Faces.Add(new Face(new List<Point3d>
@@ -917,36 +918,36 @@ namespace lab6
                 new Point3d(pts[4]),
                 new Point3d(pts[0]),
                 new Point3d(pts[10]),
-                new Point3d(pts[19]),
+                new Point3d(pts[11]),
                 new Point3d(pts[18])
             }));
-
+            */
             // side / down
-   /*         for (int i = 5; i < 10; ++i)
+ /*           for (int i = 5; i < 10; ++i)
             {
                 Faces.Add(new Face(new List<Point3d>
                 {
                     new Point3d(pts[i]),
                     new Point3d(pts[(i == 9) ? 5 : i + 1]),
-                    new Point3d(pts[(i == 9) ? 15 : i + 11]),
+                    new Point3d(pts[(i == 9) ? 15 : i + 8]),
                     new Point3d(pts[(i == 9) ? 10 : i + 6]),
                     new Point3d(pts[i + 10])
                 }));
             }*/
-            Faces.Add(new Face(new List<Point3d>
+           Faces.Add(new Face(new List<Point3d>
             {
                 new Point3d(pts[5]),
                 new Point3d(pts[6]),
-                new Point3d(pts[19]),
+                new Point3d(pts[13]),
                 new Point3d(pts[10]),
                 new Point3d(pts[11])
             }));
-            Faces.Add(new Face(new List<Point3d>
+             Faces.Add(new Face(new List<Point3d>
             {
                 new Point3d(pts[6]),
                 new Point3d(pts[7]),
                 new Point3d(pts[15]),
-                new Point3d(pts[14]),
+                new Point3d(pts[12]),
                 new Point3d(pts[13])
             }));
             Faces.Add(new Face(new List<Point3d>
@@ -954,7 +955,7 @@ namespace lab6
                 new Point3d(pts[7]),
                 new Point3d(pts[8]),
                 new Point3d(pts[17]),
-                new Point3d(pts[16]),
+                new Point3d(pts[14]),
                 new Point3d(pts[15])
             }));
             Faces.Add(new Face(new List<Point3d>
@@ -962,7 +963,7 @@ namespace lab6
                 new Point3d(pts[8]),
                 new Point3d(pts[9]),
                 new Point3d(pts[19]),
-                new Point3d(pts[18]),
+                new Point3d(pts[16]),
                 new Point3d(pts[17])
             }));
             Faces.Add(new Face(new List<Point3d>
@@ -970,7 +971,7 @@ namespace lab6
                 new Point3d(pts[9]),
                 new Point3d(pts[5]),
                 new Point3d(pts[11]),
-                new Point3d(pts[10]),
+                new Point3d(pts[18]),
                 new Point3d(pts[19])
             }));
         }
