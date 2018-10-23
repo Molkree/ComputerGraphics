@@ -758,7 +758,6 @@ namespace lab6
             float r1 = size * (float)Math.Sqrt(3) / 4;   // половина высоты правильного треугольника - для высоты цилиндра
             float r = size * (3 + (float)Math.Sqrt(5)) / (4 * (float)Math.Sqrt(3)); // радиус вписанной сферы - для правильных пятиугольников
 
-
             Point3d up_center = new Point3d(0, -r1, 0);  // центр верхней окружности
             Point3d down_center = new Point3d(0, r1, 0); // центр нижней окружности
 
@@ -770,6 +769,7 @@ namespace lab6
                 up_points.Add( new Point3d(up_center.X + r * (float)Math.Cos(a), up_center.Y, up_center.Z - r * (float)Math.Sin(a)));
                 a += 2 * Math.PI / 5;
             }
+
             // down
             a = Math.PI / 2 - Math.PI / 5;
             List<Point3d> down_points = new List<Point3d>();
@@ -881,59 +881,7 @@ namespace lab6
                     new Point3d(pts[2*i + 10])
                 }));
             }
- /*          Faces.Add(new Face(new List<Point3d>
-            {
-                new Point3d(pts[0]),
-                new Point3d(pts[1]),
-                new Point3d(pts[12]),
-                new Point3d(pts[13]),
-                new Point3d(pts[10])
-            }));
-             Faces.Add(new Face(new List<Point3d>
-            {
-                new Point3d(pts[1]),
-                new Point3d(pts[2]),
-                new Point3d(pts[14]),
-                new Point3d(pts[15]),
-                new Point3d(pts[12])
-            }));
-            Faces.Add(new Face(new List<Point3d>
-            {
-                new Point3d(pts[2]),
-                new Point3d(pts[3]),
-                new Point3d(pts[16]),
-                new Point3d(pts[17]),
-                new Point3d(pts[14])
-            }));
-            Faces.Add(new Face(new List<Point3d>
-            {
-                new Point3d(pts[3]),
-                new Point3d(pts[4]),
-                new Point3d(pts[18]),
-                new Point3d(pts[19]),
-                new Point3d(pts[16])
-            }));
-            Faces.Add(new Face(new List<Point3d>
-            {
-                new Point3d(pts[4]),
-                new Point3d(pts[0]),
-                new Point3d(pts[10]),
-                new Point3d(pts[11]),
-                new Point3d(pts[18])
-            }));
-            */
-            // side / down
- /*           for (int i = 5; i < 10; ++i)
-            {
-                Faces.Add(new Face(new List<Point3d>
-                {
-                    new Point3d(pts[i]),
-                    new Point3d(pts[(i == 9) ? 5 : i + 1]),
-                    new Point3d(pts[(i == 9) ? 15 : i + 8]),
-                    new Point3d(pts[(i == 9) ? 10 : i + 6]),
-                    new Point3d(pts[i + 10])
-                }));
-            }*/
+
            Faces.Add(new Face(new List<Point3d>
             {
                 new Point3d(pts[5]),

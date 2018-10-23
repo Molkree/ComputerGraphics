@@ -79,7 +79,12 @@ namespace Lab5_task1
             var watch = System.Diagnostics.Stopwatch.StartNew();
             if (axiom == null)
                 return;
+
             stdDev = (int)numericUpDown2.Value;
+            start_thickness = (float)numericUpDown3.Value;
+            thickness_change = (float)numericUpDown4.Value;
+            color_change = (float)numericUpDown5.Value / 100;
+
             string fractal = axiom;
             for (int i = 0; i < numericUpDown1.Value; ++i)
             {
@@ -107,13 +112,15 @@ namespace Lab5_task1
         static Random randomizer = new Random();
         private int stdDev;
         Color tree_color = Color.Green;
+        float start_thickness;
+        float thickness_change;
+        float color_change;
         private List<Line> calculate_lines(string fractal)
         {
             int len = 50;
             PointF prev_point = new PointF(pictureBox1.Width / 2, pictureBox1.Height / 2);
             List<Line> lines = new List<Line>();
             double direction = -start_angle;
-            float width = 5;
 
             Stack<Tuple<PointF, double, float, Color>> stack = new Stack<Tuple<PointF, double, float, Color>>();
             for (int i = 0; i < fractal.Length; ++i)
@@ -124,9 +131,9 @@ namespace Lab5_task1
                         p.X += (float)(len * Math.Cos(direction * Math.PI / 180.0));
                         p.Y += (float)(len * Math.Sin(direction * Math.PI / 180.0));
                         if (!isRandom)
-                            lines.Add(new Line(prev_point, p, width));
+                            lines.Add(new Line(prev_point, p, 1));
                         else
-                            lines.Add(new Line(prev_point, p, width, tree_color));
+                            lines.Add(new Line(prev_point, p, start_thickness, tree_color));
                         prev_point = p;
                         break;
                     case '+':
@@ -162,14 +169,14 @@ namespace Lab5_task1
                         }
                         break;
                     case '[':
-                        stack.Push(new Tuple<PointF, double, float, Color>(prev_point, direction, width, tree_color));
-                        width -= 1;
-                        tree_color = ControlPaint.Light(tree_color, 0.2f);
+                        stack.Push(new Tuple<PointF, double, float, Color>(prev_point, direction, start_thickness, tree_color));
+                        start_thickness -= thickness_change;
+                        tree_color = ControlPaint.Light(tree_color, color_change);
                         break;
                     case ']':
                         direction = stack.Peek().Item2;
                         prev_point = stack.Peek().Item1;
-                        width = stack.Peek().Item3;
+                        start_thickness = stack.Peek().Item3;
                         tree_color = stack.Peek().Item4;
                         stack.Pop();
                         break;
