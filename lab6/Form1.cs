@@ -18,6 +18,8 @@ namespace lab6
         public Form1()
         {
             InitializeComponent();
+            openFileDialog1.Filter = "Text files(*.txt)|*.txt|All files(*.*)|*.*";
+            saveFileDialog1.Filter = "Text files(*.txt)|*.txt|All files(*.*)|*.*";
             g = pictureBox1.CreateGraphics();
             g.TranslateTransform(pictureBox1.ClientSize.Width / 2, pictureBox1.ClientSize.Height / 2);
             g.ScaleTransform(1, -1);
@@ -235,6 +237,32 @@ namespace lab6
         {
             figure.show(g, pr, old_fig);
             figure.reflectZ();
+            figure.show(g, pr);
+        }
+
+
+        //save_file_dialog
+        private void button2_Click_1(object sender, EventArgs e)
+        {
+            if (saveFileDialog1.ShowDialog() == DialogResult.Cancel)
+                return;
+            string filename = saveFileDialog1.FileName;
+            string text = "";
+            if (figure != null)
+                text = figure.to_string();
+            System.IO.File.WriteAllText(filename, text);
+        }
+
+        //open_file_dialog
+        private void button1_Click_1(object sender, EventArgs e)
+        {
+            if (openFileDialog1.ShowDialog() == DialogResult.Cancel)
+                return;
+            string filename = openFileDialog1.FileName;
+            string fileText = System.IO.File.ReadAllText(filename);
+
+            g.Clear(Color.White);
+            figure = new Polyhedron(fileText);
             figure.show(g, pr);
         }
     }

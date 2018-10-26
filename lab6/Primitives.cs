@@ -27,6 +27,11 @@ namespace lab6
             Z = p.Z;
         }
 
+        public string to_string()
+        {   
+            return X.ToString() + " " + Y.ToString() + " " + Z.ToString();
+        }
+
         public void reflectX()
         {
             X = -X;
@@ -328,6 +333,38 @@ namespace lab6
                 find_center();
             }
         }
+        public Face(string s)
+        {
+            Points = new List<Point3d>();
+
+            var arr = s.Split(' ');
+            int points_cnt = Int32.Parse(arr[0]);
+            for (int i = 1; i < arr.Length; i+=3)
+            {
+                if (arr[i] == "")
+                    continue;
+                float x = float.Parse(arr[i]);
+                float y = float.Parse(arr[i+1]);
+                float z = float.Parse(arr[i+2]);
+                Point3d p = new Point3d(x, y, z);
+                Points.Add(p);
+            }
+        }
+
+
+
+        public string to_string()
+        {
+            string res = "";
+            res += Points.Count.ToString() + " ";
+            foreach (var f in Points)
+            {
+                res += f.to_string() + " ";
+            }
+
+            return res;
+        }
+
 
         private void find_center()
         {
@@ -470,6 +507,32 @@ namespace lab6
                 Faces = new List<Face>(fs);
                 find_center();
             }
+        }
+        public Polyhedron(string s)
+        {
+            Faces = new List<Face>();
+
+            var arr = s.Split('\n');
+            int faces_cnt = Int32.Parse(arr[0]);
+            for (int i = 1; i<arr.Length; ++i)
+            {
+                if (arr[i] == "")
+                    continue;
+                Face f = new Face(arr[i]);
+                Faces.Add(f);
+            }
+        }
+
+        public string to_string()
+        {
+            string res = "";
+            res += Faces.Count.ToString() + "\n";
+            foreach (var f in Faces)
+            {
+                res += f.to_string() + "\n";
+            }
+
+            return res;
         }
 
         private void find_center()
