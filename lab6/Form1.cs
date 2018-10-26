@@ -266,6 +266,7 @@ namespace lab6
             figure.show(g, pr);
         }
 
+        //rotation_figure
         private void button3_Click_1(object sender, EventArgs e)
         {
             if (openFileDialog1.ShowDialog() == DialogResult.Cancel)

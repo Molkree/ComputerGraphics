@@ -258,6 +258,13 @@ namespace lab6
             P2 = new Point3d(pt2);
         }
 
+        public Edge(string s)
+        {
+            var arr = s.Split(' ');
+            P1 = new Point3d(float.Parse(arr[0]), float.Parse(arr[1]), float.Parse(arr[2]));
+            P2 = new Point3d(float.Parse(arr[3]), float.Parse(arr[4]), float.Parse(arr[5]));
+        }
+
         // get points for central (perspective) projection
         private List<PointF> make_perspective()
         {
@@ -510,23 +517,33 @@ namespace lab6
                 find_center();
             }
         }
+
         public Polyhedron(string s, int mode = MODE_POL)
         {
             Faces = new List<Face>();
             switch (mode)
             {
                 case MODE_POL:
-                    var arr = s.Split('\n');
-                    int faces_cnt = Int32.Parse(arr[0]);
-                    for (int i = 1; i < arr.Length; ++i)
+                    var arr1 = s.Split('\n');
+                    int faces_cnt = Int32.Parse(arr1[0]);
+                    for (int i = 1; i < arr1.Length; ++i)
                     {
-                        if (arr[i] == "")
+                        if (arr1[i] == "")
                             continue;
-                        Face f = new Face(arr[i]);
+                        Face f = new Face(arr1[i]);
                         Faces.Add(f);
                     }
                     break;
                 case MODE_ROT:
+                    var arr2 = s.Split('\n');
+                    int cnt_breaks = int.Parse(arr2[0]);
+                    Edge rot_line = new Edge(arr2[1]);
+                    int cnt_points = int.Parse(arr2[2]);
+                    var arr3 = arr2[3].Split(' ');
+                    List<Point3d> pts = new List<Point3d>();
+                    for (int i = 0; i < 3*cnt_points; i += 3)
+                        pts.Add(new Point3d(float.Parse(arr3[i]), float.Parse(arr3[i+1]), float.Parse(arr3[i+2])));
+                    make_rotation_figure(cnt_breaks, rot_line, pts);
                     break;
                 default: break;
             }
@@ -1001,6 +1018,40 @@ namespace lab6
                 new Point3d(pts[18]),
                 new Point3d(pts[19])
             }));
+        }
+
+        private void make_rotation_figure(int cnt_breaks, Edge rot_line, List<Point3d> pts)
+        {
+            double angle = 360 / cnt_breaks;
+            float Ax = rot_line.P1.X, Ay = rot_line.P1.Y, Az = rot_line.P1.Z;
+            foreach(var p in pts)
+                p.translate(-Ax, -Ay, -Az);
+
+            List<Point3d> new_pts = new List<Point3d>();
+            foreach (var p in pts)
+                new_pts.Add(new Point3d(p.X, p.Y, p.Z));
+            //foreach (var np in new_pts)
+            //    np.rotate(angle, Axis.OTHER, rot_line);
+
+
+            for (int i = 0; i < cnt_breaks; ++i)
+            {
+                foreach (var np in new_pts)
+                    np.rotate(angle, Axis.OTHER, rot_line);
+                for (int j = 1; j < pts.Count; ++j)
+                {
+                    Face f = new Face(new List<Point3d>(){ new Point3d(pts[j-1]), new Point3d(new_pts[j-1]),
+                        new Point3d(new_pts[j]), new Point3d(pts[j])});
+                    Faces.Add(f);
+                }
+                foreach (var p in pts)
+                    p.rotate(angle, Axis.OTHER, rot_line);
+            }
+
+
+            foreach (var f in Faces)
+                f.translate(Ax, Ay, Az);
+            find_center();
         }
     }
 }

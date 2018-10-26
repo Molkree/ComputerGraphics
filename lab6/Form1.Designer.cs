@@ -72,7 +72,7 @@
             // pictureBox1
             // 
             this.pictureBox1.BackColor = System.Drawing.Color.White;
-            this.pictureBox1.Location = new System.Drawing.Point(344, 15);
+            this.pictureBox1.Location = new System.Drawing.Point(384, 55);
             this.pictureBox1.Margin = new System.Windows.Forms.Padding(4);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(799, 604);
@@ -81,10 +81,10 @@
             // 
             // button_cube
             // 
-            this.button_cube.Location = new System.Drawing.Point(9, 515);
+            this.button_cube.Location = new System.Drawing.Point(19, 504);
             this.button_cube.Margin = new System.Windows.Forms.Padding(4);
             this.button_cube.Name = "button_cube";
-            this.button_cube.Size = new System.Drawing.Size(92, 48);
+            this.button_cube.Size = new System.Drawing.Size(101, 60);
             this.button_cube.TabIndex = 1;
             this.button_cube.Text = "Гексаэдр";
             this.button_cube.UseVisualStyleBackColor = true;
@@ -335,10 +335,10 @@
             // 
             // button_tetraeder
             // 
-            this.button_tetraeder.Location = new System.Drawing.Point(109, 515);
+            this.button_tetraeder.Location = new System.Drawing.Point(128, 504);
             this.button_tetraeder.Margin = new System.Windows.Forms.Padding(4);
             this.button_tetraeder.Name = "button_tetraeder";
-            this.button_tetraeder.Size = new System.Drawing.Size(92, 48);
+            this.button_tetraeder.Size = new System.Drawing.Size(101, 60);
             this.button_tetraeder.TabIndex = 48;
             this.button_tetraeder.Text = "Тетраэдр";
             this.button_tetraeder.UseVisualStyleBackColor = true;
@@ -346,10 +346,10 @@
             // 
             // button_octaeder
             // 
-            this.button_octaeder.Location = new System.Drawing.Point(209, 515);
+            this.button_octaeder.Location = new System.Drawing.Point(237, 504);
             this.button_octaeder.Margin = new System.Windows.Forms.Padding(4);
             this.button_octaeder.Name = "button_octaeder";
-            this.button_octaeder.Size = new System.Drawing.Size(92, 48);
+            this.button_octaeder.Size = new System.Drawing.Size(101, 60);
             this.button_octaeder.TabIndex = 49;
             this.button_octaeder.Text = "Октаэдр";
             this.button_octaeder.UseVisualStyleBackColor = true;
@@ -357,10 +357,10 @@
             // 
             // button_ikosaeder
             // 
-            this.button_ikosaeder.Location = new System.Drawing.Point(109, 569);
+            this.button_ikosaeder.Location = new System.Drawing.Point(128, 572);
             this.button_ikosaeder.Margin = new System.Windows.Forms.Padding(4);
             this.button_ikosaeder.Name = "button_ikosaeder";
-            this.button_ikosaeder.Size = new System.Drawing.Size(92, 48);
+            this.button_ikosaeder.Size = new System.Drawing.Size(101, 60);
             this.button_ikosaeder.TabIndex = 50;
             this.button_ikosaeder.Text = "Икосаэдр";
             this.button_ikosaeder.UseVisualStyleBackColor = true;
@@ -368,10 +368,10 @@
             // 
             // button_dodecaeder
             // 
-            this.button_dodecaeder.Location = new System.Drawing.Point(10, 569);
+            this.button_dodecaeder.Location = new System.Drawing.Point(19, 572);
             this.button_dodecaeder.Margin = new System.Windows.Forms.Padding(4);
             this.button_dodecaeder.Name = "button_dodecaeder";
-            this.button_dodecaeder.Size = new System.Drawing.Size(91, 48);
+            this.button_dodecaeder.Size = new System.Drawing.Size(100, 60);
             this.button_dodecaeder.TabIndex = 51;
             this.button_dodecaeder.Text = "Додекаэдр";
             this.button_dodecaeder.UseVisualStyleBackColor = true;
@@ -422,7 +422,7 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(47, 637);
+            this.button1.Location = new System.Drawing.Point(69, 663);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(96, 46);
             this.button1.TabIndex = 56;
@@ -432,7 +432,7 @@
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(149, 637);
+            this.button2.Location = new System.Drawing.Point(171, 663);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(96, 46);
             this.button2.TabIndex = 57;
@@ -446,9 +446,9 @@
             // 
             // button3
             // 
-            this.button3.Location = new System.Drawing.Point(209, 569);
+            this.button3.Location = new System.Drawing.Point(236, 573);
             this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(93, 47);
+            this.button3.Size = new System.Drawing.Size(102, 59);
             this.button3.TabIndex = 58;
             this.button3.Text = "Фигура вращения";
             this.button3.UseVisualStyleBackColor = true;
@@ -458,7 +458,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1166, 695);
+            this.ClientSize = new System.Drawing.Size(1205, 721);
             this.Controls.Add(this.button3);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.button1);
