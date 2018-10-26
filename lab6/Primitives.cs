@@ -496,6 +496,8 @@ namespace lab6
     // многогранник
     public class Polyhedron
     {
+        public const int MODE_POL = 0;
+        public const int MODE_ROT = 1;
         public List<Face> Faces { get; set; } = null;
         public Point3d Center { get; set; } = new Point3d(0, 0, 0);
         public float Cube_size { get; set; }
@@ -508,19 +510,27 @@ namespace lab6
                 find_center();
             }
         }
-        public Polyhedron(string s)
+        public Polyhedron(string s, int mode = MODE_POL)
         {
             Faces = new List<Face>();
-
-            var arr = s.Split('\n');
-            int faces_cnt = Int32.Parse(arr[0]);
-            for (int i = 1; i<arr.Length; ++i)
+            switch (mode)
             {
-                if (arr[i] == "")
-                    continue;
-                Face f = new Face(arr[i]);
-                Faces.Add(f);
+                case MODE_POL:
+                    var arr = s.Split('\n');
+                    int faces_cnt = Int32.Parse(arr[0]);
+                    for (int i = 1; i < arr.Length; ++i)
+                    {
+                        if (arr[i] == "")
+                            continue;
+                        Face f = new Face(arr[i]);
+                        Faces.Add(f);
+                    }
+                    break;
+                case MODE_ROT:
+                    break;
+                default: break;
             }
+            
         }
 
         public string to_string()

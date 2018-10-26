@@ -65,6 +65,7 @@
             this.button2 = new System.Windows.Forms.Button();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
+            this.button3 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -72,7 +73,7 @@
             // 
             this.pictureBox1.BackColor = System.Drawing.Color.White;
             this.pictureBox1.Location = new System.Drawing.Point(344, 15);
-            this.pictureBox1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.pictureBox1.Margin = new System.Windows.Forms.Padding(4);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(799, 604);
             this.pictureBox1.TabIndex = 0;
@@ -80,10 +81,10 @@
             // 
             // button_cube
             // 
-            this.button_cube.Location = new System.Drawing.Point(16, 516);
-            this.button_cube.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.button_cube.Location = new System.Drawing.Point(9, 515);
+            this.button_cube.Margin = new System.Windows.Forms.Padding(4);
             this.button_cube.Name = "button_cube";
-            this.button_cube.Size = new System.Drawing.Size(85, 48);
+            this.button_cube.Size = new System.Drawing.Size(92, 48);
             this.button_cube.TabIndex = 1;
             this.button_cube.Text = "Гексаэдр";
             this.button_cube.UseVisualStyleBackColor = true;
@@ -99,7 +100,7 @@
             "ортографическая (ось Y)",
             "ортографическая (ось Z)"});
             this.comboBox1.Location = new System.Drawing.Point(16, 34);
-            this.comboBox1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.comboBox1.Margin = new System.Windows.Forms.Padding(4);
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(180, 24);
             this.comboBox1.TabIndex = 2;
@@ -148,7 +149,7 @@
             // trans_x
             // 
             this.trans_x.Location = new System.Drawing.Point(153, 101);
-            this.trans_x.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.trans_x.Margin = new System.Windows.Forms.Padding(4);
             this.trans_x.Name = "trans_x";
             this.trans_x.Size = new System.Drawing.Size(40, 22);
             this.trans_x.TabIndex = 8;
@@ -158,7 +159,7 @@
             // trans_y
             // 
             this.trans_y.Location = new System.Drawing.Point(203, 101);
-            this.trans_y.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.trans_y.Margin = new System.Windows.Forms.Padding(4);
             this.trans_y.Name = "trans_y";
             this.trans_y.Size = new System.Drawing.Size(40, 22);
             this.trans_y.TabIndex = 9;
@@ -168,7 +169,7 @@
             // trans_z
             // 
             this.trans_z.Location = new System.Drawing.Point(252, 101);
-            this.trans_z.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.trans_z.Margin = new System.Windows.Forms.Padding(4);
             this.trans_z.Name = "trans_z";
             this.trans_z.Size = new System.Drawing.Size(40, 22);
             this.trans_z.TabIndex = 10;
@@ -178,7 +179,7 @@
             // rot_angle
             // 
             this.rot_angle.Location = new System.Drawing.Point(147, 142);
-            this.rot_angle.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.rot_angle.Margin = new System.Windows.Forms.Padding(4);
             this.rot_angle.Name = "rot_angle";
             this.rot_angle.Size = new System.Drawing.Size(89, 22);
             this.rot_angle.TabIndex = 11;
@@ -198,7 +199,7 @@
             // scaling_x
             // 
             this.scaling_x.Location = new System.Drawing.Point(153, 186);
-            this.scaling_x.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.scaling_x.Margin = new System.Windows.Forms.Padding(4);
             this.scaling_x.Name = "scaling_x";
             this.scaling_x.Size = new System.Drawing.Size(40, 22);
             this.scaling_x.TabIndex = 25;
@@ -208,7 +209,7 @@
             // scaling_y
             // 
             this.scaling_y.Location = new System.Drawing.Point(203, 186);
-            this.scaling_y.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.scaling_y.Margin = new System.Windows.Forms.Padding(4);
             this.scaling_y.Name = "scaling_y";
             this.scaling_y.Size = new System.Drawing.Size(40, 22);
             this.scaling_y.TabIndex = 28;
@@ -218,7 +219,7 @@
             // scaling_z
             // 
             this.scaling_z.Location = new System.Drawing.Point(252, 186);
-            this.scaling_z.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.scaling_z.Margin = new System.Windows.Forms.Padding(4);
             this.scaling_z.Name = "scaling_z";
             this.scaling_z.Size = new System.Drawing.Size(40, 22);
             this.scaling_z.TabIndex = 29;
@@ -228,7 +229,7 @@
             // button_exec
             // 
             this.button_exec.Location = new System.Drawing.Point(16, 369);
-            this.button_exec.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.button_exec.Margin = new System.Windows.Forms.Padding(4);
             this.button_exec.Name = "button_exec";
             this.button_exec.Size = new System.Drawing.Size(100, 28);
             this.button_exec.TabIndex = 37;
@@ -255,7 +256,7 @@
             "Прямая, параллельная оси Z",
             "Задать свою прямую"});
             this.comboBox2.Location = new System.Drawing.Point(16, 261);
-            this.comboBox2.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.comboBox2.Margin = new System.Windows.Forms.Padding(4);
             this.comboBox2.Name = "comboBox2";
             this.comboBox2.Size = new System.Drawing.Size(276, 24);
             this.comboBox2.TabIndex = 40;
@@ -264,7 +265,7 @@
             // clear_button
             // 
             this.clear_button.Location = new System.Drawing.Point(124, 369);
-            this.clear_button.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.clear_button.Margin = new System.Windows.Forms.Padding(4);
             this.clear_button.Name = "clear_button";
             this.clear_button.Size = new System.Drawing.Size(100, 28);
             this.clear_button.TabIndex = 41;
@@ -334,10 +335,10 @@
             // 
             // button_tetraeder
             // 
-            this.button_tetraeder.Location = new System.Drawing.Point(109, 516);
-            this.button_tetraeder.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.button_tetraeder.Location = new System.Drawing.Point(109, 515);
+            this.button_tetraeder.Margin = new System.Windows.Forms.Padding(4);
             this.button_tetraeder.Name = "button_tetraeder";
-            this.button_tetraeder.Size = new System.Drawing.Size(85, 48);
+            this.button_tetraeder.Size = new System.Drawing.Size(92, 48);
             this.button_tetraeder.TabIndex = 48;
             this.button_tetraeder.Text = "Тетраэдр";
             this.button_tetraeder.UseVisualStyleBackColor = true;
@@ -345,10 +346,10 @@
             // 
             // button_octaeder
             // 
-            this.button_octaeder.Location = new System.Drawing.Point(203, 516);
-            this.button_octaeder.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.button_octaeder.Location = new System.Drawing.Point(209, 515);
+            this.button_octaeder.Margin = new System.Windows.Forms.Padding(4);
             this.button_octaeder.Name = "button_octaeder";
-            this.button_octaeder.Size = new System.Drawing.Size(85, 48);
+            this.button_octaeder.Size = new System.Drawing.Size(92, 48);
             this.button_octaeder.TabIndex = 49;
             this.button_octaeder.Text = "Октаэдр";
             this.button_octaeder.UseVisualStyleBackColor = true;
@@ -356,10 +357,10 @@
             // 
             // button_ikosaeder
             // 
-            this.button_ikosaeder.Location = new System.Drawing.Point(49, 571);
-            this.button_ikosaeder.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.button_ikosaeder.Location = new System.Drawing.Point(109, 569);
+            this.button_ikosaeder.Margin = new System.Windows.Forms.Padding(4);
             this.button_ikosaeder.Name = "button_ikosaeder";
-            this.button_ikosaeder.Size = new System.Drawing.Size(96, 48);
+            this.button_ikosaeder.Size = new System.Drawing.Size(92, 48);
             this.button_ikosaeder.TabIndex = 50;
             this.button_ikosaeder.Text = "Икосаэдр";
             this.button_ikosaeder.UseVisualStyleBackColor = true;
@@ -367,10 +368,10 @@
             // 
             // button_dodecaeder
             // 
-            this.button_dodecaeder.Location = new System.Drawing.Point(153, 571);
-            this.button_dodecaeder.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.button_dodecaeder.Location = new System.Drawing.Point(10, 569);
+            this.button_dodecaeder.Margin = new System.Windows.Forms.Padding(4);
             this.button_dodecaeder.Name = "button_dodecaeder";
-            this.button_dodecaeder.Size = new System.Drawing.Size(96, 48);
+            this.button_dodecaeder.Size = new System.Drawing.Size(91, 48);
             this.button_dodecaeder.TabIndex = 51;
             this.button_dodecaeder.Text = "Додекаэдр";
             this.button_dodecaeder.UseVisualStyleBackColor = true;
@@ -379,7 +380,7 @@
             // button_refl_x
             // 
             this.button_refl_x.Location = new System.Drawing.Point(16, 452);
-            this.button_refl_x.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.button_refl_x.Margin = new System.Windows.Forms.Padding(4);
             this.button_refl_x.Name = "button_refl_x";
             this.button_refl_x.Size = new System.Drawing.Size(69, 28);
             this.button_refl_x.TabIndex = 52;
@@ -390,7 +391,7 @@
             // button_refl_y
             // 
             this.button_refl_y.Location = new System.Drawing.Point(93, 452);
-            this.button_refl_y.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.button_refl_y.Margin = new System.Windows.Forms.Padding(4);
             this.button_refl_y.Name = "button_refl_y";
             this.button_refl_y.Size = new System.Drawing.Size(69, 28);
             this.button_refl_y.TabIndex = 53;
@@ -401,7 +402,7 @@
             // button_refl_z
             // 
             this.button_refl_z.Location = new System.Drawing.Point(171, 452);
-            this.button_refl_z.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.button_refl_z.Margin = new System.Windows.Forms.Padding(4);
             this.button_refl_z.Name = "button_refl_z";
             this.button_refl_z.Size = new System.Drawing.Size(69, 28);
             this.button_refl_z.TabIndex = 54;
@@ -421,7 +422,7 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(49, 626);
+            this.button1.Location = new System.Drawing.Point(47, 637);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(96, 46);
             this.button1.TabIndex = 56;
@@ -431,7 +432,7 @@
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(151, 626);
+            this.button2.Location = new System.Drawing.Point(149, 637);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(96, 46);
             this.button2.TabIndex = 57;
@@ -443,11 +444,22 @@
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
             // 
+            // button3
+            // 
+            this.button3.Location = new System.Drawing.Point(209, 569);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(93, 47);
+            this.button3.TabIndex = 58;
+            this.button3.Text = "Фигура вращения";
+            this.button3.UseVisualStyleBackColor = true;
+            this.button3.Click += new System.EventHandler(this.button3_Click_1);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1159, 695);
+            this.ClientSize = new System.Drawing.Size(1166, 695);
+            this.Controls.Add(this.button3);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.label4);
@@ -483,7 +495,7 @@
             this.Controls.Add(this.comboBox1);
             this.Controls.Add(this.button_cube);
             this.Controls.Add(this.pictureBox1);
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "Form1";
             this.Text = "Form1";
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
@@ -531,6 +543,7 @@
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
+        private System.Windows.Forms.Button button3;
     }
 }
 

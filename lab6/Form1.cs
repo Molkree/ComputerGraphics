@@ -265,5 +265,17 @@ namespace lab6
             figure = new Polyhedron(fileText);
             figure.show(g, pr);
         }
+
+        private void button3_Click_1(object sender, EventArgs e)
+        {
+            if (openFileDialog1.ShowDialog() == DialogResult.Cancel)
+                return;
+            string filename = openFileDialog1.FileName;
+            string fileText = System.IO.File.ReadAllText(filename);
+
+            g.Clear(Color.White);
+            figure = new Polyhedron(fileText, Polyhedron.MODE_ROT);
+            figure.show(g, pr);
+        }
     }
 }
