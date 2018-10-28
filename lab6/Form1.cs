@@ -29,16 +29,6 @@ namespace lab6
             comboBox2.SelectedIndex = 0;
         }
 
-        // Create cube
-        private void button1_Click(object sender, EventArgs e)
-        {
-            clear_button_Click(sender, e);
-            figure = new Polyhedron();
-            figure.make_cube();
-
-            figure.show(g, pr);
-        }
-
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
             pr = (Projection)(comboBox1.SelectedIndex);
@@ -185,6 +175,16 @@ namespace lab6
       //     figure = null;
            g.Clear(Color.White);
             figure.show(g, pr, new_fig);
+        }
+
+        // Create cube
+        private void button1_Click(object sender, EventArgs e)
+        {
+            g.Clear(Color.White);
+            figure = new Polyhedron();
+            figure.make_cube();
+
+            figure.show(g, pr);
         }
 
         private void button2_Click(object sender, EventArgs e)
