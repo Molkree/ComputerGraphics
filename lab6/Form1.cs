@@ -8,6 +8,8 @@ namespace lab6
 {
     public partial class Form1 : Form
     {
+        delegate float Function(float x, float y);
+
         Pen new_fig = Pens.Black;
         Pen old_fig = Pens.LightGray;
         Graphics g;
@@ -180,8 +182,9 @@ namespace lab6
                     
                 }
             }
-           figure = null;
+      //     figure = null;
            g.Clear(Color.White);
+            figure.show(g, pr, new_fig);
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -277,6 +280,58 @@ namespace lab6
             g.Clear(Color.White);
             figure = new Polyhedron(fileText, Polyhedron.MODE_ROT);
             figure.show(g, pr);
+        }
+
+        // graphic
+        private void button4_Click_1(object sender, EventArgs e)
+        {
+            Form2 form2 = new Form2();
+            form2.ShowDialog();
+            //            MessageBox.Show(form2.x.ToString());
+            //           MessageBox.Show(form2.y);
+
+            var f = form2.f;
+            float x0 = form2.x0;
+            float x1 = form2.x1;
+            float y0 = form2.y0;
+            float y1 = form2.y1;
+            int cnt_of_breaks = form2.cnt_of_breaks;
+
+            form2.Dispose();
+
+            // TODO
+
+            float dx = (Math.Abs(x0) + Math.Abs(x1)) / cnt_of_breaks;
+            float dy = (Math.Abs(y0) + Math.Abs(y1)) / cnt_of_breaks;
+
+            List<Face> faces = new List<Face>();
+            List<Point3d> pts0 = new List<Point3d>();
+            List<Point3d> pts1 = new List<Point3d>();
+
+            for (float x = x0; x < x1; x += dx)
+            {
+                for (float y = y0; y < y1; y += dy)
+                {
+                    float z = f(x, y);
+                    pts1.Add(new Point3d(x, y, z));
+                }
+                // make faces
+                if (pts0.Count != 0)
+                    for (int i = 1; i < pts0.Count; ++i)
+                    {
+                        faces.Add(new Face(new List<Point3d>() {
+                            new Point3d(pts0[i - 1]), new Point3d(pts1[i - 1]),
+                            new Point3d(pts1[i]), new Point3d(pts0[i])
+                        }));
+                    }
+                pts0.Clear();
+                pts0 = pts1;
+                pts1 = new List<Point3d>();
+            }
+
+            g.Clear(Color.White);
+            figure = new Polyhedron(faces);
+            figure.show(g, pr, new_fig);
         }
     }
 }
