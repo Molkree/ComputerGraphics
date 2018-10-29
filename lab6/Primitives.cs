@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Globalization;
 
 namespace lab6
 {
@@ -29,7 +30,9 @@ namespace lab6
 
         public string to_string()
         {   
-            return X.ToString() + " " + Y.ToString() + " " + Z.ToString();
+            return X.ToString(CultureInfo.InvariantCulture) + " " +
+                Y.ToString(CultureInfo.InvariantCulture) + " " +
+                Z.ToString(CultureInfo.InvariantCulture);
         }
 
         public void reflectX()
@@ -261,8 +264,12 @@ namespace lab6
         public Edge(string s)
         {
             var arr = s.Split(' ');
-            P1 = new Point3d(float.Parse(arr[0]), float.Parse(arr[1]), float.Parse(arr[2]));
-            P2 = new Point3d(float.Parse(arr[3]), float.Parse(arr[4]), float.Parse(arr[5]));
+            P1 = new Point3d(float.Parse(arr[0], CultureInfo.InvariantCulture),
+                float.Parse(arr[1], CultureInfo.InvariantCulture),
+                float.Parse(arr[2], CultureInfo.InvariantCulture));
+            P2 = new Point3d(float.Parse(arr[3], CultureInfo.InvariantCulture),
+                float.Parse(arr[4], CultureInfo.InvariantCulture),
+                float.Parse(arr[5], CultureInfo.InvariantCulture));
         }
 
         // get points for central (perspective) projection
@@ -340,30 +347,30 @@ namespace lab6
                 find_center();
             }
         }
+
         public Face(string s)
         {
             Points = new List<Point3d>();
 
             var arr = s.Split(' ');
-            int points_cnt = Int32.Parse(arr[0]);
-            for (int i = 1; i < arr.Length; i+=3)
+            //int points_cnt = int.Parse(arr[0], CultureInfo.InvariantCulture);
+            for (int i = 1; i < arr.Length; i += 3)
             {
-                if (arr[i] == "")
+                if (string.IsNullOrEmpty(arr[i]))
                     continue;
-                float x = float.Parse(arr[i]);
-                float y = float.Parse(arr[i+1]);
-                float z = float.Parse(arr[i+2]);
+                float x = float.Parse(arr[i], CultureInfo.InvariantCulture);
+                float y = float.Parse(arr[i + 1], CultureInfo.InvariantCulture);
+                float z = float.Parse(arr[i + 2], CultureInfo.InvariantCulture);
                 Point3d p = new Point3d(x, y, z);
                 Points.Add(p);
             }
+            find_center();
         }
-
-
 
         public string to_string()
         {
             string res = "";
-            res += Points.Count.ToString() + " ";
+            res += Points.Count.ToString(CultureInfo.InvariantCulture) + " ";
             foreach (var f in Points)
             {
                 res += f.to_string() + " ";
@@ -371,7 +378,6 @@ namespace lab6
 
             return res;
         }
-
 
         private void find_center()
         {
@@ -525,24 +531,28 @@ namespace lab6
             {
                 case MODE_POL:
                     var arr1 = s.Split('\n');
-                    int faces_cnt = Int32.Parse(arr1[0]);
+                    //int faces_cnt = int.Parse(arr1[0], CultureInfo.InvariantCulture);
                     for (int i = 1; i < arr1.Length; ++i)
                     {
-                        if (arr1[i] == "")
+                        if (string.IsNullOrEmpty(arr1[i]))
                             continue;
                         Face f = new Face(arr1[i]);
                         Faces.Add(f);
                     }
+                    find_center();
                     break;
                 case MODE_ROT:
                     var arr2 = s.Split('\n');
-                    int cnt_breaks = int.Parse(arr2[0]);
+                    int cnt_breaks = int.Parse(arr2[0], CultureInfo.InvariantCulture);
                     Edge rot_line = new Edge(arr2[1]);
-                    int cnt_points = int.Parse(arr2[2]);
+                    int cnt_points = int.Parse(arr2[2], CultureInfo.InvariantCulture);
                     var arr3 = arr2[3].Split(' ');
                     List<Point3d> pts = new List<Point3d>();
-                    for (int i = 0; i < 3*cnt_points; i += 3)
-                        pts.Add(new Point3d(float.Parse(arr3[i]), float.Parse(arr3[i+1]), float.Parse(arr3[i+2])));
+                    for (int i = 0; i < 3 * cnt_points; i += 3)
+                        pts.Add(new Point3d(
+                            float.Parse(arr3[i], CultureInfo.InvariantCulture),
+                            float.Parse(arr3[i + 1], CultureInfo.InvariantCulture),
+                            float.Parse(arr3[i + 2], CultureInfo.InvariantCulture)));
                     make_rotation_figure(cnt_breaks, rot_line, pts);
                     break;
                 default: break;
@@ -553,7 +563,7 @@ namespace lab6
         public string to_string()
         {
             string res = "";
-            res += Faces.Count.ToString() + "\n";
+            res += Faces.Count.ToString(CultureInfo.InvariantCulture) + "\n";
             foreach (var f in Faces)
             {
                 res += f.to_string() + "\n";
@@ -633,7 +643,7 @@ namespace lab6
 
         /* ------ Figures ------- */
 
-        public void make_cube(Face f = null)
+        public void make_hexahedron(Face f = null)
         {
             if (f == null)
             {
@@ -712,12 +722,12 @@ namespace lab6
             find_center();
         }
 
-        public void make_tetraeder(Polyhedron cube = null)
+        public void make_tetrahedron(Polyhedron cube = null)
         {
             if (cube == null)
             {
                 cube = new Polyhedron();
-                cube.make_cube();
+                cube.make_hexahedron();
             }
             Face f0 = new Face(
                 new List<Point3d>
@@ -759,12 +769,12 @@ namespace lab6
             find_center();
         }
 
-        public void make_octaeder(Polyhedron cube = null)
+        public void make_octahedron(Polyhedron cube = null)
         {
             if (cube == null)
             {
                 cube = new Polyhedron();
-                cube.make_cube();
+                cube.make_hexahedron();
             }
 
             // up
@@ -845,7 +855,7 @@ namespace lab6
             find_center();
         }
 
-        public void make_ikosaeder()
+        public void make_icosahedron()
         {
             Faces = new List<Face>();
 
@@ -933,11 +943,11 @@ namespace lab6
             find_center();
         }
 
-        public void make_dodecaeder()
+        public void make_dodecahedron()
         {
             Faces = new List<Face>();
             Polyhedron ik = new Polyhedron();
-            ik.make_ikosaeder();
+            ik.make_icosahedron();
 
             List<Point3d> pts = new List<Point3d>();
             foreach (Face f in ik.Faces)
@@ -1030,8 +1040,6 @@ namespace lab6
             List<Point3d> new_pts = new List<Point3d>();
             foreach (var p in pts)
                 new_pts.Add(new Point3d(p.X, p.Y, p.Z));
-            //foreach (var np in new_pts)
-            //    np.rotate(angle, Axis.OTHER, rot_line);
 
 
             for (int i = 0; i < cnt_breaks; ++i)
@@ -1040,7 +1048,7 @@ namespace lab6
                     np.rotate(angle, Axis.OTHER, rot_line);
                 for (int j = 1; j < pts.Count; ++j)
                 {
-                    Face f = new Face(new List<Point3d>(){ new Point3d(pts[j-1]), new Point3d(new_pts[j-1]),
+                    Face f = new Face(new List<Point3d>(){ new Point3d(pts[j - 1]), new Point3d(new_pts[j - 1]),
                         new Point3d(new_pts[j]), new Point3d(pts[j])});
                     Faces.Add(f);
                 }

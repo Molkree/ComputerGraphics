@@ -61,7 +61,7 @@ namespace lab6
                 if (c is TextBox)
                 {
                     TextBox t = c as TextBox;
-                    if (t.Text == "")
+                    if (string.IsNullOrEmpty(t.Text))
                     {
                         if (t.Name == "scaling_x" || t.Name == "scaling_y" || t.Name == "scaling_z" || t.Name == "rot_line_x2" ||
                             t.Name == "rot_line_y2" || t.Name == "rot_line_z2")
@@ -122,8 +122,14 @@ namespace lab6
                     else
                     {
                         Edge rot_line = new Edge(
-                            new Point3d(int.Parse(rot_line_x1.Text), int.Parse(rot_line_y1.Text), int.Parse(rot_line_z1.Text)),
-                            new Point3d(int.Parse(rot_line_x2.Text), int.Parse(rot_line_y2.Text), int.Parse(rot_line_z2.Text)));
+                            new Point3d(
+                                int.Parse(rot_line_x1.Text, CultureInfo.CurrentCulture),
+                                int.Parse(rot_line_y1.Text, CultureInfo.CurrentCulture),
+                                int.Parse(rot_line_z1.Text, CultureInfo.CurrentCulture)),
+                            new Point3d(
+                                int.Parse(rot_line_x2.Text, CultureInfo.CurrentCulture),
+                                int.Parse(rot_line_y2.Text, CultureInfo.CurrentCulture),
+                                int.Parse(rot_line_z2.Text, CultureInfo.CurrentCulture)));
                         float Ax = rot_line.P1.X, Ay = rot_line.P1.Y, Az = rot_line.P1.Z;
                         figure.translate(-Ax, -Ay, -Az);
                         figure.rotate(double.Parse(rot_angle.Text, CultureInfo.CurrentCulture), line_mod, rot_line);
@@ -172,54 +178,57 @@ namespace lab6
                     
                 }
             }
-      //     figure = null;
-           g.Clear(Color.White);
+            //figure = null;
+            g.Clear(Color.White);
             figure.show(g, pr, new_fig);
         }
 
-        // Create cube
+        // Create hexahedron
         private void button1_Click(object sender, EventArgs e)
         {
             g.Clear(Color.White);
             figure = new Polyhedron();
-            figure.make_cube();
-
+            figure.make_hexahedron();
             figure.show(g, pr);
         }
 
+        // Create tetrahedron
         private void button2_Click(object sender, EventArgs e)
         {
             g.Clear(Color.White);
             figure = new Polyhedron();
-            figure.make_tetraeder();
+            figure.make_tetrahedron();
             figure.show(g, pr);
         }
 
+        // Create octahedron
         private void button3_Click(object sender, EventArgs e)
         {
             g.Clear(Color.White);
             figure = new Polyhedron();
-            figure.make_octaeder();
+            figure.make_octahedron();
             figure.show(g, pr);
         }
 
+        // Create icosahedron
         private void button4_Click(object sender, EventArgs e)
         {
             g.Clear(Color.White);
             figure = new Polyhedron();
-            figure.make_ikosaeder();
+            figure.make_icosahedron();
             figure.show(g, pr);
         }
 
+        // Create dodecahedron
         private void button5_Click(object sender, EventArgs e)
         {
             g.Clear(Color.White);
             figure = new Polyhedron();
-            figure.make_dodecaeder();
+            figure.make_dodecahedron();
             figure.show(g, pr);
         }
 
-        //отражение по х
+        // отражение по х
         private void button6_Click(object sender, EventArgs e)
         {
             figure.show(g, pr, old_fig);
@@ -227,7 +236,7 @@ namespace lab6
             figure.show(g, pr);
         }
 
-        //y
+        // отражение по y
         private void button7_Click(object sender, EventArgs e)
         {
             figure.show(g, pr, old_fig);
@@ -235,7 +244,7 @@ namespace lab6
             figure.show(g, pr);
         }
 
-        //z
+        // отражение по z
         private void button8_Click(object sender, EventArgs e)
         {
             figure.show(g, pr, old_fig);
@@ -244,7 +253,7 @@ namespace lab6
         }
 
 
-        //save_file_dialog
+        // save_file_dialog
         private void button2_Click_1(object sender, EventArgs e)
         {
             if (saveFileDialog1.ShowDialog() == DialogResult.Cancel)
@@ -256,7 +265,7 @@ namespace lab6
             System.IO.File.WriteAllText(filename, text);
         }
 
-        //open_file_dialog
+        // open_file_dialog
         private void button1_Click_1(object sender, EventArgs e)
         {
             if (openFileDialog1.ShowDialog() == DialogResult.Cancel)
@@ -269,7 +278,7 @@ namespace lab6
             figure.show(g, pr);
         }
 
-        //rotation_figure
+        // rotation_figure
         private void button3_Click_1(object sender, EventArgs e)
         {
             if (openFileDialog1.ShowDialog() == DialogResult.Cancel)
@@ -287,15 +296,15 @@ namespace lab6
         {
             Form2 form2 = new Form2();
             form2.ShowDialog();
-            //            MessageBox.Show(form2.x.ToString());
-            //           MessageBox.Show(form2.y);
+            //MessageBox.Show(form2.x.ToString());
+            //MessageBox.Show(form2.y);
 
             var f = form2.f;
-            float x0 = form2.x0;
-            float x1 = form2.x1;
-            float y0 = form2.y0;
-            float y1 = form2.y1;
-            int cnt_of_breaks = form2.cnt_of_breaks;
+            float x0 = form2.X0;
+            float x1 = form2.X1;
+            float y0 = form2.Y0;
+            float y1 = form2.Y1;
+            int cnt_of_breaks = form2.Cnt_of_breaks;
 
             form2.Dispose();
 
