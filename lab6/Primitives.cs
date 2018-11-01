@@ -149,7 +149,7 @@ namespace lab6
 
         /* ------ Affine transformations ------ */
 
-        static private List<float> mul_matrix(List<float> matr1, int m1, int n1, List<float> matr2, int m2, int n2)
+        static public List<float> mul_matrix(List<float> matr1, int m1, int n1, List<float> matr2, int m2, int n2)
         {
             if (n1 != m2)
                 return new List<float>();
@@ -165,7 +165,7 @@ namespace lab6
                 for (int j = 0; j < n; ++j)
                 {
                     for (int r = 0; r < m; ++r)
-                        c[i * l + j] += matr1[i * m1 + r] * matr2[r * m2 + j];
+                        c[i * l + j] += matr1[i * m1 + r] * matr2[r * n2 + j];
                 }
             return c;
         }
@@ -338,6 +338,8 @@ namespace lab6
     {
         public List<Point3d> Points { get; }
         public Point3d Center { get; set; } = new Point3d(0, 0, 0);
+        public List<float> normal;
+        public bool isVisible;
 
         public Face(List<Point3d> pts = null)
         {
@@ -393,6 +395,30 @@ namespace lab6
             Center.X /= Points.Count;
             Center.Y /= Points.Count;
             Center.Z /= Points.Count;
+            //find_normal();
+        }
+
+        public void find_normal(Point3d p_center)
+        {
+            Point3d Q = Points[1], R = Points[2], S = Points[0];
+            List<float> QR = new List<float> { R.X - Q.X, R.Y - Q.Y, R.Z - Q.Z };
+            List<float> QS = new List<float> { S.X - Q.X, S.Y - Q.Y, S.Z - Q.Z };
+            normal = new List<float> { QR[1] * QS[2] - QR[2] * QS[1],
+                                       -(QR[0] * QS[2] - QR[2] * QS[0]),
+                                       QR[0] * QS[1] - QR[1] * QS[0] }; // cross product
+            List<float> CQ = new List<float> { Q.X - p_center.X, Q.Y - p_center.Y, Q.Z - p_center.Z };
+            if (Point3d.mul_matrix(normal, 1, 3, CQ, 3, 1)[0] < 0)
+            {
+                normal[0] *= -1;
+                normal[1] *= -1;
+                normal[2] *= -1;
+            }
+
+            // TODO allow point of view change
+            Point3d E = new Point3d(0, 0, 1000); // point of view
+            List<float> EC = new List<float> { E.X - Center.X, E.Y - Center.Y, E.Z - Center.Z };
+            float dot_product = Point3d.mul_matrix(normal, 1, 3, EC, 3, 1)[0];
+            isVisible = 0 <= dot_product;
         }
 
         public void reflectX()
@@ -488,7 +514,7 @@ namespace lab6
         {
             foreach (Point3d p in Points)
                 p.translate(x, y, z);
-            Center.translate(x, y, z);
+            find_center();
         }
 
         public void rotate(double angle, Axis a, Edge line = null)
@@ -586,12 +612,17 @@ namespace lab6
             Center.X /= Faces.Count;
             Center.Y /= Faces.Count;
             Center.Z /= Faces.Count;
+            foreach (Face f in Faces)
+            {
+                f.find_normal(Center);
+            }
         }
 
         public void show(Graphics g, Projection pr = 0, Pen pen = null)
         {
             foreach (Face f in Faces)
-                f.show(g, pr, pen);
+                if (f.isVisible)
+                    f.show(g, pr, pen); ;
         }
 
         /* ------ Affine transformation ------ */
@@ -600,7 +631,7 @@ namespace lab6
         {
             foreach (Face f in Faces)
                 f.translate(x, y, z);
-            Center.translate(x, y, z);
+            find_center();
         }
 
         public void rotate(double angle, Axis a, Edge line = null)
@@ -674,18 +705,18 @@ namespace lab6
             Face f1 = new Face(l1);
             Faces.Add(f1);
 
-            // up face
+            // down face
             List<Point3d> l2 = new List<Point3d>
             {
-                new Point3d(f.Points[0]),   // left up
-                new Point3d(f.Points[1]),   // right up
-                new Point3d(f1.Points[1]),  // right down
-                new Point3d(f1.Points[0]),  // left down
+                new Point3d(f.Points[0]),   // left back
+                new Point3d(f.Points[1]),   // right back
+                new Point3d(f1.Points[1]),  // right front
+                new Point3d(f1.Points[0]),  // left front
             };
             Face f2 = new Face(l2);
             Faces.Add(f2);
 
-            // down face
+            // up face
             List<Point3d> l3 = new List<Point3d>
             {
                 new Point3d(f.Points[3]),

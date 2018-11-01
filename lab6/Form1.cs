@@ -31,7 +31,7 @@ namespace lab6
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            pr = (Projection)(comboBox1.SelectedIndex);
+            pr = (Projection)comboBox1.SelectedIndex;
             g.Clear(Color.White);
             if (figure != null)
                 figure.show(g, pr);
@@ -81,7 +81,8 @@ namespace lab6
             else
             {
                 check_all_textboxes();
-                figure.show(g, pr, old_fig);
+                //figure.show(g, pr, old_fig);
+                g.Clear(Color.White);
                 // масштабируем и переносим относительно начала координат (сдвигом центра в начало)
                 //
                 if (scaling_x.Text != "1" || scaling_y.Text != "1" || scaling_z.Text != "1" ||
