@@ -1059,6 +1059,7 @@ namespace lab6
                 new Point3d(pts[18]),
                 new Point3d(pts[19])
             }));
+
             find_center();
         }
 
