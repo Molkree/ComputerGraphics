@@ -338,8 +338,8 @@ namespace lab6
     {
         public List<Point3d> Points { get; }
         public Point3d Center { get; set; } = new Point3d(0, 0, 0);
-        public List<float> normal;
-        public bool isVisible;
+        public List<float> Normal { get; set; }
+        public bool IsVisible { get; set; }
 
         public Face(List<Point3d> pts = null)
         {
@@ -395,7 +395,6 @@ namespace lab6
             Center.X /= Points.Count;
             Center.Y /= Points.Count;
             Center.Z /= Points.Count;
-            //find_normal();
         }
 
         public void find_normal(Point3d p_center)
@@ -403,22 +402,22 @@ namespace lab6
             Point3d Q = Points[1], R = Points[2], S = Points[0];
             List<float> QR = new List<float> { R.X - Q.X, R.Y - Q.Y, R.Z - Q.Z };
             List<float> QS = new List<float> { S.X - Q.X, S.Y - Q.Y, S.Z - Q.Z };
-            normal = new List<float> { QR[1] * QS[2] - QR[2] * QS[1],
+            Normal = new List<float> { QR[1] * QS[2] - QR[2] * QS[1],
                                        -(QR[0] * QS[2] - QR[2] * QS[0]),
                                        QR[0] * QS[1] - QR[1] * QS[0] }; // cross product
             List<float> CQ = new List<float> { Q.X - p_center.X, Q.Y - p_center.Y, Q.Z - p_center.Z };
-            if (Point3d.mul_matrix(normal, 1, 3, CQ, 3, 1)[0] < 0)
+            if (Point3d.mul_matrix(Normal, 1, 3, CQ, 3, 1)[0] < 0)
             {
-                normal[0] *= -1;
-                normal[1] *= -1;
-                normal[2] *= -1;
+                Normal[0] *= -1;
+                Normal[1] *= -1;
+                Normal[2] *= -1;
             }
 
             // TODO allow point of view change
             Point3d E = new Point3d(0, 0, 1000); // point of view
             List<float> EC = new List<float> { E.X - Center.X, E.Y - Center.Y, E.Z - Center.Z };
-            float dot_product = Point3d.mul_matrix(normal, 1, 3, EC, 3, 1)[0];
-            isVisible = 0 <= dot_product;
+            float dot_product = Point3d.mul_matrix(Normal, 1, 3, EC, 3, 1)[0];
+            IsVisible = 0 <= dot_product;
         }
 
         public void reflectX()
@@ -621,7 +620,7 @@ namespace lab6
         public void show(Graphics g, Projection pr = 0, Pen pen = null)
         {
             foreach (Face f in Faces)
-                if (f.isVisible)
+                if (f.IsVisible)
                     f.show(g, pr, pen); ;
         }
 
