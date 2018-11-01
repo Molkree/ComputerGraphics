@@ -1032,7 +1032,7 @@ namespace lab6
 
         private void make_rotation_figure(int cnt_breaks, Edge rot_line, List<Point3d> pts)
         {
-            double angle = 360 / cnt_breaks;
+            double angle = 360.0 / cnt_breaks;
             float Ax = rot_line.P1.X, Ay = rot_line.P1.Y, Az = rot_line.P1.Z;
             foreach(var p in pts)
                 p.translate(-Ax, -Ay, -Az);
