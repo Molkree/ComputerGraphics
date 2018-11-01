@@ -297,8 +297,6 @@ namespace lab6
         {
             Form2 form2 = new Form2();
             form2.ShowDialog();
-            //MessageBox.Show(form2.x.ToString());
-            //MessageBox.Show(form2.y);
 
             var f = form2.f;
             float x0 = form2.X0;
@@ -308,8 +306,6 @@ namespace lab6
             int cnt_of_breaks = form2.Cnt_of_breaks;
 
             form2.Dispose();
-
-            // TODO
 
             float dx = (Math.Abs(x0) + Math.Abs(x1)) / cnt_of_breaks;
             float dy = (Math.Abs(y0) + Math.Abs(y1)) / cnt_of_breaks;

@@ -1059,6 +1059,7 @@ namespace lab6
                 new Point3d(pts[18]),
                 new Point3d(pts[19])
             }));
+            find_center();
         }
 
         private void make_rotation_figure(int cnt_breaks, Edge rot_line, List<Point3d> pts)
