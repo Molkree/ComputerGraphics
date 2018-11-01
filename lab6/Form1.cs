@@ -144,7 +144,7 @@ namespace lab6
 
         private void comboBox2_SelectedIndexChanged(object sender, EventArgs e)
         {
-            line_mod = (Axis)(comboBox2.SelectedIndex);
+            line_mod = (Axis)comboBox2.SelectedIndex;
             if (line_mod == Axis.OTHER)
             {
                 rot_line_x1.Enabled = true;

@@ -650,26 +650,26 @@ namespace lab6
         
         public void reflectX()
         {
-            Center.X = -Center.X;
             if (Faces != null )
                 foreach (var f in Faces)
                     f.reflectX();
+            find_center();
         }
 
         public void reflectY()
         {
-            Center.Y = -Center.Y;
             if (Faces != null)
                 foreach (var f in Faces)
                     f.reflectY();
+            find_center();
         }
 
         public void reflectZ()
         {
-            Center.Z = -Center.Z;
             if (Faces != null)
                 foreach (var f in Faces)
                     f.reflectZ();
+            find_center();
         }
 
         /* ------ Figures ------- */
