@@ -150,7 +150,7 @@ namespace lab6
                 figure.show(g, pr, new_fig);
 
                 camera.show(g, pr);
-                figure_camera = new Polyhedron(figure.Faces);
+                figure_camera = new Polyhedron(figure);
                 figure_camera.translate(-camera.P1.X, -camera.P1.Y, -camera.P1.Z);
                 g_camera.Clear(Color.White);
                 figure_camera.show_camera(g_camera, camera, new_fig);
@@ -210,7 +210,7 @@ namespace lab6
 
             camera.show(g, pr);
             g_camera.Clear(Color.White);
-            figure_camera = new Polyhedron(figure.Faces);
+            figure_camera = new Polyhedron(figure);
             figure_camera.translate(-camera.P1.X, -camera.P1.Y, -camera.P1.Z);
             figure_camera.show_camera(g_camera, camera, new_fig);
         }
@@ -225,7 +225,7 @@ namespace lab6
 
             camera.show(g, pr);
             g_camera.Clear(Color.White);
-            figure_camera = new Polyhedron(figure.Faces);
+            figure_camera = new Polyhedron(figure);
             figure_camera.translate(-camera.P1.X, -camera.P1.Y, -camera.P1.Z);
             figure_camera.show_camera(g_camera, camera, new_fig);
         }
@@ -240,7 +240,7 @@ namespace lab6
 
             camera.show(g, pr);
             g_camera.Clear(Color.White);
-            figure_camera = new Polyhedron(figure.Faces);
+            figure_camera = new Polyhedron(figure);
             figure_camera.translate(-camera.P1.X, -camera.P1.Y, -camera.P1.Z);
             figure_camera.show_camera(g_camera, camera, new_fig);
         }
@@ -255,7 +255,7 @@ namespace lab6
 
             camera.show(g, pr);
             g_camera.Clear(Color.White);
-            figure_camera = new Polyhedron(figure.Faces);
+            figure_camera = new Polyhedron(figure);
             figure_camera.translate(-camera.P1.X, -camera.P1.Y, -camera.P1.Z);
             figure_camera.show_camera(g_camera, camera, new_fig);
         }
@@ -270,7 +270,7 @@ namespace lab6
 
             camera.show(g, pr);
             g_camera.Clear(Color.White);
-            figure_camera = new Polyhedron(figure.Faces);
+            figure_camera = new Polyhedron(figure);
             figure_camera.translate(-camera.P1.X, -camera.P1.Y, -camera.P1.Z);
             figure_camera.show_camera(g_camera, camera, new_fig);
         }
@@ -343,7 +343,7 @@ namespace lab6
             figure.show(g, pr);
 
             camera.show(g, pr);
-            figure_camera = new Polyhedron(figure.Faces);
+            figure_camera = new Polyhedron(figure);
             figure_camera.translate(-camera.P1.X, -camera.P1.Y, -camera.P1.Z);
             g_camera.Clear(Color.White);
             figure_camera.show_camera(g_camera, camera, new_fig);
@@ -362,7 +362,7 @@ namespace lab6
             figure.show(g, pr);
 
             camera.show(g, pr);
-            figure_camera = new Polyhedron(figure.Faces);
+            figure_camera = new Polyhedron(figure);
             figure_camera.translate(-camera.P1.X, -camera.P1.Y, -camera.P1.Z);
             g_camera.Clear(Color.White);
             figure_camera.show_camera(g_camera, camera, new_fig);

@@ -366,7 +366,9 @@ namespace lab6
         public Face(Face face)
         {
             Points = face.Points.Select(pt => new Point3d(pt.X, pt.Y, pt.Z)).ToList();
-            find_center();
+            Center = face.Center;
+            Normal = face.Normal;
+            IsVisible = face.IsVisible;
         }
 
         public Face(List<Point3d> pts = null)
@@ -570,12 +572,18 @@ namespace lab6
         public Point3d Center { get; set; } = new Point3d(0, 0, 0);
         public float Cube_size { get; set; }
 
+        public Polyhedron(Polyhedron polyhedron)
+        {
+            Faces = polyhedron.Faces.Select(face => new Face(face)).ToList();
+            Center = polyhedron.Center;
+            Cube_size = polyhedron.Cube_size;
+        }
+
         public Polyhedron(List<Face> fs = null)
         {
             if (fs != null)
             {
                 Faces = fs.Select(face => new Face(face)).ToList();
-                //Faces = new List<Face>(fs);
                 find_center();
             }
         }
