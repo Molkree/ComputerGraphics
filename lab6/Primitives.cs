@@ -366,8 +366,9 @@ namespace lab6
         public Face(Face face)
         {
             Points = face.Points.Select(pt => new Point3d(pt.X, pt.Y, pt.Z)).ToList();
-            Center = face.Center;
-            Normal = face.Normal;
+            Center = new Point3d(face.Center);
+            if (Normal != null)
+                Normal = new List<float>(face.Normal);
             IsVisible = face.IsVisible;
         }
 
@@ -444,7 +445,7 @@ namespace lab6
             }
 
             // TODO allow point of view change
-            Point3d E = new Point3d(0, 0, 1000); // point of view
+            Point3d E = new Point3d(0, 0, 0); // point of view
             //List<float> EC = new List<float> { camera.P1.X - Center.X, camera.P1.Y - Center.Y, camera.P1.Z - Center.Z };
             List<float> EC = new List<float> { E.X - Center.X, E.Y - Center.Y, E.Z - Center.Z };
             //List<float> EC = new List<float> { camera.P1.X - camera.P2.X, camera.P1.Y - camera.P2.Y, camera.P1.Z - camera.P2.Z };
@@ -575,7 +576,7 @@ namespace lab6
         public Polyhedron(Polyhedron polyhedron)
         {
             Faces = polyhedron.Faces.Select(face => new Face(face)).ToList();
-            Center = polyhedron.Center;
+            Center = new Point3d(polyhedron.Center);
             Cube_size = polyhedron.Cube_size;
         }
 
