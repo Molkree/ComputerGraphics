@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
+using System.Linq;
 
 namespace lab6
 {
@@ -311,11 +312,32 @@ namespace lab6
             g.DrawLine(pen, pts[0], pts[1]);
         }
 
-        public void show(Graphics g, Pen pen = null)
+        public void show(Graphics g, Projection pr = 0, Pen pen = null)
         {
             if (pen == null)
                 pen = Pens.Black;
-            show_perspective(g, pen);
+
+            List<PointF> pts;
+            switch (pr)
+            {
+                case Projection.ISOMETRIC:
+                    pts = make_isometric();
+                    break;
+                case Projection.ORTHOGR_X:
+                    pts = make_orthographic(Axis.AXIS_X);
+                    break;
+                case Projection.ORTHOGR_Y:
+                    pts = make_orthographic(Axis.AXIS_Y);
+                    break;
+                case Projection.ORTHOGR_Z:
+                    pts = make_orthographic(Axis.AXIS_Z);
+                    break;
+                default:
+                    pts = make_perspective();
+                    break;
+            }
+
+            g.DrawLine(pen, pts[0], pts[pts.Count - 1]);
         }
 
         public void translate(float x, float y, float z)
@@ -340,6 +362,12 @@ namespace lab6
         public Point3d Center { get; set; } = new Point3d(0, 0, 0);
         public List<float> Normal { get; set; }
         public bool IsVisible { get; set; }
+
+        public Face(Face face)
+        {
+            Points = face.Points.Select(pt => new Point3d(pt.X, pt.Y, pt.Z)).ToList();
+            find_center();
+        }
 
         public Face(List<Point3d> pts = null)
         {
@@ -397,7 +425,7 @@ namespace lab6
             Center.Z /= Points.Count;
         }
 
-        public void find_normal(Point3d p_center)
+        public void find_normal(Point3d p_center, Edge camera)
         {
             Point3d Q = Points[1], R = Points[2], S = Points[0];
             List<float> QR = new List<float> { R.X - Q.X, R.Y - Q.Y, R.Z - Q.Z };
@@ -415,7 +443,9 @@ namespace lab6
 
             // TODO allow point of view change
             Point3d E = new Point3d(0, 0, 1000); // point of view
+            //List<float> EC = new List<float> { camera.P1.X - Center.X, camera.P1.Y - Center.Y, camera.P1.Z - Center.Z };
             List<float> EC = new List<float> { E.X - Center.X, E.Y - Center.Y, E.Z - Center.Z };
+            //List<float> EC = new List<float> { camera.P1.X - camera.P2.X, camera.P1.Y - camera.P2.Y, camera.P1.Z - camera.P2.Z };
             float dot_product = Point3d.mul_matrix(Normal, 1, 3, EC, 3, 1)[0];
             IsVisible = 0 <= dot_product;
         }
@@ -445,12 +475,12 @@ namespace lab6
         /* ------ Projections ------ */
 
         // get points for central (perspective) projection
-        public List<PointF> make_perspective()
+        public List<PointF> make_perspective(float k = 1000)
         {
             List<PointF> res = new List<PointF>();
 
             foreach (Point3d p in Points)
-                res.Add(p.make_perspective());
+                res.Add(p.make_perspective(k));
           
             return res;
         }
@@ -544,7 +574,8 @@ namespace lab6
         {
             if (fs != null)
             {
-                Faces = new List<Face>(fs);
+                Faces = fs.Select(face => new Face(face)).ToList();
+                //Faces = new List<Face>(fs);
                 find_center();
             }
         }
@@ -611,17 +642,36 @@ namespace lab6
             Center.X /= Faces.Count;
             Center.Y /= Faces.Count;
             Center.Z /= Faces.Count;
-            foreach (Face f in Faces)
-            {
-                f.find_normal(Center);
-            }
+            //foreach (Face f in Faces)
+            //{
+            //    f.find_normal(Center);
+            //}
         }
 
         public void show(Graphics g, Projection pr = 0, Pen pen = null)
         {
             foreach (Face f in Faces)
+                //if (f.IsVisible)
+                    f.show(g, pr, pen);
+        }
+
+        public void show_camera(Graphics g, Edge camera, Pen pen = null)
+        {
+            foreach (Face f in Faces)
+            {
+                f.find_normal(Center, camera);
                 if (f.IsVisible)
-                    f.show(g, pr, pen); ;
+                {
+                    //float k = (float)Math.Sqrt(
+                    //    (camera.P1.X - Center.X) * (camera.P1.X - Center.X) + 
+                    //    (camera.P1.Y - Center.Y) * (camera.P1.Y - Center.Y) +
+                    //    (camera.P1.Z - Center.Z) * (camera.P1.Z - Center.Z));
+                    //List<PointF> pts = f.make_perspective(k/*1000*/);
+                    //g.DrawLines(pen, pts.ToArray());
+                    //g.DrawLine(pen, pts[0], pts[pts.Count - 1]);
+                    f.show(g, Projection.PERSPECTIVE, pen);
+                }
+            }
         }
 
         /* ------ Affine transformation ------ */

@@ -13,9 +13,12 @@ namespace lab6
         Pen new_fig = Pens.Black;
         Pen old_fig = Pens.LightGray;
         Graphics g;
+        Graphics g_camera;
         Projection pr = 0;
         Axis line_mod = 0;
         Polyhedron figure = null;
+        Polyhedron figure_camera = null;
+        Edge camera = new Edge(new Point3d(0, 0, 0), new Point3d(0, 0, 0));
 
         public Form1()
         {
@@ -25,8 +28,14 @@ namespace lab6
             g = pictureBox1.CreateGraphics();
             g.TranslateTransform(pictureBox1.ClientSize.Width / 2, pictureBox1.ClientSize.Height / 2);
             g.ScaleTransform(1, -1);
+            g_camera = pictureBox2.CreateGraphics();
+            g_camera.TranslateTransform(pictureBox2.ClientSize.Width / 2, pictureBox2.ClientSize.Height / 2);
+            g_camera.ScaleTransform(1, -1);
             comboBox1.SelectedIndex = 0;
             comboBox2.SelectedIndex = 0;
+            camera_x.Text = camera.P1.X.ToString();
+            camera_y.Text = camera.P1.Y.ToString();
+            camera_z.Text = (camera.P1.Z + 1000).ToString();
         }
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
@@ -35,6 +44,7 @@ namespace lab6
             g.Clear(Color.White);
             if (figure != null)
                 figure.show(g, pr);
+            camera.show(g, pr);
         }
 
         // контроль вводимых символов
@@ -83,6 +93,7 @@ namespace lab6
                 check_all_textboxes();
                 //figure.show(g, pr, old_fig);
                 g.Clear(Color.White);
+                g_camera.Clear(Color.White);
                 // масштабируем и переносим относительно начала координат (сдвигом центра в начало)
                 //
                 if (scaling_x.Text != "1" || scaling_y.Text != "1" || scaling_z.Text != "1" ||
@@ -139,6 +150,11 @@ namespace lab6
                 }
 
                 figure.show(g, pr, new_fig);
+
+                camera.show(g, pr);
+                figure_camera = new Polyhedron(figure.Faces);
+                figure_camera.translate(-camera.P1.X, -camera.P1.Y, -camera.P1.Z);
+                figure_camera.show_camera(g_camera, camera, new_fig);
             }
         }
 
@@ -181,52 +197,80 @@ namespace lab6
             }
             //figure = null;
             g.Clear(Color.White);
+            g_camera.Clear(Color.White);
             figure.show(g, pr, new_fig);
+            camera.show(g, pr);
+            figure_camera.show_camera(g_camera, camera, new_fig);
         }
 
         // Create hexahedron
         private void button1_Click(object sender, EventArgs e)
         {
             g.Clear(Color.White);
+            g_camera.Clear(Color.White);
             figure = new Polyhedron();
             figure.make_hexahedron();
             figure.show(g, pr);
+            camera.show(g, pr);
+            figure_camera = new Polyhedron(figure.Faces);
+            figure_camera.translate(-camera.P1.X, -camera.P1.Y, -camera.P1.Z);
+            figure_camera.show_camera(g_camera, camera, new_fig);
         }
 
         // Create tetrahedron
         private void button2_Click(object sender, EventArgs e)
         {
             g.Clear(Color.White);
+            g_camera.Clear(Color.White);
             figure = new Polyhedron();
             figure.make_tetrahedron();
             figure.show(g, pr);
+            camera.show(g, pr);
+            figure_camera = new Polyhedron(figure.Faces);
+            figure_camera.translate(-camera.P1.X, -camera.P1.Y, -camera.P1.Z);
+            figure_camera.show_camera(g_camera, camera, new_fig);
         }
 
         // Create octahedron
         private void button3_Click(object sender, EventArgs e)
         {
             g.Clear(Color.White);
+            g_camera.Clear(Color.White);
             figure = new Polyhedron();
             figure.make_octahedron();
             figure.show(g, pr);
+            camera.show(g, pr);
+            figure_camera = new Polyhedron(figure.Faces);
+            figure_camera.translate(-camera.P1.X, -camera.P1.Y, -camera.P1.Z);
+            figure_camera.show_camera(g_camera, camera, new_fig);
         }
 
         // Create icosahedron
         private void button4_Click(object sender, EventArgs e)
         {
             g.Clear(Color.White);
+            g_camera.Clear(Color.White);
             figure = new Polyhedron();
             figure.make_icosahedron();
             figure.show(g, pr);
+            camera.show(g, pr);
+            figure_camera = new Polyhedron(figure.Faces);
+            figure_camera.translate(-camera.P1.X, -camera.P1.Y, -camera.P1.Z);
+            figure_camera.show_camera(g_camera, camera, new_fig);
         }
 
         // Create dodecahedron
         private void button5_Click(object sender, EventArgs e)
         {
             g.Clear(Color.White);
+            g_camera.Clear(Color.White);
             figure = new Polyhedron();
             figure.make_dodecahedron();
             figure.show(g, pr);
+            camera.show(g, pr);
+            figure_camera = new Polyhedron(figure.Faces);
+            figure_camera.translate(-camera.P1.X, -camera.P1.Y, -camera.P1.Z);
+            figure_camera.show_camera(g_camera, camera, new_fig);
         }
 
         // отражение по х
@@ -235,6 +279,9 @@ namespace lab6
             figure.show(g, pr, old_fig);
             figure.reflectX();
             figure.show(g, pr);
+            camera.show(g, pr);
+            g_camera.Clear(Color.White);
+            figure_camera.show_camera(g_camera, camera, new_fig);
         }
 
         // отражение по y
@@ -243,6 +290,9 @@ namespace lab6
             figure.show(g, pr, old_fig);
             figure.reflectY();
             figure.show(g, pr);
+            camera.show(g, pr);
+            g_camera.Clear(Color.White);
+            figure_camera.show_camera(g_camera, camera, new_fig);
         }
 
         // отражение по z
@@ -251,6 +301,9 @@ namespace lab6
             figure.show(g, pr, old_fig);
             figure.reflectZ();
             figure.show(g, pr);
+            camera.show(g, pr);
+            g_camera.Clear(Color.White);
+            figure_camera.show_camera(g_camera, camera, new_fig);
         }
 
 
@@ -277,6 +330,11 @@ namespace lab6
             g.Clear(Color.White);
             figure = new Polyhedron(fileText);
             figure.show(g, pr);
+            camera.show(g, pr);
+            g_camera.Clear(Color.White);
+            figure_camera = new Polyhedron(figure.Faces);
+            figure_camera.translate(-camera.P1.X, -camera.P1.Y, -camera.P1.Z);
+            figure_camera.show_camera(g_camera, camera, new_fig);
         }
 
         // rotation_figure
@@ -290,6 +348,11 @@ namespace lab6
             g.Clear(Color.White);
             figure = new Polyhedron(fileText, Polyhedron.MODE_ROT);
             figure.show(g, pr);
+            camera.show(g, pr);
+            g_camera.Clear(Color.White);
+            figure_camera = new Polyhedron(figure.Faces);
+            figure_camera.translate(-camera.P1.X, -camera.P1.Y, -camera.P1.Z);
+            figure_camera.show_camera(g_camera, camera, new_fig);
         }
 
         // graphic
