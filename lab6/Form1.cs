@@ -12,12 +12,10 @@ namespace lab6
 
         Pen new_fig = Pens.Black;
         Pen old_fig = Pens.LightGray;
-        Graphics g;
-        Graphics g_camera;
+        Graphics g, g_camera;
         Projection pr = 0;
-        Axis line_mod = 0;
-        Polyhedron figure = null;
-        Polyhedron figure_camera = null;
+        Axis line_mode = 0, camera_mode = 0;
+        Polyhedron figure = null, figure_camera = null;
         Edge camera = new Edge(new Point3d(0, 0, 500), new Point3d(0, 0, 0));
 
         public Form1()
@@ -34,9 +32,10 @@ namespace lab6
             g_camera = pictureBox2.CreateGraphics();
             g_camera.TranslateTransform(pictureBox2.ClientSize.Width / 2, pictureBox2.ClientSize.Height / 2);
             g_camera.ScaleTransform(1, -1);
-            camera_x.Text = camera.P1.X.ToString();
-            camera_y.Text = camera.P1.Y.ToString();
-            camera_z.Text = (camera.P1.Z).ToString();
+            camera_x.Text = ((int)camera.P1.X).ToString(CultureInfo.CurrentCulture);
+            camera_y.Text = ((int)camera.P1.Y).ToString(CultureInfo.CurrentCulture);
+            camera_z.Text = ((int)camera.P1.Z).ToString(CultureInfo.CurrentCulture);
+            camera_axis_picker.SelectedIndex = 0;
         }
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
@@ -100,33 +99,48 @@ namespace lab6
                     // сначала переносим в начало
                     float old_x = figure.Center.X, old_y = figure.Center.Y, old_z = figure.Center.Z;
                     figure.translate(-old_x, -old_y, -old_z);
+                    float old_x_camera = figure_camera.Center.X,
+                        old_y_camera = figure_camera.Center.Y,
+                        old_z_camera = figure_camera.Center.Z;
+                    figure_camera.translate(-old_x_camera, -old_y_camera, -old_z_camera);
                     // делаем, что нужно
                     if (scaling_x.Text != "1" || scaling_y.Text != "1" || scaling_z.Text != "1")
                     {
-                        float x = float.Parse(scaling_x.Text, CultureInfo.CurrentCulture);
-                        float y = float.Parse(scaling_y.Text, CultureInfo.CurrentCulture);
-                        float z = float.Parse(scaling_z.Text, CultureInfo.CurrentCulture);
+                        float x = float.Parse(scaling_x.Text, CultureInfo.CurrentCulture),
+                            y = float.Parse(scaling_y.Text, CultureInfo.CurrentCulture),
+                            z = float.Parse(scaling_z.Text, CultureInfo.CurrentCulture);
                         figure.scale(x, y, z);
+                        figure_camera.scale(x, y, z);
                     }
                     if (trans_x.Text != "0" || trans_y.Text != "0" || trans_z.Text != "0")
                     {
-                        figure.translate(int.Parse(trans_x.Text, CultureInfo.CurrentCulture),
-                                         int.Parse(trans_y.Text, CultureInfo.CurrentCulture),
-                                         int.Parse(trans_z.Text, CultureInfo.CurrentCulture));
+                        int dx = int.Parse(trans_x.Text, CultureInfo.CurrentCulture),
+                            dy = int.Parse(trans_y.Text, CultureInfo.CurrentCulture),
+                            dz = int.Parse(trans_z.Text, CultureInfo.CurrentCulture);
+                        figure.translate(dx, dy, dz);
+                        figure_camera.translate(dx, dy, dz);
                     }
                     // переносим обратно
                     figure.translate(old_x, old_y, old_z);
+                    figure_camera.translate(old_x_camera, old_y_camera, old_z_camera);
                 }
 
                 // поворачиваем относительно нужной прямой
                 if (rot_angle.Text != "0")
                 {
-                    if (line_mod != Axis.OTHER)
+                    if (line_mode != Axis.OTHER)
                     {
                         float old_x = figure.Center.X, old_y = figure.Center.Y, old_z = figure.Center.Z;
                         figure.translate(-old_x, -old_y, -old_z);
-                        figure.rotate(double.Parse(rot_angle.Text, CultureInfo.CurrentCulture), line_mod);
+                        float old_x_camera = figure_camera.Center.X,
+                            old_y_camera = figure_camera.Center.Y,
+                            old_z_camera = figure_camera.Center.Z;
+                        figure_camera.translate(-old_x_camera, -old_y_camera, -old_z_camera);
+                        double angle = double.Parse(rot_angle.Text, CultureInfo.CurrentCulture);
+                        figure.rotate(angle, line_mode);
+                        figure_camera.rotate(angle, line_mode);
                         figure.translate(old_x, old_y, old_z);
+                        figure_camera.translate(old_x_camera, old_y_camera, old_z_camera);
                     }
                     else
                     {
@@ -141,8 +155,12 @@ namespace lab6
                                 int.Parse(rot_line_z2.Text, CultureInfo.CurrentCulture)));
                         float Ax = rot_line.P1.X, Ay = rot_line.P1.Y, Az = rot_line.P1.Z;
                         figure.translate(-Ax, -Ay, -Az);
-                        figure.rotate(double.Parse(rot_angle.Text, CultureInfo.CurrentCulture), line_mod, rot_line);
+                        figure_camera.translate(-Ax, -Ay, -Az);
+                        double angle = double.Parse(rot_angle.Text, CultureInfo.CurrentCulture);
+                        figure.rotate(angle, line_mode, rot_line);
+                        figure_camera.rotate(angle, line_mode, rot_line);
                         figure.translate(Ax, Ay, Az);
+                        figure_camera.translate(Ax, Ay, Az);
                     }
                 }
                 //figure.show(g, pr, old_fig);
@@ -150,8 +168,49 @@ namespace lab6
                 figure.show(g, pr, new_fig);
 
                 camera.show(g, pr);
-                figure_camera = new Polyhedron(figure);
-                figure_camera.translate(-camera.P1.X, -camera.P1.Y, -camera.P1.Z);
+                g_camera.Clear(Color.White);
+                figure_camera.show_camera(g_camera, camera, new_fig);
+            }
+        }
+
+        private void button_exec_camera_Click(object sender, EventArgs e)
+        {
+            if (figure == null)
+            {
+                MessageBox.Show("Сначала создайте фигуру", "Нет фигуры", MessageBoxButtons.OK);
+            }
+            else
+            {
+                check_all_textboxes();
+                // масштабируем и переносим относительно начала координат (сдвигом центра в начало)
+                //
+                if (trans_x_camera.Text != "0" || trans_y_camera.Text != "0" || trans_z_camera.Text != "0"
+                    || rot_angle_camera.Text != "0")
+                {
+                    // сначала переносим в начало
+                    float old_x = figure_camera.Center.X, old_y = figure_camera.Center.Y, old_z = figure_camera.Center.Z;
+                    figure_camera.translate(-old_x, -old_y, -old_z);
+                    // делаем, что нужно
+                    if (trans_x_camera.Text != "0" || trans_y_camera.Text != "0" || trans_z_camera.Text != "0")
+                    {
+                        int dx = int.Parse(trans_x_camera.Text, CultureInfo.CurrentCulture),
+                            dy = int.Parse(trans_y_camera.Text, CultureInfo.CurrentCulture),
+                            dz = int.Parse(trans_z_camera.Text, CultureInfo.CurrentCulture);
+                        figure_camera.translate(-dx, -dy, -dz);
+                        camera_x.Text = (int.Parse(camera_x.Text, CultureInfo.CurrentCulture) + dx).ToString(CultureInfo.CurrentCulture);
+                        camera_y.Text = (int.Parse(camera_y.Text, CultureInfo.CurrentCulture) + dy).ToString(CultureInfo.CurrentCulture);
+                        camera_z.Text = (int.Parse(camera_z.Text, CultureInfo.CurrentCulture) + dz).ToString(CultureInfo.CurrentCulture);
+                    }
+                    // поворачиваем относительно нужной прямой
+                    if (rot_angle_camera.Text != "0")
+                    {
+                        figure_camera.rotate(-double.Parse(rot_angle_camera.Text, CultureInfo.CurrentCulture), camera_mode);
+                    }
+                    // переносим обратно
+                    figure_camera.translate(old_x, old_y, old_z);
+                }
+
+                camera.show(g, pr); // TODO change camera on left picturebox
                 g_camera.Clear(Color.White);
                 figure_camera.show_camera(g_camera, camera, new_fig);
             }
@@ -159,8 +218,8 @@ namespace lab6
 
         private void comboBox2_SelectedIndexChanged(object sender, EventArgs e)
         {
-            line_mod = (Axis)comboBox2.SelectedIndex;
-            if (line_mod == Axis.OTHER)
+            line_mode = (Axis)comboBox2.SelectedIndex;
+            if (line_mode == Axis.OTHER)
             {
                 rot_line_x1.Enabled = true;
                 rot_line_y1.Enabled = true;
@@ -178,6 +237,11 @@ namespace lab6
                 rot_line_y2.Enabled = false;
                 rot_line_z2.Enabled = false;
             }
+        }
+
+        private void camera_axis_picker_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            camera_mode = (Axis)camera_axis_picker.SelectedIndex;
         }
 
         private void clear_button_Click(object sender, EventArgs e)
@@ -209,6 +273,9 @@ namespace lab6
             figure.show(g, pr);
 
             camera.show(g, pr);
+            camera_x.Text = ((int)camera.P1.X).ToString(CultureInfo.CurrentCulture);
+            camera_y.Text = ((int)camera.P1.Y).ToString(CultureInfo.CurrentCulture);
+            camera_z.Text = ((int)camera.P1.Z).ToString(CultureInfo.CurrentCulture);
             g_camera.Clear(Color.White);
             figure_camera = new Polyhedron(figure);
             figure_camera.translate(-camera.P1.X, -camera.P1.Y, -camera.P1.Z);
@@ -224,6 +291,9 @@ namespace lab6
             figure.show(g, pr);
 
             camera.show(g, pr);
+            camera_x.Text = ((int)camera.P1.X).ToString(CultureInfo.CurrentCulture);
+            camera_y.Text = ((int)camera.P1.Y).ToString(CultureInfo.CurrentCulture);
+            camera_z.Text = ((int)camera.P1.Z).ToString(CultureInfo.CurrentCulture);
             g_camera.Clear(Color.White);
             figure_camera = new Polyhedron(figure);
             figure_camera.translate(-camera.P1.X, -camera.P1.Y, -camera.P1.Z);
@@ -239,6 +309,9 @@ namespace lab6
             figure.show(g, pr);
 
             camera.show(g, pr);
+            camera_x.Text = ((int)camera.P1.X).ToString(CultureInfo.CurrentCulture);
+            camera_y.Text = ((int)camera.P1.Y).ToString(CultureInfo.CurrentCulture);
+            camera_z.Text = ((int)camera.P1.Z).ToString(CultureInfo.CurrentCulture);
             g_camera.Clear(Color.White);
             figure_camera = new Polyhedron(figure);
             figure_camera.translate(-camera.P1.X, -camera.P1.Y, -camera.P1.Z);
@@ -254,6 +327,9 @@ namespace lab6
             figure.show(g, pr);
 
             camera.show(g, pr);
+            camera_x.Text = ((int)camera.P1.X).ToString(CultureInfo.CurrentCulture);
+            camera_y.Text = ((int)camera.P1.Y).ToString(CultureInfo.CurrentCulture);
+            camera_z.Text = ((int)camera.P1.Z).ToString(CultureInfo.CurrentCulture);
             g_camera.Clear(Color.White);
             figure_camera = new Polyhedron(figure);
             figure_camera.translate(-camera.P1.X, -camera.P1.Y, -camera.P1.Z);
@@ -269,6 +345,9 @@ namespace lab6
             figure.show(g, pr);
 
             camera.show(g, pr);
+            camera_x.Text = ((int)camera.P1.X).ToString(CultureInfo.CurrentCulture);
+            camera_y.Text = ((int)camera.P1.Y).ToString(CultureInfo.CurrentCulture);
+            camera_z.Text = ((int)camera.P1.Z).ToString(CultureInfo.CurrentCulture);
             g_camera.Clear(Color.White);
             figure_camera = new Polyhedron(figure);
             figure_camera.translate(-camera.P1.X, -camera.P1.Y, -camera.P1.Z);
@@ -343,6 +422,9 @@ namespace lab6
             figure.show(g, pr);
 
             camera.show(g, pr);
+            camera_x.Text = ((int)camera.P1.X).ToString(CultureInfo.CurrentCulture);
+            camera_y.Text = ((int)camera.P1.Y).ToString(CultureInfo.CurrentCulture);
+            camera_z.Text = ((int)camera.P1.Z).ToString(CultureInfo.CurrentCulture);
             figure_camera = new Polyhedron(figure);
             figure_camera.translate(-camera.P1.X, -camera.P1.Y, -camera.P1.Z);
             g_camera.Clear(Color.White);
@@ -362,6 +444,9 @@ namespace lab6
             figure.show(g, pr);
 
             camera.show(g, pr);
+            camera_x.Text = ((int)camera.P1.X).ToString(CultureInfo.CurrentCulture);
+            camera_y.Text = ((int)camera.P1.Y).ToString(CultureInfo.CurrentCulture);
+            camera_z.Text = ((int)camera.P1.Z).ToString(CultureInfo.CurrentCulture);
             figure_camera = new Polyhedron(figure);
             figure_camera.translate(-camera.P1.X, -camera.P1.Y, -camera.P1.Z);
             g_camera.Clear(Color.White);

@@ -76,6 +76,11 @@
             this.trans_y_camera = new System.Windows.Forms.TextBox();
             this.trans_x_camera = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
+            this.camera_axis_picker = new System.Windows.Forms.ComboBox();
+            this.label7 = new System.Windows.Forms.Label();
+            this.rot_angle_camera = new System.Windows.Forms.TextBox();
+            this.label8 = new System.Windows.Forms.Label();
+            this.button_exec_camera = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             this.SuspendLayout();
@@ -84,7 +89,7 @@
             // 
             this.pictureBox1.BackColor = System.Drawing.Color.White;
             this.pictureBox1.Location = new System.Drawing.Point(384, 55);
-            this.pictureBox1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.pictureBox1.Margin = new System.Windows.Forms.Padding(4);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(799, 604);
             this.pictureBox1.TabIndex = 0;
@@ -93,7 +98,7 @@
             // button_cube
             // 
             this.button_cube.Location = new System.Drawing.Point(19, 505);
-            this.button_cube.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.button_cube.Margin = new System.Windows.Forms.Padding(4);
             this.button_cube.Name = "button_cube";
             this.button_cube.Size = new System.Drawing.Size(101, 60);
             this.button_cube.TabIndex = 1;
@@ -111,7 +116,7 @@
             "ортографическая (ось Y)",
             "ортографическая (ось Z)"});
             this.comboBox1.Location = new System.Drawing.Point(16, 34);
-            this.comboBox1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.comboBox1.Margin = new System.Windows.Forms.Padding(4);
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(180, 24);
             this.comboBox1.TabIndex = 2;
@@ -160,7 +165,7 @@
             // trans_x
             // 
             this.trans_x.Location = new System.Drawing.Point(153, 101);
-            this.trans_x.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.trans_x.Margin = new System.Windows.Forms.Padding(4);
             this.trans_x.Name = "trans_x";
             this.trans_x.Size = new System.Drawing.Size(40, 22);
             this.trans_x.TabIndex = 8;
@@ -170,7 +175,7 @@
             // trans_y
             // 
             this.trans_y.Location = new System.Drawing.Point(203, 101);
-            this.trans_y.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.trans_y.Margin = new System.Windows.Forms.Padding(4);
             this.trans_y.Name = "trans_y";
             this.trans_y.Size = new System.Drawing.Size(40, 22);
             this.trans_y.TabIndex = 9;
@@ -180,7 +185,7 @@
             // trans_z
             // 
             this.trans_z.Location = new System.Drawing.Point(252, 101);
-            this.trans_z.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.trans_z.Margin = new System.Windows.Forms.Padding(4);
             this.trans_z.Name = "trans_z";
             this.trans_z.Size = new System.Drawing.Size(40, 22);
             this.trans_z.TabIndex = 10;
@@ -190,7 +195,7 @@
             // rot_angle
             // 
             this.rot_angle.Location = new System.Drawing.Point(147, 142);
-            this.rot_angle.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.rot_angle.Margin = new System.Windows.Forms.Padding(4);
             this.rot_angle.Name = "rot_angle";
             this.rot_angle.Size = new System.Drawing.Size(89, 22);
             this.rot_angle.TabIndex = 11;
@@ -210,7 +215,7 @@
             // scaling_x
             // 
             this.scaling_x.Location = new System.Drawing.Point(153, 186);
-            this.scaling_x.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.scaling_x.Margin = new System.Windows.Forms.Padding(4);
             this.scaling_x.Name = "scaling_x";
             this.scaling_x.Size = new System.Drawing.Size(40, 22);
             this.scaling_x.TabIndex = 25;
@@ -220,7 +225,7 @@
             // scaling_y
             // 
             this.scaling_y.Location = new System.Drawing.Point(203, 186);
-            this.scaling_y.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.scaling_y.Margin = new System.Windows.Forms.Padding(4);
             this.scaling_y.Name = "scaling_y";
             this.scaling_y.Size = new System.Drawing.Size(40, 22);
             this.scaling_y.TabIndex = 28;
@@ -230,7 +235,7 @@
             // scaling_z
             // 
             this.scaling_z.Location = new System.Drawing.Point(252, 186);
-            this.scaling_z.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.scaling_z.Margin = new System.Windows.Forms.Padding(4);
             this.scaling_z.Name = "scaling_z";
             this.scaling_z.Size = new System.Drawing.Size(40, 22);
             this.scaling_z.TabIndex = 29;
@@ -240,7 +245,7 @@
             // button_exec
             // 
             this.button_exec.Location = new System.Drawing.Point(16, 369);
-            this.button_exec.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.button_exec.Margin = new System.Windows.Forms.Padding(4);
             this.button_exec.Name = "button_exec";
             this.button_exec.Size = new System.Drawing.Size(100, 28);
             this.button_exec.TabIndex = 37;
@@ -267,7 +272,7 @@
             "Прямая, параллельная оси Z",
             "Задать свою прямую"});
             this.comboBox2.Location = new System.Drawing.Point(16, 261);
-            this.comboBox2.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.comboBox2.Margin = new System.Windows.Forms.Padding(4);
             this.comboBox2.Name = "comboBox2";
             this.comboBox2.Size = new System.Drawing.Size(276, 24);
             this.comboBox2.TabIndex = 40;
@@ -276,7 +281,7 @@
             // clear_button
             // 
             this.clear_button.Location = new System.Drawing.Point(124, 369);
-            this.clear_button.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.clear_button.Margin = new System.Windows.Forms.Padding(4);
             this.clear_button.Name = "clear_button";
             this.clear_button.Size = new System.Drawing.Size(100, 28);
             this.clear_button.TabIndex = 41;
@@ -347,7 +352,7 @@
             // button_tetraeder
             // 
             this.button_tetraeder.Location = new System.Drawing.Point(128, 505);
-            this.button_tetraeder.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.button_tetraeder.Margin = new System.Windows.Forms.Padding(4);
             this.button_tetraeder.Name = "button_tetraeder";
             this.button_tetraeder.Size = new System.Drawing.Size(101, 60);
             this.button_tetraeder.TabIndex = 48;
@@ -358,7 +363,7 @@
             // button_octaeder
             // 
             this.button_octaeder.Location = new System.Drawing.Point(237, 505);
-            this.button_octaeder.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.button_octaeder.Margin = new System.Windows.Forms.Padding(4);
             this.button_octaeder.Name = "button_octaeder";
             this.button_octaeder.Size = new System.Drawing.Size(101, 60);
             this.button_octaeder.TabIndex = 49;
@@ -369,7 +374,7 @@
             // button_ikosaeder
             // 
             this.button_ikosaeder.Location = new System.Drawing.Point(128, 572);
-            this.button_ikosaeder.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.button_ikosaeder.Margin = new System.Windows.Forms.Padding(4);
             this.button_ikosaeder.Name = "button_ikosaeder";
             this.button_ikosaeder.Size = new System.Drawing.Size(101, 60);
             this.button_ikosaeder.TabIndex = 50;
@@ -380,7 +385,7 @@
             // button_dodecaeder
             // 
             this.button_dodecaeder.Location = new System.Drawing.Point(19, 572);
-            this.button_dodecaeder.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.button_dodecaeder.Margin = new System.Windows.Forms.Padding(4);
             this.button_dodecaeder.Name = "button_dodecaeder";
             this.button_dodecaeder.Size = new System.Drawing.Size(100, 60);
             this.button_dodecaeder.TabIndex = 51;
@@ -391,7 +396,7 @@
             // button_refl_x
             // 
             this.button_refl_x.Location = new System.Drawing.Point(16, 452);
-            this.button_refl_x.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.button_refl_x.Margin = new System.Windows.Forms.Padding(4);
             this.button_refl_x.Name = "button_refl_x";
             this.button_refl_x.Size = new System.Drawing.Size(69, 28);
             this.button_refl_x.TabIndex = 52;
@@ -402,7 +407,7 @@
             // button_refl_y
             // 
             this.button_refl_y.Location = new System.Drawing.Point(93, 452);
-            this.button_refl_y.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.button_refl_y.Margin = new System.Windows.Forms.Padding(4);
             this.button_refl_y.Name = "button_refl_y";
             this.button_refl_y.Size = new System.Drawing.Size(69, 28);
             this.button_refl_y.TabIndex = 53;
@@ -413,7 +418,7 @@
             // button_refl_z
             // 
             this.button_refl_z.Location = new System.Drawing.Point(171, 452);
-            this.button_refl_z.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.button_refl_z.Margin = new System.Windows.Forms.Padding(4);
             this.button_refl_z.Name = "button_refl_z";
             this.button_refl_z.Size = new System.Drawing.Size(69, 28);
             this.button_refl_z.TabIndex = 54;
@@ -471,7 +476,7 @@
             // button4
             // 
             this.button4.Location = new System.Drawing.Point(384, 678);
-            this.button4.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.button4.Margin = new System.Windows.Forms.Padding(4);
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(197, 28);
             this.button4.TabIndex = 59;
@@ -562,11 +567,70 @@
             this.label6.TabIndex = 65;
             this.label6.Text = "Смещение (x, y, z)";
             // 
+            // camera_axis_picker
+            // 
+            this.camera_axis_picker.FormattingEnabled = true;
+            this.camera_axis_picker.Items.AddRange(new object[] {
+            "Прямая, параллельная оси X",
+            "Прямая, параллельная оси Y",
+            "Прямая, параллельная оси Z"});
+            this.camera_axis_picker.Location = new System.Drawing.Point(1220, 832);
+            this.camera_axis_picker.Margin = new System.Windows.Forms.Padding(4);
+            this.camera_axis_picker.Name = "camera_axis_picker";
+            this.camera_axis_picker.Size = new System.Drawing.Size(276, 24);
+            this.camera_axis_picker.TabIndex = 70;
+            this.camera_axis_picker.SelectedIndexChanged += new System.EventHandler(this.camera_axis_picker_SelectedIndexChanged);
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(1224, 812);
+            this.label7.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(213, 17);
+            this.label7.TabIndex = 69;
+            this.label7.Text = "Выбрать прямую для поворота";
+            // 
+            // rot_angle_camera
+            // 
+            this.rot_angle_camera.Location = new System.Drawing.Point(1357, 774);
+            this.rot_angle_camera.Margin = new System.Windows.Forms.Padding(4);
+            this.rot_angle_camera.Name = "rot_angle_camera";
+            this.rot_angle_camera.Size = new System.Drawing.Size(89, 22);
+            this.rot_angle_camera.TabIndex = 72;
+            this.rot_angle_camera.Text = "0";
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(1226, 777);
+            this.label8.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(113, 17);
+            this.label8.TabIndex = 71;
+            this.label8.Text = "Поворот (angle)";
+            // 
+            // button_exec_camera
+            // 
+            this.button_exec_camera.Location = new System.Drawing.Point(1220, 875);
+            this.button_exec_camera.Margin = new System.Windows.Forms.Padding(4);
+            this.button_exec_camera.Name = "button_exec_camera";
+            this.button_exec_camera.Size = new System.Drawing.Size(100, 28);
+            this.button_exec_camera.TabIndex = 73;
+            this.button_exec_camera.Text = "Выполнить";
+            this.button_exec_camera.UseVisualStyleBackColor = true;
+            this.button_exec_camera.Click += new System.EventHandler(this.button_exec_camera_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1902, 1033);
+            this.Controls.Add(this.button_exec_camera);
+            this.Controls.Add(this.rot_angle_camera);
+            this.Controls.Add(this.label8);
+            this.Controls.Add(this.camera_axis_picker);
+            this.Controls.Add(this.label7);
             this.Controls.Add(this.trans_z_camera);
             this.Controls.Add(this.trans_y_camera);
             this.Controls.Add(this.trans_x_camera);
@@ -613,7 +677,7 @@
             this.Controls.Add(this.comboBox1);
             this.Controls.Add(this.button_cube);
             this.Controls.Add(this.pictureBox1);
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "Form1";
             this.Text = "Form1";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
@@ -674,6 +738,11 @@
         private System.Windows.Forms.TextBox trans_y_camera;
         private System.Windows.Forms.TextBox trans_x_camera;
         private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.ComboBox camera_axis_picker;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.TextBox rot_angle_camera;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.Button button_exec_camera;
     }
 }
 

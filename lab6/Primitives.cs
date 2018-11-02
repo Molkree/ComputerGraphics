@@ -428,7 +428,7 @@ namespace lab6
             Center.Z /= Points.Count;
         }
 
-        public void find_normal(Point3d p_center, Edge camera)
+        public void find_normal(Point3d p_center, /*Do we need it?*/Edge camera)
         {
             Point3d Q = Points[1], R = Points[2], S = Points[0];
             List<float> QR = new List<float> { R.X - Q.X, R.Y - Q.Y, R.Z - Q.Z };
@@ -444,10 +444,11 @@ namespace lab6
                 Normal[2] *= -1;
             }
 
-            // TODO allow point of view change
+            // we move scene, not camera, so our point of view is always in (0,0,0)
             Point3d E = new Point3d(0, 0, 0); // point of view
-            //List<float> EC = new List<float> { camera.P1.X - Center.X, camera.P1.Y - Center.Y, camera.P1.Z - Center.Z };
             List<float> EC = new List<float> { E.X - Center.X, E.Y - Center.Y, E.Z - Center.Z };
+            // these two options are stored here for the history so that everyone can see how stupid I am
+            //List<float> EC = new List<float> { camera.P1.X - Center.X, camera.P1.Y - Center.Y, camera.P1.Z - Center.Z };
             //List<float> EC = new List<float> { camera.P1.X - camera.P2.X, camera.P1.Y - camera.P2.Y, camera.P1.Z - camera.P2.Z };
             float dot_product = Point3d.mul_matrix(Normal, 1, 3, EC, 3, 1)[0];
             IsVisible = 0 <= dot_product;
