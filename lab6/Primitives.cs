@@ -352,7 +352,11 @@ namespace lab6
             P2.rotate(angle, a, line);
         }
 
-        //Edge scale(float kx, float ky, float kz);
+        public void scale(float kx, float ky, float kz)
+        {
+            P1.scale(kx, ky, kz);
+            P2.scale(kx, ky, kz);
+        }
     }
 
     // многоугольник (грань)
@@ -574,13 +578,6 @@ namespace lab6
         public Point3d Center { get; set; } = new Point3d(0, 0, 0);
         public float Cube_size { get; set; }
 
-        public Polyhedron(Polyhedron polyhedron)
-        {
-            Faces = polyhedron.Faces.Select(face => new Face(face)).ToList();
-            Center = new Point3d(polyhedron.Center);
-            Cube_size = polyhedron.Cube_size;
-        }
-
         public Polyhedron(List<Face> fs = null)
         {
             if (fs != null)
@@ -589,6 +586,15 @@ namespace lab6
                 find_center();
             }
         }
+
+        public Polyhedron(Polyhedron polyhedron)
+        {
+            Faces = polyhedron.Faces.Select(face => new Face(face)).ToList();
+            Center = new Point3d(polyhedron.Center);
+            Cube_size = polyhedron.Cube_size;
+        }
+
+        
 
         public Polyhedron(string s, int mode = MODE_POL)
         {

@@ -16,7 +16,8 @@ namespace lab6
         Projection pr = 0;
         Axis line_mode = 0, camera_mode = 0;
         Polyhedron figure = null, figure_camera = null;
-        Edge camera = new Edge(new Point3d(0, 0, 500), new Point3d(0, 0, 0));
+        Edge camera = new Edge(new Point3d(0, 0, 500), new Point3d(0, 0, 450));
+        Polyhedron small_cube = new Polyhedron();
 
         public Form1()
         {
@@ -36,6 +37,7 @@ namespace lab6
             camera_y.Text = ((int)camera.P1.Y).ToString(CultureInfo.CurrentCulture);
             camera_z.Text = ((int)camera.P1.Z).ToString(CultureInfo.CurrentCulture);
             camera_axis_picker.SelectedIndex = 0;
+            create_camera();
         }
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
@@ -44,7 +46,9 @@ namespace lab6
             g.Clear(Color.White);
             if (figure != null)
                 figure.show(g, pr);
+
             camera.show(g, pr);
+   //         small_cube.show(g, pr);
         }
 
         // контроль вводимых символов
@@ -97,12 +101,22 @@ namespace lab6
                     trans_x.Text != "0" || trans_y.Text != "0" || trans_z.Text != "0")
                 {
                     // сначала переносим в начало
+                    // left fig
                     float old_x = figure.Center.X, old_y = figure.Center.Y, old_z = figure.Center.Z;
                     figure.translate(-old_x, -old_y, -old_z);
+
+                    // right fig
                     float old_x_camera = figure_camera.Center.X,
                         old_y_camera = figure_camera.Center.Y,
                         old_z_camera = figure_camera.Center.Z;
                     figure_camera.translate(-old_x_camera, -old_y_camera, -old_z_camera);
+
+                    // camera
+                    float cam_x = camera.P1.X, cam_y = camera.P1.Y, cam_z = camera.P1.Z;
+                    camera.translate(-cam_x, -cam_y, -cam_z);
+                    small_cube.translate(-cam_x, -cam_y, -cam_z);
+
+
                     // делаем, что нужно
                     if (scaling_x.Text != "1" || scaling_y.Text != "1" || scaling_z.Text != "1")
                     {
@@ -111,6 +125,9 @@ namespace lab6
                             z = float.Parse(scaling_z.Text, CultureInfo.CurrentCulture);
                         figure.scale(x, y, z);
                         figure_camera.scale(x, y, z);
+
+                        camera.scale(x, y, z);
+                        small_cube.scale(x, y, z);
                     }
                     if (trans_x.Text != "0" || trans_y.Text != "0" || trans_z.Text != "0")
                     {
@@ -119,10 +136,17 @@ namespace lab6
                             dz = int.Parse(trans_z.Text, CultureInfo.CurrentCulture);
                         figure.translate(dx, dy, dz);
                         figure_camera.translate(dx, dy, dz);
+
+                        camera.translate(dx, dy, dz);
+                        small_cube.translate(dx, dy, dz);
                     }
                     // переносим обратно
                     figure.translate(old_x, old_y, old_z);
                     figure_camera.translate(old_x_camera, old_y_camera, old_z_camera);
+
+                    camera.translate(cam_x, cam_y, cam_z);
+                    small_cube.translate(cam_x, cam_y, cam_z);
+
                 }
 
                 // поворачиваем относительно нужной прямой
@@ -136,11 +160,27 @@ namespace lab6
                             old_y_camera = figure_camera.Center.Y,
                             old_z_camera = figure_camera.Center.Z;
                         figure_camera.translate(-old_x_camera, -old_y_camera, -old_z_camera);
+
+                        // camera
+                        float cam_x = camera.P1.X, cam_y = camera.P1.Y, cam_z = camera.P1.Z;
+                        camera.translate(-cam_x, -cam_y, -cam_z);
+                        small_cube.translate(-cam_x, -cam_y, -cam_z);
+
                         double angle = double.Parse(rot_angle.Text, CultureInfo.CurrentCulture);
                         figure.rotate(angle, line_mode);
                         figure_camera.rotate(angle, line_mode);
+
+                        // camera
+                        camera.rotate(angle, line_mode);
+                        small_cube.rotate(angle, line_mode);
+
                         figure.translate(old_x, old_y, old_z);
                         figure_camera.translate(old_x_camera, old_y_camera, old_z_camera);
+
+                        // camera
+                        camera.translate(cam_x, cam_y, cam_z);
+                        small_cube.translate(cam_x, cam_y, cam_z);
+
                     }
                     else
                     {
@@ -156,18 +196,35 @@ namespace lab6
                         float Ax = rot_line.P1.X, Ay = rot_line.P1.Y, Az = rot_line.P1.Z;
                         figure.translate(-Ax, -Ay, -Az);
                         figure_camera.translate(-Ax, -Ay, -Az);
+
+                        // camera
+                        camera.translate(-Ax, -Ay, -Az);
+                        small_cube.translate(-Ax, -Ay, -Az);
+
                         double angle = double.Parse(rot_angle.Text, CultureInfo.CurrentCulture);
                         figure.rotate(angle, line_mode, rot_line);
                         figure_camera.rotate(angle, line_mode, rot_line);
+
+                        // camera
+                        camera.rotate(angle, line_mode, rot_line);
+                        small_cube.rotate(angle, line_mode, rot_line);
+
                         figure.translate(Ax, Ay, Az);
                         figure_camera.translate(Ax, Ay, Az);
+
+                        // camera
+                        camera.translate(Ax, Ay, Az);
+                        small_cube.translate(Ax, Ay, Az);
                     }
                 }
                 //figure.show(g, pr, old_fig);
                 g.Clear(Color.White);
                 figure.show(g, pr, new_fig);
 
-                camera.show(g, pr);
+                // camera
+                camera.show(g, pr, new_fig);
+                small_cube.show(g, pr, new_fig);
+                
                 g_camera.Clear(Color.White);
                 figure_camera.show_camera(g_camera, camera, new_fig);
             }
@@ -181,6 +238,12 @@ namespace lab6
             }
             else
             {
+                // erase previous camera, draw pretty figure
+                camera.show(g, pr, Pens.White);
+                small_cube.show(g, pr, Pens.White);
+                figure.show(g, pr);
+
+
                 check_all_textboxes();
                 // масштабируем и переносим относительно начала координат (сдвигом центра в начало)
                 //
@@ -190,6 +253,12 @@ namespace lab6
                     // сначала переносим в начало
                     float old_x = figure_camera.Center.X, old_y = figure_camera.Center.Y, old_z = figure_camera.Center.Z;
                     figure_camera.translate(-old_x, -old_y, -old_z);
+
+                    // try to move camera
+                    float cam_x = camera.P1.X, cam_y = camera.P1.Y, cam_z = camera.P1.Z;
+                    camera.translate(-cam_x, -cam_y, -cam_z);
+
+
                     // делаем, что нужно
                     if (trans_x_camera.Text != "0" || trans_y_camera.Text != "0" || trans_z_camera.Text != "0")
                     {
@@ -197,6 +266,11 @@ namespace lab6
                             dy = int.Parse(trans_y_camera.Text, CultureInfo.CurrentCulture),
                             dz = int.Parse(trans_z_camera.Text, CultureInfo.CurrentCulture);
                         figure_camera.translate(-dx, -dy, -dz);
+
+                        // try to move camera
+                        camera.translate(dx, dy, dz);
+
+
                         camera_x.Text = (int.Parse(camera_x.Text, CultureInfo.CurrentCulture) + dx).ToString(CultureInfo.CurrentCulture);
                         camera_y.Text = (int.Parse(camera_y.Text, CultureInfo.CurrentCulture) + dy).ToString(CultureInfo.CurrentCulture);
                         camera_z.Text = (int.Parse(camera_z.Text, CultureInfo.CurrentCulture) + dz).ToString(CultureInfo.CurrentCulture);
@@ -205,12 +279,21 @@ namespace lab6
                     if (rot_angle_camera.Text != "0")
                     {
                         figure_camera.rotate(-double.Parse(rot_angle_camera.Text, CultureInfo.CurrentCulture), camera_mode);
+
+                        // try to move camera
+                        camera.rotate(double.Parse(rot_angle_camera.Text, CultureInfo.CurrentCulture), camera_mode);
+
                     }
                     // переносим обратно
                     figure_camera.translate(old_x, old_y, old_z);
+                    
+                    // try to move camera
+                    camera.translate(cam_x, cam_y, cam_z);
+
                 }
 
                 camera.show(g, pr); // TODO change camera on left picturebox
+                small_cube.show(g, pr);
                 g_camera.Clear(Color.White);
                 figure_camera.show_camera(g_camera, camera, new_fig);
             }
@@ -266,14 +349,29 @@ namespace lab6
 
         private void create_camera()
         {
-            camera.show(g, pr);
+            
             camera_x.Text = ((int)camera.P1.X).ToString(CultureInfo.CurrentCulture);
             camera_y.Text = ((int)camera.P1.Y).ToString(CultureInfo.CurrentCulture);
             camera_z.Text = ((int)camera.P1.Z).ToString(CultureInfo.CurrentCulture);
             g_camera.Clear(Color.White);
-            figure_camera = new Polyhedron(figure);
-            figure_camera.translate(-camera.P1.X, -camera.P1.Y, -camera.P1.Z);
-            figure_camera.show_camera(g_camera, camera, new_fig);
+
+            if (figure != null)
+            {
+                figure_camera = new Polyhedron(figure);
+                figure_camera.translate(-camera.P1.X, -camera.P1.Y, -camera.P1.Z);
+                figure_camera.show_camera(g_camera, camera, new_fig);
+            }
+            int camera_halfsize = 5;
+            small_cube.make_hexahedron(new Face(new List<Point3d>()
+            {
+                new Point3d(camera.P1.X - camera_halfsize, camera.P1.Y + camera_halfsize, camera.P1.Z),
+                new Point3d(camera.P1.X + camera_halfsize, camera.P1.Y + camera_halfsize, camera.P1.Z),
+                new Point3d(camera.P1.X + camera_halfsize, camera.P1.Y - camera_halfsize, camera.P1.Z),
+                new Point3d(camera.P1.X - camera_halfsize, camera.P1.Y - camera_halfsize, camera.P1.Z),
+            }));
+
+            camera.show(g, pr);
+            small_cube.show(g, pr);
         }
         
         // Create hexahedron
