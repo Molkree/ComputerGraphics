@@ -274,7 +274,7 @@
             // 
             this.rot_line_x1.Enabled = false;
             this.rot_line_x1.Location = new System.Drawing.Point(12, 238);
-            this.rot_line_x1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.rot_line_x1.Margin = new System.Windows.Forms.Padding(2);
             this.rot_line_x1.Name = "rot_line_x1";
             this.rot_line_x1.Size = new System.Drawing.Size(52, 20);
             this.rot_line_x1.TabIndex = 42;
@@ -284,7 +284,7 @@
             // 
             this.rot_line_y1.Enabled = false;
             this.rot_line_y1.Location = new System.Drawing.Point(87, 238);
-            this.rot_line_y1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.rot_line_y1.Margin = new System.Windows.Forms.Padding(2);
             this.rot_line_y1.Name = "rot_line_y1";
             this.rot_line_y1.Size = new System.Drawing.Size(52, 20);
             this.rot_line_y1.TabIndex = 43;
@@ -294,7 +294,7 @@
             // 
             this.rot_line_z1.Enabled = false;
             this.rot_line_z1.Location = new System.Drawing.Point(167, 238);
-            this.rot_line_z1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.rot_line_z1.Margin = new System.Windows.Forms.Padding(2);
             this.rot_line_z1.Name = "rot_line_z1";
             this.rot_line_z1.Size = new System.Drawing.Size(53, 20);
             this.rot_line_z1.TabIndex = 44;
@@ -304,7 +304,7 @@
             // 
             this.rot_line_z2.Enabled = false;
             this.rot_line_z2.Location = new System.Drawing.Point(167, 264);
-            this.rot_line_z2.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.rot_line_z2.Margin = new System.Windows.Forms.Padding(2);
             this.rot_line_z2.Name = "rot_line_z2";
             this.rot_line_z2.Size = new System.Drawing.Size(53, 20);
             this.rot_line_z2.TabIndex = 47;
@@ -314,7 +314,7 @@
             // 
             this.rot_line_y2.Enabled = false;
             this.rot_line_y2.Location = new System.Drawing.Point(87, 264);
-            this.rot_line_y2.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.rot_line_y2.Margin = new System.Windows.Forms.Padding(2);
             this.rot_line_y2.Name = "rot_line_y2";
             this.rot_line_y2.Size = new System.Drawing.Size(52, 20);
             this.rot_line_y2.TabIndex = 46;
@@ -324,7 +324,7 @@
             // 
             this.rot_line_x2.Enabled = false;
             this.rot_line_x2.Location = new System.Drawing.Point(12, 264);
-            this.rot_line_x2.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.rot_line_x2.Margin = new System.Windows.Forms.Padding(2);
             this.rot_line_x2.Name = "rot_line_x2";
             this.rot_line_x2.Size = new System.Drawing.Size(52, 20);
             this.rot_line_x2.TabIndex = 45;
@@ -412,7 +412,7 @@
             // button1
             // 
             this.button1.Location = new System.Drawing.Point(52, 539);
-            this.button1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.button1.Margin = new System.Windows.Forms.Padding(2);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(72, 37);
             this.button1.TabIndex = 56;
@@ -423,7 +423,7 @@
             // button2
             // 
             this.button2.Location = new System.Drawing.Point(128, 539);
-            this.button2.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.button2.Margin = new System.Windows.Forms.Padding(2);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(72, 37);
             this.button2.TabIndex = 57;
@@ -438,7 +438,7 @@
             // button3
             // 
             this.button3.Location = new System.Drawing.Point(177, 466);
-            this.button3.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.button3.Margin = new System.Windows.Forms.Padding(2);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(76, 48);
             this.button3.TabIndex = 58;

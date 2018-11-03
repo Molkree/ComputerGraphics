@@ -260,9 +260,11 @@ namespace lab6
                     // поворачиваем относительно нужной прямой
                     if (rot_angle_camera.Text != "0")
                     {
-                        Edge rot_line = new Edge(new Point3d(camera.view.P1.X, camera.view.P1.Y, camera.view.P1.Z),
-                                                 new Point3d(camera.view.P1.X + 10, camera.view.P1.Y + 10, camera.view.P1.Z + 10));
-                        figure_camera.rotate(-double.Parse(rot_angle_camera.Text, CultureInfo.CurrentCulture), camera_mode, rot_line);
+
+                        float Ax = camera.rot_line.P1.X, Ay = camera.rot_line.P1.Y, Az = camera.rot_line.P1.Z;
+                        figure_camera.translate(-Ax, -Ay, -Az);
+                        figure_camera.rotate(-double.Parse(rot_angle_camera.Text, CultureInfo.CurrentCulture), camera_mode, camera.rot_line);
+                        figure_camera.translate(Ax, Ay, Az);
 
                         // try to move camera
                         camera.rotate(double.Parse(rot_angle_camera.Text, CultureInfo.CurrentCulture), camera_mode);
@@ -312,6 +314,7 @@ namespace lab6
         private void camera_axis_picker_SelectedIndexChanged(object sender, EventArgs e)
         {
             camera_mode = (Axis)camera_axis_picker.SelectedIndex;
+            camera.set_rot_line((Axis)camera_axis_picker.SelectedIndex);
         }
 
         private void clear_button_Click(object sender, EventArgs e)
@@ -336,7 +339,7 @@ namespace lab6
 
         private void create_camera()
         {
-            
+            camera = new Camera();
             camera_x.Text = ((int)camera.view.P1.X).ToString(CultureInfo.CurrentCulture);
             camera_y.Text = ((int)camera.view.P1.Y).ToString(CultureInfo.CurrentCulture);
             camera_z.Text = ((int)camera.view.P1.Z).ToString(CultureInfo.CurrentCulture);

@@ -1165,6 +1165,8 @@ namespace lab6
     {
         public Edge view = new Edge(new Point3d(0, 0, 500), new Point3d(0, 0, 450));
         Polyhedron small_cube = new Polyhedron();
+        public Edge rot_line { get; set; }
+
 
         public Camera()
         {
@@ -1176,6 +1178,26 @@ namespace lab6
                 new Point3d(view.P1.X + camera_halfsize, view.P1.Y - camera_halfsize, view.P1.Z),
                 new Point3d(view.P1.X - camera_halfsize, view.P1.Y - camera_halfsize, view.P1.Z),
             }));
+            set_rot_line();
+        }
+
+        public void set_rot_line(Axis a = Axis.AXIS_X)
+        {
+            Point3d p1, p2;
+            p1 = new Point3d(view.P1);
+            switch (a)
+            {
+                case Axis.AXIS_Y:
+                    p2 = new Point3d(p1.X, p1.Y + 10, p1.Z);
+                    break;
+                case Axis.AXIS_Z:
+                    p2 = new Point3d(p1.X, p1.Y, p1.Z + 10);
+                    break;
+                default:
+                    p2 = new Point3d(p1.X + 10, p1.Y, p1.Z);
+                    break;
+            }
+            rot_line = new Edge(p1, p2);
         }
 
         public Point3d P1()
