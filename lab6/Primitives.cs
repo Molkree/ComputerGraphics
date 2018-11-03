@@ -1160,4 +1160,50 @@ namespace lab6
             find_center();
         }
     }
+
+    public class Camera
+    {
+        public Edge view = new Edge(new Point3d(0, 0, 500), new Point3d(0, 0, 450));
+        Polyhedron small_cube = new Polyhedron();
+
+        public Camera()
+        {
+            int camera_halfsize = 5;
+            small_cube.make_hexahedron(new Face(new List<Point3d>()
+            {
+                new Point3d(view.P1.X - camera_halfsize, view.P1.Y + camera_halfsize, view.P1.Z),
+                new Point3d(view.P1.X + camera_halfsize, view.P1.Y + camera_halfsize, view.P1.Z),
+                new Point3d(view.P1.X + camera_halfsize, view.P1.Y - camera_halfsize, view.P1.Z),
+                new Point3d(view.P1.X - camera_halfsize, view.P1.Y - camera_halfsize, view.P1.Z),
+            }));
+        }
+
+        public Point3d P1()
+        {
+            return view.P1;
+        }
+
+        public Point3d P2()
+        {
+            return view.P1;
+        }
+
+        public void show(Graphics g, Projection pr = 0, Pen pen = null)
+        {
+            view.show(g, pr, pen);
+            small_cube.show(g, pr, pen);
+        }
+
+        public void translate(float x, float y, float z)
+        {
+            view.translate(x, y, z);
+            small_cube.translate(x, y, z);
+        }
+
+        public void rotate(double angle, Axis a, Edge line = null)
+        {
+            view.rotate(angle, a, line);
+            small_cube.rotate(angle, a, line);
+        }
+    }
 }
