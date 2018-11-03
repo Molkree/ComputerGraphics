@@ -264,14 +264,8 @@ namespace lab6
             camera.show(g, pr);
         }
 
-        // Create hexahedron
-        private void button1_Click(object sender, EventArgs e)
+        private void create_camera()
         {
-            g.Clear(Color.White);
-            figure = new Polyhedron();
-            figure.make_hexahedron();
-            figure.show(g, pr);
-
             camera.show(g, pr);
             camera_x.Text = ((int)camera.P1.X).ToString(CultureInfo.CurrentCulture);
             camera_y.Text = ((int)camera.P1.Y).ToString(CultureInfo.CurrentCulture);
@@ -280,6 +274,17 @@ namespace lab6
             figure_camera = new Polyhedron(figure);
             figure_camera.translate(-camera.P1.X, -camera.P1.Y, -camera.P1.Z);
             figure_camera.show_camera(g_camera, camera, new_fig);
+        }
+        
+        // Create hexahedron
+        private void button1_Click(object sender, EventArgs e)
+        {
+            g.Clear(Color.White);
+            figure = new Polyhedron();
+            figure.make_hexahedron();
+            figure.show(g, pr);
+
+            create_camera();
         }
 
         // Create tetrahedron
@@ -290,14 +295,7 @@ namespace lab6
             figure.make_tetrahedron();
             figure.show(g, pr);
 
-            camera.show(g, pr);
-            camera_x.Text = ((int)camera.P1.X).ToString(CultureInfo.CurrentCulture);
-            camera_y.Text = ((int)camera.P1.Y).ToString(CultureInfo.CurrentCulture);
-            camera_z.Text = ((int)camera.P1.Z).ToString(CultureInfo.CurrentCulture);
-            g_camera.Clear(Color.White);
-            figure_camera = new Polyhedron(figure);
-            figure_camera.translate(-camera.P1.X, -camera.P1.Y, -camera.P1.Z);
-            figure_camera.show_camera(g_camera, camera, new_fig);
+            create_camera();
         }
 
         // Create octahedron
@@ -308,14 +306,7 @@ namespace lab6
             figure.make_octahedron();
             figure.show(g, pr);
 
-            camera.show(g, pr);
-            camera_x.Text = ((int)camera.P1.X).ToString(CultureInfo.CurrentCulture);
-            camera_y.Text = ((int)camera.P1.Y).ToString(CultureInfo.CurrentCulture);
-            camera_z.Text = ((int)camera.P1.Z).ToString(CultureInfo.CurrentCulture);
-            g_camera.Clear(Color.White);
-            figure_camera = new Polyhedron(figure);
-            figure_camera.translate(-camera.P1.X, -camera.P1.Y, -camera.P1.Z);
-            figure_camera.show_camera(g_camera, camera, new_fig);
+            create_camera();
         }
 
         // Create icosahedron
@@ -326,14 +317,7 @@ namespace lab6
             figure.make_icosahedron();
             figure.show(g, pr);
 
-            camera.show(g, pr);
-            camera_x.Text = ((int)camera.P1.X).ToString(CultureInfo.CurrentCulture);
-            camera_y.Text = ((int)camera.P1.Y).ToString(CultureInfo.CurrentCulture);
-            camera_z.Text = ((int)camera.P1.Z).ToString(CultureInfo.CurrentCulture);
-            g_camera.Clear(Color.White);
-            figure_camera = new Polyhedron(figure);
-            figure_camera.translate(-camera.P1.X, -camera.P1.Y, -camera.P1.Z);
-            figure_camera.show_camera(g_camera, camera, new_fig);
+            create_camera();
         }
 
         // Create dodecahedron
@@ -344,14 +328,7 @@ namespace lab6
             figure.make_dodecahedron();
             figure.show(g, pr);
 
-            camera.show(g, pr);
-            camera_x.Text = ((int)camera.P1.X).ToString(CultureInfo.CurrentCulture);
-            camera_y.Text = ((int)camera.P1.Y).ToString(CultureInfo.CurrentCulture);
-            camera_z.Text = ((int)camera.P1.Z).ToString(CultureInfo.CurrentCulture);
-            g_camera.Clear(Color.White);
-            figure_camera = new Polyhedron(figure);
-            figure_camera.translate(-camera.P1.X, -camera.P1.Y, -camera.P1.Z);
-            figure_camera.show_camera(g_camera, camera, new_fig);
+            create_camera();
         }
 
         // отражение по х
@@ -421,14 +398,7 @@ namespace lab6
             g.Clear(Color.White);
             figure.show(g, pr);
 
-            camera.show(g, pr);
-            camera_x.Text = ((int)camera.P1.X).ToString(CultureInfo.CurrentCulture);
-            camera_y.Text = ((int)camera.P1.Y).ToString(CultureInfo.CurrentCulture);
-            camera_z.Text = ((int)camera.P1.Z).ToString(CultureInfo.CurrentCulture);
-            figure_camera = new Polyhedron(figure);
-            figure_camera.translate(-camera.P1.X, -camera.P1.Y, -camera.P1.Z);
-            g_camera.Clear(Color.White);
-            figure_camera.show_camera(g_camera, camera, new_fig);
+            create_camera();
         }
 
         // rotation_figure
@@ -443,14 +413,7 @@ namespace lab6
             g.Clear(Color.White);
             figure.show(g, pr);
 
-            camera.show(g, pr);
-            camera_x.Text = ((int)camera.P1.X).ToString(CultureInfo.CurrentCulture);
-            camera_y.Text = ((int)camera.P1.Y).ToString(CultureInfo.CurrentCulture);
-            camera_z.Text = ((int)camera.P1.Z).ToString(CultureInfo.CurrentCulture);
-            figure_camera = new Polyhedron(figure);
-            figure_camera.translate(-camera.P1.X, -camera.P1.Y, -camera.P1.Z);
-            g_camera.Clear(Color.White);
-            figure_camera.show_camera(g_camera, camera, new_fig);
+            create_camera();
         }
 
         // graphic
