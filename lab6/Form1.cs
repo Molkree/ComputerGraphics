@@ -17,7 +17,7 @@ namespace lab6
         Axis line_mode = 0, camera_mode = 0;
         Polyhedron figure = null, figure_camera = null;
         Camera camera = new Camera();
-
+        
         public Form1()
         {
             InitializeComponent();
@@ -37,6 +37,7 @@ namespace lab6
             camera_z.Text = ((int)camera.view.P1.Z).ToString(CultureInfo.CurrentCulture);
             camera_axis_picker.SelectedIndex = 0;
             create_camera();
+            radioButton1.Checked = true;
         }
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
@@ -48,7 +49,7 @@ namespace lab6
 
             camera.show(g, pr);
         }
-
+        
         // контроль вводимых символов
         private void textBox_KeyPress_int(object sender, KeyPressEventArgs e)
         {
@@ -216,8 +217,27 @@ namespace lab6
                 camera.show(g, pr, new_fig);
                 
                 g_camera.Clear(Color.White);
-                figure_camera.show_camera(g_camera, camera.view, new_fig);
+
+                if (radioButton1.Checked)
+                    figure_camera.show_camera(g_camera, camera.view, new_fig);
+                else
+                    show_z_buff();
             }
+        }
+
+        private void show_z_buff()
+        {
+            int[] buff = figure_camera.calc_z_buff(camera.view, pictureBox2.Width, pictureBox2.Height);
+            Bitmap bmp = pictureBox2.Image as Bitmap;
+            
+            for (int i = 0; i < pictureBox2.Width; ++i)
+                for (int j = 0; j < pictureBox2.Height; ++j)
+                {
+                    bmp.SetPixel(i, j, Color.FromArgb(buff[i * pictureBox2.Height + j], buff[i * pictureBox2.Height + j], buff[i * pictureBox2.Height + j]));
+
+                }
+
+            pictureBox2.Refresh();
         }
 
         private void button_exec_camera_Click(object sender, EventArgs e)
@@ -284,7 +304,10 @@ namespace lab6
 
 
                 g_camera.Clear(Color.White);
-                figure_camera.show_camera(g_camera, camera.view, new_fig);
+                if (radioButton1.Checked)
+                    figure_camera.show_camera(g_camera, camera.view, new_fig);
+                else
+                    show_z_buff();
             }
         }
 
@@ -349,7 +372,10 @@ namespace lab6
             {
                 figure_camera = new Polyhedron(figure);
                 figure_camera.translate(-camera.view.P1.X, -camera.view.P1.Y, -camera.view.P1.Z);
-                figure_camera.show_camera(g_camera, camera.view, new_fig);
+                if (radioButton1.Checked)
+                    figure_camera.show_camera(g_camera, camera.view, new_fig);
+                else
+                    show_z_buff();
             }
 
             camera.show(g, pr);
@@ -421,7 +447,10 @@ namespace lab6
             camera.show(g, pr);
             figure_camera.reflectX();
             g_camera.Clear(Color.White);
-            figure_camera.show_camera(g_camera, camera.view, new_fig);
+            if (radioButton1.Checked)
+                figure_camera.show_camera(g_camera, camera.view, new_fig);
+            else
+                show_z_buff();
         }
 
         // отражение по y
@@ -435,7 +464,10 @@ namespace lab6
             camera.show(g, pr);
             figure_camera.reflectY();
             g_camera.Clear(Color.White);
-            figure_camera.show_camera(g_camera, camera.view, new_fig);
+            if (radioButton1.Checked)
+                figure_camera.show_camera(g_camera, camera.view, new_fig);
+            else
+                show_z_buff();
         }
 
         // отражение по z
@@ -449,7 +481,10 @@ namespace lab6
             camera.show(g, pr);
             figure_camera.reflectZ();
             g_camera.Clear(Color.White);
-            figure_camera.show_camera(g_camera, camera.view, new_fig);
+            if (radioButton1.Checked)
+                figure_camera.show_camera(g_camera, camera.view, new_fig);
+            else
+                show_z_buff();
         }
 
 
@@ -463,6 +498,17 @@ namespace lab6
             if (figure != null)
                 text = figure.to_string();
             System.IO.File.WriteAllText(filename, text);
+        }
+
+        private void radioButton1_CheckedChanged(object sender, EventArgs e)
+        {
+            if (figure != null)
+            {
+                if (radioButton1.Checked)
+                    figure_camera.show_camera(g_camera, camera.view, new_fig);
+                else
+                    show_z_buff();
+            }
         }
 
         // open_file_dialog

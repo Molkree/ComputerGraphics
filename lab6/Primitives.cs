@@ -671,25 +671,106 @@ namespace lab6
                     f.show(g, pr, pen);
         }
 
-        public void show_camera(Graphics g, Edge camera, Pen pen = null)
+        private float from_det(Face f, int x, int y)
         {
-            foreach (Face f in Faces)
-            {
-                f.find_normal(Center, camera);
-                if (f.IsVisible)
-                {
-                    //float k = (float)Math.Sqrt(
-                    //    (camera.P1.X - Center.X) * (camera.P1.X - Center.X) + 
-                    //    (camera.P1.Y - Center.Y) * (camera.P1.Y - Center.Y) +
-                    //    (camera.P1.Z - Center.Z) * (camera.P1.Z - Center.Z));
-                    //List<PointF> pts = f.make_perspective(k/*1000*/);
-                    //g.DrawLines(pen, pts.ToArray());
-                    //g.DrawLine(pen, pts[0], pts[pts.Count - 1]);
-                    f.show(g, Projection.PERSPECTIVE, pen);
-                }
-            }
+            float res = 0;
+            float a1 = x - f.Points[0].X;
+            float a2 = f.Points[1].X - f.Points[0].X;
+            float a3 = f.Points[2].X - f.Points[0].X;
+            float b1 = y - f.Points[0].Y;
+            float b2 = f.Points[1].Y - f.Points[0].Y;
+            float b3 = f.Points[2].Y - f.Points[0].Y;
+            float c2 = f.Points[1].Z - f.Points[0].Z;
+            float c3 = f.Points[2].Z - f.Points[0].Z;
+
+            res = a1 * b2 * c3 + a3 * b2 * c3 - a1 * b3 * c2 - a2 * b1 * c3;
+            res /= a2 * b3 - a3 * b2;
+
+            return res;
         }
 
+        private float distance(float x, float y, float z, Point3d p)
+        {
+            return (float)Math.Sqrt((double)((p.X - x) * (p.X - x)) + (double)((p.Y - y) * (p.Y - y)) + (double)((p.Z - z) * (p.Z - z)));
+        }
+
+        public int[] calc_z_buff(Edge camera, int width, int height)
+        {
+            int[] res = new int[width*height];
+            for (int i = 0; i < width * height; ++i)
+                res[i] = int.MaxValue;
+            
+            foreach (Face f in Faces)
+            {
+                //bounding rectangle
+                float min_x = f.Points[0].X;
+                float max_x = f.Points[0].X;
+                float min_y = f.Points[0].Y;
+                float max_y = f.Points[0].Y;
+                foreach (var p in f.Points)
+                {
+                    if (p.X < min_x)
+                        min_x = p.X;
+                    else if (p.X > max_x)
+                        max_x = p.X;
+                    if (p.Y < min_y)
+                        min_y = p.Y;
+                    else if (p.Y > max_y)
+                        max_y = p.Y;
+                }
+
+                //bounding rect
+                int x_from = (int)min_x - 1;
+                int x_to = (int)max_x + 1;
+                int y_from = (int)min_y - 1;
+                int y_to = (int)max_y + 1;
+
+                for (int i = x_from; i <= x_to; ++i)
+                    for (int j = y_from; j<=y_to; ++j)
+                    {
+                        //interpolation
+                        float z = from_det(f, i, j);
+                        float dist = distance(i, j, z, camera.P1);
+                        //i, j, z - координаты в пространстве, в пикчербоксе x, y
+                        int x = (i + width / 2) % width;
+                        int y = (-j + height / 2) % height;
+                        if (dist < res[x * height + y])
+                            res[x * height + y] = (int)(dist + 0.5);
+                    }
+            }
+
+            int max_v = int.MinValue;
+            for (int i = 0; i < width * height; ++i)
+                if (res[i] != int.MaxValue && res[i] > max_v)
+                    max_v = res[i];
+
+            for (int i = 0; i < width * height; ++i)
+                if (res[i] == int.MaxValue)
+                    res[i] = 255;
+                else res[i] = 255 / max_v * res[i];
+
+            return res;
+        }
+        
+        public void show_camera(Graphics g, Edge camera, Pen pen = null)
+        {
+           foreach (Face f in Faces)
+                {
+                    f.find_normal(Center, camera);
+                    if (f.IsVisible)
+                    {
+                        //float k = (float)Math.Sqrt(
+                        //    (camera.P1.X - Center.X) * (camera.P1.X - Center.X) + 
+                        //    (camera.P1.Y - Center.Y) * (camera.P1.Y - Center.Y) +
+                        //    (camera.P1.Z - Center.Z) * (camera.P1.Z - Center.Z));
+                        //List<PointF> pts = f.make_perspective(k/*1000*/);
+                        //g.DrawLines(pen, pts.ToArray());
+                        //g.DrawLine(pen, pts[0], pts[pts.Count - 1]);
+                        f.show(g, Projection.PERSPECTIVE, pen);
+                    }
+                }
+        }
+        
         /* ------ Affine transformation ------ */
 
         public void translate(float x, float y, float z)
