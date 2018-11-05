@@ -241,8 +241,8 @@ namespace lab6
                 for (int j = 0; j < pictureBox3.Height; ++j)
                 {
                     Color c = Color.FromArgb(buff[i * pictureBox3.Height + j], buff[i * pictureBox3.Height + j], buff[i * pictureBox3.Height + j]);
-                    //bmp.SetPixel(i, j, Color.FromArgb(buff[i * pictureBox2.Height + j], buff[i * pictureBox2.Height + j], buff[i * pictureBox2.Height + j]));
-                    g_fake_camera.DrawRectangle(new Pen(c), i - pictureBox3.Width / 2, pictureBox3.Height / 2 - j, 1, 1);
+                    bmp.SetPixel(i, j, Color.FromArgb(buff[i * pictureBox2.Height + j], buff[i * pictureBox2.Height + j], buff[i * pictureBox2.Height + j]));
+                    //g_fake_camera.DrawRectangle(new Pen(c), i - pictureBox3.Width / 2, pictureBox3.Height / 2 - j, 1, 1);
                 }
 
             pictureBox3.Refresh();

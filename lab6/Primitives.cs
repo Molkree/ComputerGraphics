@@ -703,88 +703,10 @@ namespace lab6
             return res;
         }
 
-        /*private float distance(float x, float y, float z, Point3d p)
+        private float distance(float x, float y, float z, Point3d p)
         {
             return (float)Math.Sqrt((double)((p.X - x) * (p.X - x)) + (double)((p.Y - y) * (p.Y - y)) + (double)((p.Z - z) * (p.Z - z)));
         }
-
-        private bool eq(float d1, float d2)
-        {
-            return Math.Abs(d1 - d2) < 1E-6f;
-        }
-
-        private bool less(float d1, float d2)
-        {
-            return (d1 < d2) && (Math.Abs(d1 - d2) >= 1E-6f);
-        }
-
-        bool l_eq(float b1, float b2)
-        {
-            return less(b1, b2) || eq(b1, b2);
-        }
-
-        private int point_belongs(Point3d e1, Point3d e2, int x, int y)
-        {
-            float a = e1.Y - e2.Y;
-            float b = e2.X - e1.X;
-            float c = e1.X * e2.Y - e2.X * e1.Y;
-
-            if (Math.Abs(a * x + b * y+ c) > 1E-6f)
-                return -1;
-
-            bool toedge = l_eq(Math.Min(e1.X, e2.X), x) && l_eq(x, Math.Max(e1.X, e2.X))
-                        && l_eq(Math.Min(e1.Y, e2.Y), y) && l_eq(y, Math.Max(e1.Y, e2.Y));
-            if (toedge)
-                return 1;
-            return -1;
-        }
-
-        private bool is_crossed(Point3d first1, Point3d first2, Point3d second1, Point3d second2)
-        {
-            float a1 = first1.Y - first2.Y;
-            float b1 = first2.X - first1.X;
-            float c1 = first1.X * first2.Y - first2.X * first1.Y;
-
-            float a2 = second1.Y - second2.Y;
-            float b2 = second2.X - second1.X;
-            float c2 = second1.X * second2.Y - second2.X * second1.Y;
-
-            float zn = a1 * b2 - a2 * b1;
-            if (Math.Abs(zn) < 1E-6f)
-                return false;
-            float x = (-1) * (c1 * b2 - c2 * b1) / zn;
-            float y = (-1) * (a1 * c2 - a2 * c1) / zn;
-
-            bool tofirst = l_eq(Math.Min(first1.X, first2.X), x) && l_eq(x, Math.Max(first1.X, first2.X)) && l_eq(Math.Min(first1.Y, first2.Y), y) && l_eq(y, Math.Max(first1.Y, first2.Y));
-            bool tosecond = l_eq(Math.Min(second1.X, second2.X), x) && l_eq(x, Math.Max(second1.X, second2.X)) && l_eq(Math.Min(second1.Y, second2.Y), y) && l_eq(y, Math.Max(second1.Y, second2.Y));
-
-            return tofirst && tosecond;
-        }
-
-        private bool belong(Face f, int x, int y, int width)
-        {
-            int cnt = 0;
-            Point3d ray = new Point3d(width, y, 0);
-
-            for (int i = 1; i <= f.Points.Count; ++i)
-            {
-                var tmp1 = f.Points[i - 1];
-                var tmp2 = f.Points[i % f.Points.Count];
-                if (point_belongs(tmp1, tmp2, x, y) == 1)
-                    return true;
-                if (eq(tmp1.Y, tmp2.Y))
-                    continue;
-                if (eq(y, Math.Min(tmp1.Y, tmp2.Y)))
-                    continue;
-                if (eq(y, Math.Max(tmp1.Y, tmp2.Y)) && less(x, Math.Min(tmp1.X, tmp2.X)))
-                    ++cnt;
-                else if (is_crossed(tmp1, tmp2, new Point3d(x, y, 0), ray))
-                    ++cnt;
-            }
-
-            return cnt % 2 == 0 ? false : true;
-        }*/
-        
 
         private int[] Interpolate(int i0, int d0, int i1, int d1)
         {
@@ -805,7 +727,7 @@ namespace lab6
             return values;
         }
         
-        private void DrawFilledTriangle(Point3d P0, Point3d P1, Point3d P2, int[] buff, int width, int height, int[] colors, int color)
+        private void DrawFilledTriangle(Edge camera, Point3d P0, Point3d P1, Point3d P2, int[] buff, int width, int height, int[] colors, int color)
         {
             //y0 <= y1 <= y2
             int y0 = (int)P0.Y; int x0 = (int)P0.X;
@@ -842,17 +764,24 @@ namespace lab6
                     //i, j, z - координаты в пространстве, в пикчербоксе x, y
                     int xx = (x + width / 2) % width;
                     int yy = (-y + height / 2) % height;
+                    /*float dist = distance(x, y, z, camera.P1);
+                    if (dist < buff[xx * height + yy])
+                    {
+                        buff[xx * height + yy] = (int)(dist + 0.5);
+                        colors[xx * height + yy] = color;
+                    }*/
                     if (z < buff[xx * height + yy])
                     {
                         buff[xx * height + yy] = (int)(z + 0.5);
                         colors[xx * height + yy] = color;
                     }
+
                 }
 
         }
 
 
-        private void magic(Point3d P0, Point3d P1, Point3d P2, int[] buff, int width, int height, int[] colors, int color)
+        private void magic(Edge camera, Point3d P0, Point3d P1, Point3d P2, int[] buff, int width, int height, int[] colors, int color)
         {
             //сортируем p0, p1, p2: y0 <= y1 <= y2
             if (P1.Y < P0.Y)
@@ -874,7 +803,7 @@ namespace lab6
                 P2.X = tmpp.X; P2.Y = tmpp.Y; P2.Z = tmpp.Z;
             }
 
-            DrawFilledTriangle(P0, P1, P2, buff, width, height, colors, color);
+            DrawFilledTriangle(camera, P0, P1, P2, buff, width, height, colors, color);
         }
 
         public int[] calc_z_buff(Edge camera, int width, int height)
@@ -896,14 +825,14 @@ namespace lab6
                 Point3d P0 = new Point3d(f.Points[0]);
                 Point3d P1 = new Point3d(f.Points[1]);
                 Point3d P2 = new Point3d(f.Points[2]);
-                magic(P0, P1, P2, res, width, height, colors, color);
+                magic(camera, P0, P1, P2, res, width, height, colors, color);
                 //4
                 if (f.Points.Count > 3)
                 {
                     P0 = new Point3d(f.Points[2]);
                     P1 = new Point3d(f.Points[3]);
                     P2 = new Point3d(f.Points[0]);
-                    magic(P0, P1, P2, res, width, height, colors, color);
+                    magic(camera, P0, P1, P2, res, width, height, colors, color);
                 }
                 //5  убейте додекаэдр,пожалуйста
                 if (f.Points.Count > 4)
@@ -911,96 +840,13 @@ namespace lab6
                     P0 = new Point3d(f.Points[3]);
                     P1 = new Point3d(f.Points[4]);
                     P2 = new Point3d(f.Points[0]);
-                    magic(P0, P1, P2, res, width, height, colors, color);
+                    magic(camera, P0, P1, P2, res, width, height, colors, color);
                 }
             }
             
             return colors;
         }
-        /*public int[] calc_z_buff(Edge camera, int width, int height)
-        {
-            int[] res = new int[width*height];
-            for (int i = 0; i < width * height; ++i)
-                res[i] = int.MaxValue;
-            
-            foreach (Face f in Faces)
-            {
-                //bounding rectangle
-                float min_x = f.Points[0].X;
-                float max_x = f.Points[0].X;
-                float min_y = f.Points[0].Y;
-                float max_y = f.Points[0].Y;
-                foreach (var p in f.Points)
-                {
-                    if (p.X < min_x)
-                        min_x = p.X;
-                    else if (p.X > max_x)
-                        max_x = p.X;
-                    if (p.Y < min_y)
-                        min_y = p.Y;
-                    else if (p.Y > max_y)
-                        max_y = p.Y;
-                }
 
-                //bounding rect
-                int x_from = (int)min_x - 1;
-                int x_to = (int)max_x + 1;
-                int y_from = (int)min_y - 1;
-                int y_to = (int)max_y + 1;
-
-                for (int i = x_from; i <= x_to; ++i)
-                    for (int j = y_from; j<=y_to; ++j)
-                    {
-                        if (!belong(f, i, j, width))
-                            continue;
-                        //interpolation
-                        float z = from_det(f, i, j);
-                        float dist = distance(i, j, z, camera.P1);
-                        //i, j, z - координаты в пространстве, в пикчербоксе x, y
-                        int x = (i + width / 2) % width;
-                        int y = (-j + height / 2) % height;
-                        //if (dist < res[x * height + y])
-                        //    res[x * height + y] = (int)(dist + 0.5);
-                        if (z < res[x * height + y])
-                            res[x * height + y] = (int)(z + 0.5);
-                    }
-            }
-            
-            SortedSet<int> tmp = new SortedSet<int>();
-
-            int min_v = 0;
-            int max_v = int.MinValue;
-            for (int i = 0; i < width * height; ++i)
-            {
-                if (res[i] < 0 && res[i] < min_v)
-                    min_v = res[i];
-                tmp.Add(res[i]);
-                if (res[i] != int.MaxValue && res[i] > max_v)
-                    max_v = res[i];
-            }
-            min_v = -min_v;
-            max_v += min_v;
-            if (min_v != 0)
-                for (int i = 0; i < width * height; ++i)
-                {
-                    if (res[i] != int.MaxValue)
-                        res[i] = (res[i] + min_v)%255;
-                }
-            SortedSet<int> tmp2 = new SortedSet<int>();
-
-            for (int i = 0; i < width * height; ++i)
-            {
-                if (res[i] == int.MaxValue)
-                    res[i] = 255;
-                else if (max_v != 0)
-                    res[i] = (int)(254f / (float)max_v * (float)res[i]);
-                //else res[i] = res[i] % 256;
-                tmp2.Add(res[i]);
-            }
-
-            return res;
-        }
-        */
         public void show_camera(Graphics g, Edge camera, Pen pen = null)
         {
            foreach (Face f in Faces)
