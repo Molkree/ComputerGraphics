@@ -492,8 +492,13 @@ namespace lab6
             List<PointF> res = new List<PointF>();
 
             foreach (Point3d p in Points)
+            {
+                // very strange idea
+                if (p.Z > k)
+                    continue;
+                // end of very idea
                 res.Add(p.make_perspective(k));
-          
+            }
             return res;
         }
 
@@ -545,8 +550,11 @@ namespace lab6
                     break;
             }
 
-            g.DrawLines(pen, pts.ToArray());
-            g.DrawLine(pen, pts[0], pts[pts.Count - 1]);
+            if (pts.Count > 0)
+            {
+                g.DrawLines(pen, pts.ToArray());
+                g.DrawLine(pen, pts[0], pts[pts.Count - 1]);
+            }
         }
 
         /* ------ Affine transformations ------ */
