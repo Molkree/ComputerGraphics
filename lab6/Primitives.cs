@@ -550,11 +550,13 @@ namespace lab6
                     break;
             }
 
-            if (pts.Count > 0)
+            if (pts.Count > 1)
             {
                 g.DrawLines(pen, pts.ToArray());
                 g.DrawLine(pen, pts[0], pts[pts.Count - 1]);
             }
+            else if (pts.Count == 1)
+                g.DrawRectangle(pen, pts[0].X, pts[0].Y, 1, 1);
         }
 
         /* ------ Affine transformations ------ */
