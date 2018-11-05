@@ -53,6 +53,10 @@ namespace lab6
         // get point for central (perspective) projection
         public PointF make_perspective(float k = 1000)
         {
+            // for safety - in order not to get infinity
+            if (Math.Abs(Z - k) < 1e-10)
+                k += 1;
+
             List<float> P = new List<float> { 1, 0, 0, 0,
                                               0, 1, 0, 0,
                                               0, 0, 0, -1/k,
@@ -274,12 +278,12 @@ namespace lab6
         }
 
         // get points for central (perspective) projection
-        private List<PointF> make_perspective()
+        private List<PointF> make_perspective(int k = 1000)
         {
             List<PointF> res = new List<PointF>
             {
-                P1.make_perspective(),
-                P2.make_perspective()
+                P1.make_perspective(k),
+                P2.make_perspective(k)
             };
 
             return res;
@@ -515,7 +519,7 @@ namespace lab6
             return res;
         }
 
-        public void show(Graphics g, Projection pr = 0, Pen pen = null)
+        public void show(Graphics g, Projection pr = 0, Pen pen = null, float k = 1000)
         {
             if (pen == null)
                 pen = Pens.Black;
@@ -537,7 +541,7 @@ namespace lab6
                     pts = make_orthographic(Axis.AXIS_Z);
                     break;
                 default:
-                    pts = make_perspective();
+                    pts = make_perspective(k);
                     break;
             }
 
@@ -849,14 +853,14 @@ namespace lab6
                     f.find_normal(Center, camera);
                     if (f.IsVisible)
                     {
-                        //float k = (float)Math.Sqrt(
-                        //    (camera.P1.X - Center.X) * (camera.P1.X - Center.X) + 
-                        //    (camera.P1.Y - Center.Y) * (camera.P1.Y - Center.Y) +
-                        //    (camera.P1.Z - Center.Z) * (camera.P1.Z - Center.Z));
-                        //List<PointF> pts = f.make_perspective(k/*1000*/);
-                        //g.DrawLines(pen, pts.ToArray());
-                        //g.DrawLine(pen, pts[0], pts[pts.Count - 1]);
-                        f.show(g, Projection.PERSPECTIVE, pen);
+                    //float k = (float)Math.Sqrt(
+                    //    (camera.P1.X - Center.X) * (camera.P1.X - Center.X) + 
+                    //    (camera.P1.Y - Center.Y) * (camera.P1.Y - Center.Y) +
+                    //    (camera.P1.Z - Center.Z) * (camera.P1.Z - Center.Z));
+                    //List<PointF> pts = f.make_perspective(k/*1000*/);
+                    //g.DrawLines(pen, pts.ToArray());
+                    //g.DrawLine(pen, pts[0], pts[pts.Count - 1]);
+                    f.show(g, Projection.PERSPECTIVE, pen); //, camera.P1.Z);
                     }
                 }
         }
@@ -1383,6 +1387,7 @@ namespace lab6
 
         public void show(Graphics g, Projection pr = 0, Pen pen = null)
         {
+            pen = Pens.Red;
             view.show(g, pr, pen);
             small_cube.show(g, pr, pen);
         }

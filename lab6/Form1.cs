@@ -285,6 +285,10 @@ namespace lab6
                         camera_y.Text = (int.Parse(camera_y.Text, CultureInfo.CurrentCulture) + dy).ToString(CultureInfo.CurrentCulture);
                         camera_z.Text = (int.Parse(camera_z.Text, CultureInfo.CurrentCulture) + dz).ToString(CultureInfo.CurrentCulture);
                     }
+                    // переносим обратно
+                    figure_camera.translate(old_x, old_y, old_z);
+                    
+
                     // поворачиваем относительно нужной прямой
                     if (rot_angle_camera.Text != "0")
                     {
@@ -297,11 +301,9 @@ namespace lab6
                         // try to move camera
                         camera.rotate(double.Parse(rot_angle_camera.Text, CultureInfo.CurrentCulture), camera_mode);
                     }
-                    // переносим обратно
-                    figure_camera.translate(old_x, old_y, old_z);
-                    
                     // try to move camera
                     camera.translate(cam_x, cam_y, cam_z);
+
 
                 }
 
