@@ -817,16 +817,27 @@ namespace lab6
                             res[x * height + y] = (int)(dist + 0.5);
                     }
             }
+            SortedSet<int> tmp = new SortedSet<int>();
+
 
             int max_v = int.MinValue;
             for (int i = 0; i < width * height; ++i)
-                if ( res[i] > max_v)
+            {
+                tmp.Add(res[i]);
+                if (res[i] != int.MaxValue && res[i] > max_v)
                     max_v = res[i];
+            }
+
+            SortedSet<int> tmp2 = new SortedSet<int>();
 
             for (int i = 0; i < width * height; ++i)
+            {
                 if (res[i] == int.MaxValue)
                     res[i] = 255;
-                else res[i] = 255 / max_v * res[i];
+                else res[i] = (int)(255f / (float)max_v * (float)res[i]);
+                //else res[i] = res[i] % 256;
+                tmp2.Add(res[i]);
+            }
 
             return res;
         }
