@@ -794,7 +794,7 @@ namespace lab6
                         buff[xx * height + yy] = (int)(dist + 0.5);
                         colors[xx * height + yy] = color;
                     }*/
-                    if (z < buff[xx * height + yy])
+                    if (z > buff[xx * height + yy])
                     {
                         buff[xx * height + yy] = (int)(z + 0.5);
                         colors[xx * height + yy] = color;
@@ -834,7 +834,7 @@ namespace lab6
         {
             int[] res = new int[width * height];
             for (int i = 0; i < width * height; ++i)
-                res[i] = int.MaxValue;
+                res[i] = int.MinValue;
             int[] colors = new int[width * height];
             for (int i = 0; i < width * height; ++i)
                 colors[i] = 255;
