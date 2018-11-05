@@ -12,7 +12,7 @@ namespace lab6
 
         Pen new_fig = Pens.Black;
         Pen old_fig = Pens.LightGray;
-        Graphics g, g_camera;
+        Graphics g, g_camera, g_fake_camera;
         Projection pr = 0;
         Axis line_mode = 0, camera_mode = 0;
         Polyhedron figure = null, figure_camera = null;
@@ -30,6 +30,12 @@ namespace lab6
             comboBox2.SelectedIndex = 0;
 
             g_camera = pictureBox2.CreateGraphics();
+            pictureBox3.Image = new Bitmap(pictureBox3.Width, pictureBox3.Height);
+            g_fake_camera = Graphics.FromImage(pictureBox3.Image);
+            g_fake_camera.TranslateTransform(pictureBox2.ClientSize.Width / 2, pictureBox2.ClientSize.Height / 2);
+            g_fake_camera.ScaleTransform(1, -1);
+            pictureBox3.Visible = false;
+
             g_camera.TranslateTransform(pictureBox2.ClientSize.Width / 2, pictureBox2.ClientSize.Height / 2);
             g_camera.ScaleTransform(1, -1);
             camera_x.Text = ((int)camera.view.P1.X).ToString(CultureInfo.CurrentCulture);
@@ -227,19 +233,19 @@ namespace lab6
 
         private void show_z_buff()
         {
-            int[] buff = figure_camera.calc_z_buff(camera.view, pictureBox2.Width, pictureBox2.Height);
-            Bitmap bmp = pictureBox2.InitialImage as Bitmap;
-            g_camera.Clear(Color.White);
+            int[] buff = figure_camera.calc_z_buff(camera.view, pictureBox3.Width, pictureBox3.Height);
+            Bitmap bmp = pictureBox3.Image as Bitmap;
+            g_fake_camera.Clear(Color.White);
             
-            for (int i = 0; i < pictureBox2.Width; ++i)
-                for (int j = 0; j < pictureBox2.Height; ++j)
+            for (int i = 0; i < pictureBox3.Width; ++i)
+                for (int j = 0; j < pictureBox3.Height; ++j)
                 {
-                    Color c = Color.FromArgb(buff[i * pictureBox2.Height + j], buff[i * pictureBox2.Height + j], buff[i * pictureBox2.Height + j]);
+                    Color c = Color.FromArgb(buff[i * pictureBox3.Height + j], buff[i * pictureBox3.Height + j], buff[i * pictureBox3.Height + j]);
                     //bmp.SetPixel(i, j, Color.FromArgb(buff[i * pictureBox2.Height + j], buff[i * pictureBox2.Height + j], buff[i * pictureBox2.Height + j]));
-                    g_camera.DrawRectangle(new Pen(c), i - pictureBox2.Width / 2, pictureBox2.Height / 2 - j, 1, 1);
+                    g_fake_camera.DrawRectangle(new Pen(c), i - pictureBox3.Width / 2, pictureBox3.Height / 2 - j, 1, 1);
                 }
 
-            //pictureBox2.Refresh();
+            pictureBox3.Refresh();
         }
 
         private void button_exec_camera_Click(object sender, EventArgs e)
@@ -502,14 +508,37 @@ namespace lab6
             System.IO.File.WriteAllText(filename, text);
         }
 
+        private void radioButton2_CheckedChanged(object sender, EventArgs e)
+        {
+            if (figure != null)
+            {
+                if (radioButton1.Checked)
+                {
+                    pictureBox3.Visible = false;
+                    figure_camera.show_camera(g_camera, camera.view, new_fig);
+                }
+                else
+                {
+                    pictureBox3.Visible = true;
+                    show_z_buff();
+                }
+            }
+        }
+
         private void radioButton1_CheckedChanged(object sender, EventArgs e)
         {
             if (figure != null)
             {
                 if (radioButton1.Checked)
+                {
+                    pictureBox3.Visible = false;
                     figure_camera.show_camera(g_camera, camera.view, new_fig);
+                }
                 else
+                {
+                    pictureBox3.Visible = true;
                     show_z_buff();
+                }
             }
         }
 

@@ -820,7 +820,7 @@ namespace lab6
 
             int max_v = int.MinValue;
             for (int i = 0; i < width * height; ++i)
-                if (res[i] != int.MaxValue && res[i] > max_v)
+                if ( res[i] > max_v)
                     max_v = res[i];
 
             for (int i = 0; i < width * height; ++i)
