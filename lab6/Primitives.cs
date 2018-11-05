@@ -694,6 +694,83 @@ namespace lab6
             return (float)Math.Sqrt((double)((p.X - x) * (p.X - x)) + (double)((p.Y - y) * (p.Y - y)) + (double)((p.Z - z) * (p.Z - z)));
         }
 
+        private bool eq(float d1, float d2)
+        {
+            return Math.Abs(d1 - d2) < 1E-6f;
+        }
+
+        private bool less(float d1, float d2)
+        {
+            return (d1 < d2) && (Math.Abs(d1 - d2) >= 1E-6f);
+        }
+
+        bool l_eq(float b1, float b2)
+        {
+            return less(b1, b2) || eq(b1, b2);
+        }
+
+        private int point_belongs(Point3d e1, Point3d e2, int x, int y)
+        {
+            float a = e1.Y - e2.Y;
+            float b = e2.X - e1.X;
+            float c = e1.X * e2.Y - e2.X * e1.Y;
+
+            if (Math.Abs(a * x + b * y+ c) > 1E-6f)
+                return -1;
+
+            bool toedge = l_eq(Math.Min(e1.X, e2.X), x) && l_eq(x, Math.Max(e1.X, e2.X))
+                        && l_eq(Math.Min(e1.Y, e2.Y), y) && l_eq(y, Math.Max(e1.Y, e2.Y));
+            if (toedge)
+                return 1;
+            return -1;
+        }
+
+        private bool is_crossed(Point3d first1, Point3d first2, Point3d second1, Point3d second2)
+        {
+            float a1 = first1.Y - first2.Y;
+            float b1 = first2.X - first1.X;
+            float c1 = first1.X * first2.Y - first2.X * first1.Y;
+
+            float a2 = second1.Y - second2.Y;
+            float b2 = second2.X - second1.X;
+            float c2 = second1.X * second2.Y - second2.X * second1.Y;
+
+            float zn = a1 * b2 - a2 * b1;
+            if (Math.Abs(zn) < 1E-6f)
+                return false;
+            float x = (-1) * (c1 * b2 - c2 * b1) / zn;
+            float y = (-1) * (a1 * c2 - a2 * c1) / zn;
+
+            bool tofirst = l_eq(Math.Min(first1.X, first2.X), x) && l_eq(x, Math.Max(first1.X, first2.X)) && l_eq(Math.Min(first1.Y, first2.Y), y) && l_eq(y, Math.Max(first1.Y, first2.Y));
+            bool tosecond = l_eq(Math.Min(second1.X, second2.X), x) && l_eq(x, Math.Max(second1.X, second2.X)) && l_eq(Math.Min(second1.Y, second2.Y), y) && l_eq(y, Math.Max(second1.Y, second2.Y));
+
+            return tofirst && tosecond;
+        }
+
+        private bool belong(Face f, int x, int y, int width)
+        {
+            int cnt = 0;
+            Point3d ray = new Point3d(width, y, 0);
+
+            for (int i = 1; i <= f.Points.Count; ++i)
+            {
+                var tmp1 = f.Points[i - 1];
+                var tmp2 = f.Points[i % f.Points.Count];
+                if (point_belongs(tmp1, tmp2, x, y) == 1)
+                    return true;
+                if (eq(tmp1.Y, tmp2.Y))
+                    continue;
+                if (eq(y, Math.Min(tmp1.Y, tmp2.Y)))
+                    continue;
+                if (eq(y, Math.Max(tmp1.Y, tmp2.Y)) && less(x, Math.Min(tmp1.X, tmp2.X)))
+                    ++cnt;
+                else if (is_crossed(tmp1, tmp2, new Point3d(x, y, 0), ray))
+                    ++cnt;
+            }
+
+            return cnt % 2 == 0 ? false : true;
+        }
+
         public int[] calc_z_buff(Edge camera, int width, int height)
         {
             int[] res = new int[width*height];
@@ -728,6 +805,8 @@ namespace lab6
                 for (int i = x_from; i <= x_to; ++i)
                     for (int j = y_from; j<=y_to; ++j)
                     {
+                        if (!belong(f, i, j, width))
+                            continue;
                         //interpolation
                         float z = from_det(f, i, j);
                         float dist = distance(i, j, z, camera.P1);

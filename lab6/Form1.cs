@@ -239,7 +239,7 @@ namespace lab6
                     g_camera.DrawRectangle(new Pen(c), i - pictureBox2.Width / 2, pictureBox2.Height / 2 - j, 1, 1);
                 }
 
-            pictureBox2.Refresh();
+            //pictureBox2.Refresh();
         }
 
         private void button_exec_camera_Click(object sender, EventArgs e)
