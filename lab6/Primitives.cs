@@ -703,7 +703,7 @@ namespace lab6
             return res;
         }
 
-        private float distance(float x, float y, float z, Point3d p)
+        /*private float distance(float x, float y, float z, Point3d p)
         {
             return (float)Math.Sqrt((double)((p.X - x) * (p.X - x)) + (double)((p.Y - y) * (p.Y - y)) + (double)((p.Z - z) * (p.Z - z)));
         }
@@ -783,7 +783,7 @@ namespace lab6
             }
 
             return cnt % 2 == 0 ? false : true;
-        }
+        }*/
         
 
         private int[] Interpolate(int i0, int d0, int i1, int d1)
@@ -793,19 +793,131 @@ namespace lab6
                 return new int[] { d0 };
             }
             int[] values = new int[i1 - i0 + 1];
-            int a = (d1 - d0) / (i1 - i0);
-            int d = d0;
+            float a = (float)(d1 - d0) / (i1 - i0);
+            float d = d0;
             int ind = 0;
             for (int i = i0; i <= i1; ++i)
             {
-                values[ind] = d;
+                values[ind] = (int)(d+0.5);
                 d = d + a;
                 ++ind;
             }
             return values;
         }
+        
+        private void DrawFilledTriangle(Point3d P0, Point3d P1, Point3d P2, int[] buff, int width, int height, int[] colors, int color)
+        {
+            //y0 <= y1 <= y2
+            int y0 = (int)P0.Y; int x0 = (int)P0.X;
+            int y1 = (int)P1.Y; int x1 = (int)P1.X;
+            int y2  = (int)P2.Y; int x2 = (int)P2.X;
+
+            var x01 = Interpolate(y0, x0, y1, x1);
+            var x12 = Interpolate(y1, x1, y2, x2);
+            var x02 = Interpolate(y0, x0, y2, x2);
+
+            // Конкатенация коротких сторон
+            int[] x012 = x01.Take(x01.Length - 1).Concat(x12).ToArray();
+
+            //Определяем, какая из сторон левая и правая
+            int m = x012.Length / 2;
+            int[] x_left, x_right;
+            if (x02[m] < x012[m]) {
+                x_left = x02;
+                x_right = x012;
+            }
+            else
+            {
+                x_left = x012;
+                x_right = x02;
+            }
+            
+            Face f = new Face(new List<Point3d>() { P0, P1, P2});
+            //Отрисовка горизонтальных отрезков
+            for (int y = y0; y <= y2; ++y)
+                for (int x = x_left[y - y0]; x <= x_right[y - y0]; ++x)
+                {
+                    //interpolation
+                    float z = from_det(f, x, y);
+                    //i, j, z - координаты в пространстве, в пикчербоксе x, y
+                    int xx = (x + width / 2) % width;
+                    int yy = (-y + height / 2) % height;
+                    if (z < buff[xx * height + yy])
+                    {
+                        buff[xx * height + yy] = (int)(z + 0.5);
+                        colors[xx * height + yy] = color;
+                    }
+                }
+
+        }
+
+
+        private void magic(Point3d P0, Point3d P1, Point3d P2, int[] buff, int width, int height, int[] colors, int color)
+        {
+            //сортируем p0, p1, p2: y0 <= y1 <= y2
+            if (P1.Y < P0.Y)
+            {
+                Point3d tmpp = new Point3d(P0);
+                P0.X = P1.X; P0.Y = P1.Y; P0.Z = P1.Z;
+                P1.X = tmpp.X; P1.Y = tmpp.Y; P1.Z = tmpp.Z;
+            }
+            if (P2.Y < P0.Y)
+            {
+                Point3d tmpp = new Point3d(P0);
+                P0.X = P2.X; P0.Y = P2.Y; P0.Z = P2.Z;
+                P2.X = tmpp.X; P2.Y = tmpp.Y; P2.Z = tmpp.Z;
+            }
+            if (P2.Y < P1.Y)
+            {
+                Point3d tmpp = new Point3d(P1);
+                P1.X = P2.X; P1.Y = P2.Y; P1.Z = P2.Z;
+                P2.X = tmpp.X; P2.Y = tmpp.Y; P2.Z = tmpp.Z;
+            }
+
+            DrawFilledTriangle(P0, P1, P2, buff, width, height, colors, color);
+        }
 
         public int[] calc_z_buff(Edge camera, int width, int height)
+        {
+            int[] res = new int[width * height];
+            for (int i = 0; i < width * height; ++i)
+                res[i] = int.MaxValue;
+            int[] colors = new int[width * height];
+            for (int i = 0; i < width * height; ++i)
+                colors[i] = 255;
+
+            Random r = new Random();
+
+            foreach (var f in Faces)
+            {
+
+                int color = r.Next(200);
+                //треугольник
+                Point3d P0 = new Point3d(f.Points[0]);
+                Point3d P1 = new Point3d(f.Points[1]);
+                Point3d P2 = new Point3d(f.Points[2]);
+                magic(P0, P1, P2, res, width, height, colors, color);
+                //4
+                if (f.Points.Count > 3)
+                {
+                    P0 = new Point3d(f.Points[2]);
+                    P1 = new Point3d(f.Points[3]);
+                    P2 = new Point3d(f.Points[0]);
+                    magic(P0, P1, P2, res, width, height, colors, color);
+                }
+                //5  убейте додекаэдр,пожалуйста
+                if (f.Points.Count > 4)
+                {
+                    P0 = new Point3d(f.Points[3]);
+                    P1 = new Point3d(f.Points[4]);
+                    P2 = new Point3d(f.Points[0]);
+                    magic(P0, P1, P2, res, width, height, colors, color);
+                }
+            }
+            
+            return colors;
+        }
+        /*public int[] calc_z_buff(Edge camera, int width, int height)
         {
             int[] res = new int[width*height];
             for (int i = 0; i < width * height; ++i)
@@ -888,7 +1000,7 @@ namespace lab6
 
             return res;
         }
-        
+        */
         public void show_camera(Graphics g, Edge camera, Pen pen = null)
         {
            foreach (Face f in Faces)
