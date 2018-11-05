@@ -784,6 +784,26 @@ namespace lab6
 
             return cnt % 2 == 0 ? false : true;
         }
+        
+
+        private int[] Interpolate(int i0, int d0, int i1, int d1)
+        {
+            if (i0 == i1)
+            {
+                return new int[] { d0 };
+            }
+            int[] values = new int[i1 - i0 + 1];
+            int a = (d1 - d0) / (i1 - i0);
+            int d = d0;
+            int ind = 0;
+            for (int i = i0; i <= i1; ++i)
+            {
+                values[ind] = d;
+                d = d + a;
+                ++ind;
+            }
+            return values;
+        }
 
         public int[] calc_z_buff(Edge camera, int width, int height)
         {
@@ -827,28 +847,41 @@ namespace lab6
                         //i, j, z - координаты в пространстве, в пикчербоксе x, y
                         int x = (i + width / 2) % width;
                         int y = (-j + height / 2) % height;
-                        if (dist < res[x * height + y])
-                            res[x * height + y] = (int)(dist + 0.5);
+                        //if (dist < res[x * height + y])
+                        //    res[x * height + y] = (int)(dist + 0.5);
+                        if (z < res[x * height + y])
+                            res[x * height + y] = (int)(z + 0.5);
                     }
             }
+            
             SortedSet<int> tmp = new SortedSet<int>();
 
-
+            int min_v = 0;
             int max_v = int.MinValue;
             for (int i = 0; i < width * height; ++i)
             {
+                if (res[i] < 0 && res[i] < min_v)
+                    min_v = res[i];
                 tmp.Add(res[i]);
                 if (res[i] != int.MaxValue && res[i] > max_v)
                     max_v = res[i];
             }
-
+            min_v = -min_v;
+            max_v += min_v;
+            if (min_v != 0)
+                for (int i = 0; i < width * height; ++i)
+                {
+                    if (res[i] != int.MaxValue)
+                        res[i] = (res[i] + min_v)%255;
+                }
             SortedSet<int> tmp2 = new SortedSet<int>();
 
             for (int i = 0; i < width * height; ++i)
             {
                 if (res[i] == int.MaxValue)
                     res[i] = 255;
-                else res[i] = (int)(255f / (float)max_v * (float)res[i]);
+                else if (max_v != 0)
+                    res[i] = (int)(254f / (float)max_v * (float)res[i]);
                 //else res[i] = res[i] % 256;
                 tmp2.Add(res[i]);
             }
