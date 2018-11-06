@@ -394,6 +394,7 @@ namespace lab6
             }
 
             camera.show(g, pr, int.Parse(camera_x.Text), int.Parse(camera_y.Text), int.Parse(camera_z.Text));
+            camera.set_rot_line();
         }
         
         // Create hexahedron
