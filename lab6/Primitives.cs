@@ -888,7 +888,7 @@ namespace lab6
             for (int i = 0; i < width * height; ++i)
                 if (buf[i] == int.MinValue)
                     buf[i] = 255;
-                else buf[i] = buf[i] * 254 / max_v;
+                else if (max_v != 0) buf[i] = buf[i] * 254 / max_v;
             
         }
 
