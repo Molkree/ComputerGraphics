@@ -487,14 +487,14 @@ namespace lab6
         /* ------ Projections ------ */
 
         // get points for central (perspective) projection
-        public List<PointF> make_perspective(float k = 1000)
+        public List<PointF> make_perspective(float k = 1000, float z_camera = 1000)
         {
             List<PointF> res = new List<PointF>();
 
             foreach (Point3d p in Points)
             {
                 // very strange idea
-                if (p.Z > k)
+                if (p.Z > k || p.Z > z_camera)
                     continue;
                 // end of very idea
                 res.Add(p.make_perspective(k));
@@ -524,7 +524,7 @@ namespace lab6
             return res;
         }
 
-        public void show(Graphics g, Projection pr = 0, Pen pen = null, float k = 1000)
+        public void show(Graphics g, Projection pr = 0, Pen pen = null, Edge camera = null, float k = 1000)
         {
             if (pen == null)
                 pen = Pens.Black;
@@ -546,7 +546,9 @@ namespace lab6
                     pts = make_orthographic(Axis.AXIS_Z);
                     break;
                 default:
-                    pts = make_perspective(k);
+                    if (camera != null)
+                        pts = make_perspective(k, camera.P1.Z);
+                    else pts = make_perspective(k);
                     break;
             }
 
@@ -906,7 +908,7 @@ namespace lab6
                     //List<PointF> pts = f.make_perspective(k/*1000*/);
                     //g.DrawLines(pen, pts.ToArray());
                     //g.DrawLine(pen, pts[0], pts[pts.Count - 1]);
-                    f.show(g, Projection.PERSPECTIVE, pen); //, camera.P1.Z);
+                    f.show(g, Projection.PERSPECTIVE, pen, camera); //, camera.P1.Z);
                     }
                 }
         }
