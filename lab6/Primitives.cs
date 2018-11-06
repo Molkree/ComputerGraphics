@@ -459,7 +459,7 @@ namespace lab6
             //List<float> EC = new List<float> { camera.P1.X - Center.X, camera.P1.Y - Center.Y, camera.P1.Z - Center.Z };
             //List<float> EC = new List<float> { camera.P1.X - camera.P2.X, camera.P1.Y - camera.P2.Y, camera.P1.Z - camera.P2.Z };
             float dot_product = Point3d.mul_matrix(Normal, 1, 3, EC, 3, 1)[0];
-            IsVisible = 0 <= dot_product;
+            IsVisible = Math.Abs(dot_product) < 1E-6 || dot_product < 0 ;
         }
 
         public void reflectX()
