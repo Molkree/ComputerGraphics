@@ -233,7 +233,10 @@ namespace lab6
 
         private void show_z_buff()
         {
-            int[] buff = figure_camera.calc_z_buff(camera.view, pictureBox3.Width, pictureBox3.Height);
+            int[] buff = new int[pictureBox3.Width * pictureBox3.Height];
+            int[] colors = new int[pictureBox3.Width * pictureBox3.Height];
+            
+            figure_camera.calc_z_buff(camera.view, pictureBox3.Width, pictureBox3.Height, out buff, out colors);
             Bitmap bmp = pictureBox3.Image as Bitmap;
             g_fake_camera.Clear(Color.White);
             
@@ -241,7 +244,7 @@ namespace lab6
                 for (int j = 0; j < pictureBox3.Height; ++j)
                 {
                     Color c = Color.FromArgb(buff[i * pictureBox3.Height + j], buff[i * pictureBox3.Height + j], buff[i * pictureBox3.Height + j]);
-                    bmp.SetPixel(i, j, Color.FromArgb(buff[i * pictureBox2.Height + j], buff[i * pictureBox2.Height + j], buff[i * pictureBox2.Height + j]));
+                    bmp.SetPixel(i, j, c);
                     //g_fake_camera.DrawRectangle(new Pen(c), i - pictureBox3.Width / 2, pictureBox3.Height / 2 - j, 1, 1);
                 }
 

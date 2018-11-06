@@ -830,12 +830,12 @@ namespace lab6
             DrawFilledTriangle(camera, P0, P1, P2, buff, width, height, colors, color);
         }
 
-        public int[] calc_z_buff(Edge camera, int width, int height)
+        public void calc_z_buff(Edge camera, int width, int height, out int[] buf, out int[] colors)
         {
-            int[] res = new int[width * height];
+            buf = new int[width * height];
             for (int i = 0; i < width * height; ++i)
-                res[i] = int.MinValue;
-            int[] colors = new int[width * height];
+                buf[i] = int.MinValue;
+            colors = new int[width * height];
             for (int i = 0; i < width * height; ++i)
                 colors[i] = 255;
 
@@ -849,14 +849,14 @@ namespace lab6
                 Point3d P0 = new Point3d(f.Points[0]);
                 Point3d P1 = new Point3d(f.Points[1]);
                 Point3d P2 = new Point3d(f.Points[2]);
-                magic(camera, P0, P1, P2, res, width, height, colors, color);
+                magic(camera, P0, P1, P2, buf, width, height, colors, color);
                 //4
                 if (f.Points.Count > 3)
                 {
                     P0 = new Point3d(f.Points[2]);
                     P1 = new Point3d(f.Points[3]);
                     P2 = new Point3d(f.Points[0]);
-                    magic(camera, P0, P1, P2, res, width, height, colors, color);
+                    magic(camera, P0, P1, P2, buf, width, height, colors, color);
                 }
                 //5  убейте додекаэдр,пожалуйста
                 if (f.Points.Count > 4)
@@ -864,11 +864,32 @@ namespace lab6
                     P0 = new Point3d(f.Points[3]);
                     P1 = new Point3d(f.Points[4]);
                     P2 = new Point3d(f.Points[0]);
-                    magic(camera, P0, P1, P2, res, width, height, colors, color);
+                    magic(camera, P0, P1, P2, buf, width, height, colors, color);
                 }
             }
+
+            int min_v = int.MaxValue;
+            int max_v = 0;
+            for (int i = 0; i<width*height; ++i)
+            {
+                if (buf[i] != int.MinValue && buf[i] < min_v)
+                    min_v = buf[i];
+                if (buf[i] > max_v)
+                    max_v = buf[i];
+            }
+            if (min_v < 0)
+            {
+                min_v = -min_v;
+                max_v += min_v;
+                for (int i = 0; i < width * height; ++i)
+                    if (buf[i] != int.MinValue)
+                    buf[i] = (buf[i]+min_v)%int.MaxValue;
+            }
+            for (int i = 0; i < width * height; ++i)
+                if (buf[i] == int.MinValue)
+                    buf[i] = 255;
+                else buf[i] = buf[i] * 254 / max_v;
             
-            return colors;
         }
 
         public void show_camera(Graphics g, Edge camera, Pen pen = null)
