@@ -53,7 +53,7 @@ namespace lab6
             if (figure != null)
                 figure.show(g, pr);
 
-            camera.show(g, pr);
+            camera.show(g, pr, int.Parse(camera_x.Text), int.Parse(camera_y.Text), int.Parse(camera_z.Text));
         }
         
         // контроль вводимых символов
@@ -220,8 +220,8 @@ namespace lab6
                 figure.show(g, pr, new_fig);
 
                 // camera
-                camera.show(g, pr, new_fig);
-                
+                camera.show(g, pr, int.Parse(camera_x.Text), int.Parse(camera_y.Text), int.Parse(camera_z.Text));
+
                 g_camera.Clear(Color.White);
 
                 if (radioButton1.Checked)
@@ -312,7 +312,8 @@ namespace lab6
 
                 // draw camera, draw figure
                 g.Clear(Color.White);
-                camera.show(g, pr);
+
+                camera.show(g, pr, int.Parse(camera_x.Text), int.Parse(camera_y.Text), int.Parse(camera_z.Text));
                 figure.show(g, pr);
 
 
@@ -370,7 +371,7 @@ namespace lab6
             //figure = null;
             g.Clear(Color.White);
             figure.show(g, pr, new_fig);
-            camera.show(g, pr);
+            camera.show(g, pr, int.Parse(camera_x.Text), int.Parse(camera_y.Text), int.Parse(camera_z.Text));
         }
 
         private void create_camera()
@@ -385,13 +386,14 @@ namespace lab6
             {
                 figure_camera = new Polyhedron(figure);
                 figure_camera.translate(-camera.view.P1.X, -camera.view.P1.Y, -camera.view.P1.Z);
+                camera.translate(-camera.view.P1.X, -camera.view.P1.Y, -camera.view.P1.Z);
                 if (radioButton1.Checked)
                     figure_camera.show_camera(g_camera, camera.view, new_fig);
                 else
                     show_z_buff();
             }
 
-            camera.show(g, pr);
+            camera.show(g, pr, int.Parse(camera_x.Text), int.Parse(camera_y.Text), int.Parse(camera_z.Text));
         }
         
         // Create hexahedron
@@ -457,7 +459,7 @@ namespace lab6
             g.Clear(Color.White);
             figure.show(g, pr);
 
-            camera.show(g, pr);
+            camera.show(g, pr, int.Parse(camera_x.Text), int.Parse(camera_y.Text), int.Parse(camera_x.Text));
             figure_camera.reflectX();
             g_camera.Clear(Color.White);
             if (radioButton1.Checked)
@@ -474,7 +476,8 @@ namespace lab6
             g.Clear(Color.White);
             figure.show(g, pr);
 
-            camera.show(g, pr);
+
+            camera.show(g, pr, int.Parse(camera_x.Text), int.Parse(camera_y.Text), int.Parse(camera_z.Text));
             figure_camera.reflectY();
             g_camera.Clear(Color.White);
             if (radioButton1.Checked)
@@ -491,7 +494,7 @@ namespace lab6
             g.Clear(Color.White);
             figure.show(g, pr);
 
-            camera.show(g, pr);
+            camera.show(g, pr, int.Parse(camera_x.Text), int.Parse(camera_y.Text), int.Parse(camera_z.Text));
             figure_camera.reflectZ();
             g_camera.Clear(Color.White);
             if (radioButton1.Checked)

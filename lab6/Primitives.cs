@@ -1421,33 +1421,31 @@ namespace lab6
             rot_line = new Edge(p1, p2);
         }
 
-        public Point3d P1()
-        {
-            return view.P1;
-        }
-
-        public Point3d P2()
-        {
-            return view.P1;
-        }
-
-        public void show(Graphics g, Projection pr = 0, Pen pen = null)
+        public void show(Graphics g, Projection pr = 0, int x = 0, int y = 0, int z = 0, Pen pen = null)
         {
             pen = Pens.Red;
+            view.translate(x, y, z);
             view.show(g, pr, pen);
+            view.translate(-x, -y, -z);
+
+            small_cube.translate(x, y, z);
             small_cube.show(g, pr, pen);
+            small_cube.translate(-x, -y, -z);
         }
+        
 
         public void translate(float x, float y, float z)
         {
             view.translate(x, y, z);
             small_cube.translate(x, y, z);
+            rot_line.translate(x, y, z);
         }
 
         public void rotate(double angle, Axis a, Edge line = null)
         {
             view.rotate(angle, a, line);
             small_cube.rotate(angle, a, line);
+            rot_line.rotate(angle, a, line);
         }
     }
 }
