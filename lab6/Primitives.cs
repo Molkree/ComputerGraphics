@@ -594,6 +594,10 @@ namespace lab6
         public Point3d Center { get; set; } = new Point3d(0, 0, 0);
         public float Cube_size { get; set; }
 
+        // костыли
+        public bool is_graph = false;
+        public SortedDictionary<PointF, float> graph_function = null;
+
         public Polyhedron(List<Face> fs = null)
         {
             if (fs != null)
@@ -608,6 +612,8 @@ namespace lab6
             Faces = polyhedron.Faces.Select(face => new Face(face)).ToList();
             Center = new Point3d(polyhedron.Center);
             Cube_size = polyhedron.Cube_size;
+            is_graph = polyhedron.is_graph;
+            graph_function = polyhedron.graph_function;
         }
 
         
@@ -894,25 +900,74 @@ namespace lab6
             
         }
 
-        public void show_camera(Graphics g, Edge camera, Pen pen = null)
+        public void show_camera(Graphics g, Camera camera, Pen pen = null)
         {
-           foreach (Face f in Faces)
-                {
-                    f.find_normal(Center, camera);
-                    if (f.IsVisible)
+            if (is_graph)
+                floating_horizon(g, camera, pen);
+            else
+                foreach (Face f in Faces)
                     {
-                    //float k = (float)Math.Sqrt(
-                    //    (camera.P1.X - Center.X) * (camera.P1.X - Center.X) + 
-                    //    (camera.P1.Y - Center.Y) * (camera.P1.Y - Center.Y) +
-                    //    (camera.P1.Z - Center.Z) * (camera.P1.Z - Center.Z));
-                    //List<PointF> pts = f.make_perspective(k/*1000*/);
-                    //g.DrawLines(pen, pts.ToArray());
-                    //g.DrawLine(pen, pts[0], pts[pts.Count - 1]);
-                    f.show(g, Projection.PERSPECTIVE, pen, camera); //, camera.P1.Z);
+                        f.find_normal(Center, camera.view);
+                        if (f.IsVisible)
+                        {
+                        //float k = (float)Math.Sqrt(
+                        //    (camera.P1.X - Center.X) * (camera.P1.X - Center.X) + 
+                        //    (camera.P1.Y - Center.Y) * (camera.P1.Y - Center.Y) +
+                        //    (camera.P1.Z - Center.Z) * (camera.P1.Z - Center.Z));
+                        //List<PointF> pts = f.make_perspective(k/*1000*/);
+                        //g.DrawLines(pen, pts.ToArray());
+                        //g.DrawLine(pen, pts[0], pts[pts.Count - 1]);
+                        f.show(g, Projection.PERSPECTIVE, pen, camera.view); //, camera.P1.Z);
+                        }
                     }
-                }
         }
-        
+
+        public void floating_horizon(Graphics g, Camera camera, Pen pen = null)
+        {
+            ReverseFloatComparer fcmp = new ReverseFloatComparer();
+            SortedDictionary<float, float> horMax = new SortedDictionary<float, float>(fcmp); // x, y
+            SortedDictionary<float, float> horMin = new SortedDictionary<float, float>(fcmp); // x, y
+
+            float[] hMax = new float[camera.width];
+            float[] hMin = new float[camera.width];
+                
+
+            List<PointF> up_pts = new List<PointF>();
+            List<PointF> down_pts = new List<PointF>();
+
+            foreach (var point in graph_function)
+            {
+                Point3d p3d = new Point3d(point.Key.X, point.Key.Y, point.Value);
+                PointF pf = p3d.make_perspective();
+
+                if (!horMax.ContainsKey(pf.X))
+                {
+                    horMax.Add(pf.X, pf.Y);
+                    up_pts.Add(pf);
+                }
+                else if (pf.Y > horMax[pf.X])
+                {
+                    horMax[pf.X] = pf.Y;
+                    up_pts.Add(pf);
+                }
+                if (!horMin.ContainsKey(pf.X))
+                {
+                    horMin.Add(pf.X, pf.Y);
+                    down_pts.Add(pf);
+                }
+                else if (pf.Y < horMin[pf.X])
+                {
+                    horMin[pf.X] = pf.Y;
+                    down_pts.Add(pf);
+                }
+            }
+
+            g.DrawLines(Pens.Red, up_pts.ToArray());
+            g.DrawLines(Pens.Green, down_pts.ToArray());
+
+
+        }
+
         /* ------ Affine transformation ------ */
 
         public void translate(float x, float y, float z)
@@ -1389,9 +1444,10 @@ namespace lab6
         public Edge view = new Edge(new Point3d(0, 0, 500), new Point3d(0, 0, 450));
         Polyhedron small_cube = new Polyhedron();
         public Edge rot_line { get; set; }
+        public int width { get; set; }
+        public int height { get; set; }
 
-
-        public Camera()
+        public Camera(int w, int h)
         {
             int camera_halfsize = 5;
             small_cube.make_hexahedron(new Face(new List<Point3d>()
@@ -1402,6 +1458,8 @@ namespace lab6
                 new Point3d(view.P1.X - camera_halfsize, view.P1.Y - camera_halfsize, view.P1.Z),
             }));
             set_rot_line();
+            width = w;
+            height = h;
         }
 
         public void set_rot_line(Axis a = Axis.AXIS_X)
@@ -1448,6 +1506,22 @@ namespace lab6
             view.rotate(angle, a, line);
             small_cube.rotate(angle, a, line);
             rot_line.rotate(angle, a, line);
+        }
+    }
+    public sealed class PointComparer : IComparer<PointF>
+    {
+        public int Compare(PointF p1, PointF p2)
+        {
+            if (p1.X.Equals(p2.X))
+                return p1.Y.CompareTo(p2.Y);
+            else return p1.X.CompareTo(p2.X);
+        }
+    }
+    public sealed class ReverseFloatComparer : IComparer<float>
+    {
+        public int Compare(float x, float y)
+        {
+            return y.CompareTo(x);
         }
     }
 }
