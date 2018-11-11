@@ -495,8 +495,15 @@ namespace lab6
             g.Clear(Color.White);
             figure.show(g, pr);
 
+            // сначала переносим в начало
+            float old_x = figure_camera.Center.X, old_y = figure_camera.Center.Y, old_z = figure_camera.Center.Z;
+            figure_camera.translate(-old_x, -old_y, -old_z);
+
             camera.show(g, pr, int.Parse(camera_x.Text), int.Parse(camera_y.Text), int.Parse(camera_z.Text));
             figure_camera.reflectZ();
+            // переносим обратно
+            figure_camera.translate(old_x, old_y, old_z);
+
             g_camera.Clear(Color.White);
             if (radioButton1.Checked)
                 figure_camera.show_camera(g_camera, camera.view, new_fig);
@@ -521,13 +528,13 @@ namespace lab6
         {
             if (figure != null)
             {
-                if (radioButton1.Checked)
+                if (radioButton2.Checked)
                 {
-                    pictureBox3.Visible = false;
-                    figure_camera.show_camera(g_camera, camera.view, new_fig);
-                }
-                else
-                {
+                //    pictureBox3.Visible = false;
+                //    figure_camera.show_camera(g_camera, camera.view, new_fig);
+                //}
+                //else
+                //{
                     pictureBox3.Visible = true;
                     show_z_buff();
                 }
@@ -543,11 +550,11 @@ namespace lab6
                     pictureBox3.Visible = false;
                     figure_camera.show_camera(g_camera, camera.view, new_fig);
                 }
-                else
-                {
-                    pictureBox3.Visible = true;
-                    show_z_buff();
-                }
+                //else
+                //{
+                //    pictureBox3.Visible = true;
+                //    show_z_buff();
+                //}
             }
         }
 
