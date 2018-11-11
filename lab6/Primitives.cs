@@ -596,7 +596,7 @@ namespace lab6
 
         // костыли
         public bool is_graph = false;
-        public SortedDictionary<PointF, float> graph_function = null;
+    //    public SortedDictionary<float, PointF> graph_function = null;
 
         public Polyhedron(List<Face> fs = null)
         {
@@ -613,7 +613,7 @@ namespace lab6
             Center = new Point3d(polyhedron.Center);
             Cube_size = polyhedron.Cube_size;
             is_graph = polyhedron.is_graph;
-            graph_function = polyhedron.graph_function;
+            //graph_function = polyhedron.graph_function;
         }
 
         
@@ -924,43 +924,100 @@ namespace lab6
 
         public void floating_horizon(Graphics g, Camera camera, Pen pen = null)
         {
-            ReverseFloatComparer fcmp = new ReverseFloatComparer();
-            SortedDictionary<float, float> horMax = new SortedDictionary<float, float>(fcmp); // x, y
-            SortedDictionary<float, float> horMin = new SortedDictionary<float, float>(fcmp); // x, y
+            double minX = double.MaxValue, maxX = double.MinValue, minY = double.MaxValue, maxY = double.MinValue;
+            SortedDictionary<float, List<PointF>> pts = new SortedDictionary<float, List<PointF>>(new ReverseFloatComparer()); // z, (x, y)
+            foreach (Face f in Faces)
+                foreach (Point3d p in f.Points)
+                {
+                    if (!pts.ContainsKey(p.Z))
+                        pts.Add(p.Z, new List<PointF>());
+                    pts[p.Z].Add(new PointF(p.X, p.Y));
+                    if (p.X < minX)
+                        minX = p.X;
+                    if (p.Y < minY)
+                        minY = p.Y;
+                    if (p.X > maxX)
+                        maxX = p.X;
+                    if (p.Y > maxY)
+                        maxY = p.Y;
 
-            float[] hMax = new float[camera.width];
-            float[] hMin = new float[camera.width];
-                
+                }
+
+
+            SortedDictionary<double, double> horMax = new SortedDictionary<double, double>(); // x, y
+            SortedDictionary<double, double> horMin = new SortedDictionary<double, double>(); // x, y
+
+            int dx = Math.Abs((int)Math.Round(maxX - minX));
+            int dy = Math.Abs((int)Math.Round(maxY - minY));
+
+            float[] hMax = new float[dx];
+            float[] hMin = new float[dy];
+            for (int i = 0; i < Math.Max(dx, dy); ++i)
+            {
+                if (i < dx)
+                    hMax[i] = float.MinValue;
+                if (i < dy)
+                    hMin[i] = float.MaxValue;
+            }
 
             List<PointF> up_pts = new List<PointF>();
             List<PointF> down_pts = new List<PointF>();
 
-            foreach (var point in graph_function)
+            foreach (var plist in pts)
             {
-                Point3d p3d = new Point3d(point.Key.X, point.Key.Y, point.Value);
-                PointF pf = p3d.make_perspective();
+                foreach (var p in plist.Value)
+                {
+                    Point3d p3d = new Point3d(p.X, p.Y, plist.Key);
+                    PointF pf = p3d.make_perspective();
+                    var pX = Math.Round(pf.X);
+                    var pY = Math.Round(pf.Y);
+                    if (!horMax.ContainsKey(pX))
+                        horMax.Add(pX, pY);
+                    else if (pY > horMax[pX])
+                        horMax[pX] = pY;
 
-                if (!horMax.ContainsKey(pf.X))
-                {
-                    horMax.Add(pf.X, pf.Y);
-                    up_pts.Add(pf);
-                }
-                else if (pf.Y > horMax[pf.X])
-                {
-                    horMax[pf.X] = pf.Y;
-                    up_pts.Add(pf);
-                }
-                if (!horMin.ContainsKey(pf.X))
-                {
-                    horMin.Add(pf.X, pf.Y);
-                    down_pts.Add(pf);
-                }
-                else if (pf.Y < horMin[pf.X])
-                {
-                    horMin[pf.X] = pf.Y;
-                    down_pts.Add(pf);
+                    if (!horMin.ContainsKey(pX))
+                        horMin.Add(pX, pY);
+                    else if (pY < horMin[pX])
+                        horMin[pX] = pY;
+
                 }
             }
+
+            foreach (var p in horMax)
+                up_pts.Add(new PointF((float)p.Key, (float)p.Value));
+            foreach (var p in horMin)
+                down_pts.Add(new PointF((float)p.Key, (float)p.Value));
+
+
+
+
+            /*       foreach (var point in graph_function)
+                   {
+                       Point3d p3d = new Point3d(point.Key.X, point.Key.Y, point.Value);
+                       PointF pf = p3d.make_perspective();
+
+                       if (!horMax.ContainsKey(pf.X))
+                       {
+                           horMax.Add(pf.X, pf.Y);
+                           up_pts.Add(pf);
+                       }
+                       else if (pf.Y > horMax[pf.X])
+                       {
+                           horMax[pf.X] = pf.Y;
+                           up_pts.Add(pf);
+                       }
+                       if (!horMin.ContainsKey(pf.X))
+                       {
+                           horMin.Add(pf.X, pf.Y);
+                           down_pts.Add(pf);
+                       }
+                       else if (pf.Y < horMin[pf.X])
+                       {
+                           horMin[pf.X] = pf.Y;
+                           down_pts.Add(pf);
+                       }
+                   }*/
 
             g.DrawLines(Pens.Red, up_pts.ToArray());
             g.DrawLines(Pens.Green, down_pts.ToArray());
@@ -1444,8 +1501,8 @@ namespace lab6
         public Edge view = new Edge(new Point3d(0, 0, 500), new Point3d(0, 0, 450));
         Polyhedron small_cube = new Polyhedron();
         public Edge rot_line { get; set; }
-        public int width { get; set; }
-        public int height { get; set; }
+        public int Width { get; set; }
+        public int Height { get; set; }
 
         public Camera(int w, int h)
         {
@@ -1458,8 +1515,8 @@ namespace lab6
                 new Point3d(view.P1.X - camera_halfsize, view.P1.Y - camera_halfsize, view.P1.Z),
             }));
             set_rot_line();
-            width = w;
-            height = h;
+            Width = w;
+            Height = h;
         }
 
         public void set_rot_line(Axis a = Axis.AXIS_X)

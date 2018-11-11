@@ -659,7 +659,7 @@ namespace lab6
 
 
 
-           SortedDictionary<PointF, float> graph_function = new SortedDictionary<PointF, float>(new PointComparer());
+       //    SortedDictionary<float, PointF> graph_function = new SortedDictionary<float, PointF>(fcmp); // z, (x, y)
 
 
             for (float x = x0; x < x1; x += dx)
@@ -667,7 +667,7 @@ namespace lab6
                 for (float y = y0; y < y1; y += dy)
                 {
                     float z = f(x, y);
-                    graph_function.Add(new PointF(x, y), z);
+                 //   graph_function.Add(z, new PointF(x, y));
                     pts1.Add(new Point3d(x, y, z));
                 }
                 // make faces
@@ -687,7 +687,7 @@ namespace lab6
             g.Clear(Color.White);
             figure = new Polyhedron(faces);
             figure.is_graph = true;
-            figure.graph_function = graph_function;
+       //     figure.graph_function = graph_function;
             figure.show(g, pr, new_fig);
             //          figure.show_camera(g_camera, camera.view, new_fig);
             create_camera();
