@@ -441,11 +441,14 @@ namespace lab6
             Point3d Q = Points[1], R = Points[2], S = Points[0];
             List<float> QR = new List<float> { R.X - Q.X, R.Y - Q.Y, R.Z - Q.Z };
             List<float> QS = new List<float> { S.X - Q.X, S.Y - Q.Y, S.Z - Q.Z };
+
+
             Normal = new List<float> { QR[1] * QS[2] - QR[2] * QS[1],
                                        -(QR[0] * QS[2] - QR[2] * QS[0]),
                                        QR[0] * QS[1] - QR[1] * QS[0] }; // cross product
+
             List<float> CQ = new List<float> { Q.X - p_center.X, Q.Y - p_center.Y, Q.Z - p_center.Z };
-            if (Point3d.mul_matrix(Normal, 1, 3, CQ, 3, 1)[0] < 0)
+            if (Point3d.mul_matrix(Normal, 1, 3, CQ, 3, 1)[0] > 1E-6)
             {
                 Normal[0] *= -1;
                 Normal[1] *= -1;
@@ -454,12 +457,12 @@ namespace lab6
 
             // we move scene, not camera, so our point of view is always in (0,0,0)
             Point3d E = camera.P1; // point of view
-            List<float> EC = new List<float> { E.X - Center.X, E.Y - Center.Y, E.Z - Center.Z };
+            List<float> CE = new List<float> { E.X - Center.X, E.Y - Center.Y, E.Z - Center.Z };
             // these two options are stored here for the history so that everyone can see how stupid I am
             //List<float> EC = new List<float> { camera.P1.X - Center.X, camera.P1.Y - Center.Y, camera.P1.Z - Center.Z };
             //List<float> EC = new List<float> { camera.P1.X - camera.P2.X, camera.P1.Y - camera.P2.Y, camera.P1.Z - camera.P2.Z };
-            float dot_product = Point3d.mul_matrix(Normal, 1, 3, EC, 3, 1)[0];
-            IsVisible = Math.Abs(dot_product) < 1E-6 || dot_product > 0 ;
+            float dot_product = Point3d.mul_matrix(Normal, 1, 3, CE, 3, 1)[0];
+            IsVisible = Math.Abs(dot_product) < 1E-6 || dot_product < 0 ;
         }
 
         public void reflectX()
@@ -493,10 +496,10 @@ namespace lab6
 
             foreach (Point3d p in Points)
             {
-                // very strange idea
-                if (p.Z > k || p.Z > z_camera)
-                    continue;
-                // end of very idea
+                // not to show object behind the camera  -  bad idea
+            //    if (p.Z > k || p.Z > z_camera)
+              //      continue;
+                // 
                 res.Add(p.make_perspective(k));
             }
             return res;
