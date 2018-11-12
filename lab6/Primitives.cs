@@ -1554,9 +1554,9 @@ namespace lab6
 
         public void translate(float x, float y, float z)
         {
-            view.translate(x, y, z);
+            //view.translate(x, y, z);
             small_cube.translate(x, y, z);
-            rot_line.translate(x, y, z);
+            //rot_line.translate(x, y, z);
         }
 
         public void rotate(double angle, Axis a, Edge line = null)
