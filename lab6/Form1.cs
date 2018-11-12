@@ -238,8 +238,8 @@ namespace lab6
             int[] buff = new int[pictureBox3.Width * pictureBox3.Height];
             int[] colors = new int[pictureBox3.Width * pictureBox3.Height];
 
-            //figure_camera.calc_z_buff(camera.view, pictureBox3.Width, pictureBox3.Height, out buff, out colors);
-            figure_camera.calc_z_buff(camera.view, pictureBox3.Width, pictureBox3.Height, out colors, out buff);
+            figure_camera.calc_z_buff(camera.view, pictureBox3.Width, pictureBox3.Height, out buff, out colors);
+            //figure_camera.calc_z_buff(camera.view, pictureBox3.Width, pictureBox3.Height, out colors, out buff);
             Bitmap bmp = pictureBox3.Image as Bitmap;
             g_fake_camera.Clear(Color.White);
             
