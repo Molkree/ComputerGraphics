@@ -6,7 +6,7 @@ namespace lab6
 {
     public partial class Form2 : Form
     {
-        internal delegate float Function(float x, float y);
+ //       internal delegate float Function(float x, float y);
         internal Function f;
 
         public float X0 { get; set; }

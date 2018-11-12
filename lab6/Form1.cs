@@ -8,7 +8,7 @@ namespace lab6
 {
     public partial class Form1 : Form
     {
-        delegate float Function(float x, float y);
+        
 
         Pen new_fig = Pens.Black;
         Pen old_fig = Pens.LightGray;
@@ -714,6 +714,8 @@ namespace lab6
             g.Clear(Color.White);
             figure = new Polyhedron(faces);
             figure.is_graph = true;
+            figure.graph_function = f;
+
        //     figure.graph_function = graph_function;
             figure.show(g, pr, new_fig);
             //          figure.show_camera(g_camera, camera.view, new_fig);
