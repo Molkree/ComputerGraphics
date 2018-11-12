@@ -371,7 +371,6 @@ namespace lab6
         public Point3d Center { get; set; } = new Point3d(0, 0, 0);
         public List<float> Normal { get; set; }
         public bool IsVisible { get; set; }
-
         public Face(Face face)
         {
             Points = face.Points.Select(pt => new Point3d(pt.X, pt.Y, pt.Z)).ToList();
@@ -602,8 +601,8 @@ namespace lab6
         public bool is_graph = false;
         public Function graph_function = null;
 
-    //    public SortedDictionary<float, PointF> graph_function = null;
-
+        //    public SortedDictionary<float, PointF> graph_function = null;
+        private Dictionary<Point3d, List<int>> map = null;
 
         public Polyhedron(List<Face> fs = null)
         {
@@ -611,6 +610,7 @@ namespace lab6
             {
                 Faces = fs.Select(face => new Face(face)).ToList();
                 find_center();
+                create_map();
             }
         }
 
@@ -621,9 +621,8 @@ namespace lab6
             Cube_size = polyhedron.Cube_size;
             is_graph = polyhedron.is_graph;
             graph_function = polyhedron.graph_function;
+            create_map();
         }
-
-        
 
         public Polyhedron(string s, int mode = MODE_POL)
         {
@@ -658,7 +657,19 @@ namespace lab6
                     break;
                 default: break;
             }
-            
+            create_map();
+        }
+
+        private void create_map()
+        {
+            map = new Dictionary<Point3d, List<int>>(new Point3dComparer());
+            for (int i = 0; i < Faces.Count; ++i)
+                foreach (var p in Faces[i].Points)
+                {
+                    if (!map.ContainsKey(p))
+                        map[p] = new List<int>();
+                    map[p].Add(i);
+                }    
         }
 
         public string to_string()
@@ -903,7 +914,7 @@ namespace lab6
         {
       //      if (is_graph)
         //        floating_horizon(g, camera, pen);
-            else
+         //   else
                 foreach (Face f in Faces)
                     {
                         f.find_normal(Center, camera.view);
@@ -1554,6 +1565,20 @@ namespace lab6
             rot_line.rotate(angle, a, line);
         }
     }
+    
+    public sealed class Point3dComparer : IEqualityComparer<Point3d>
+    {
+        public bool Equals(Point3d x, Point3d y)
+        {
+            return x.X.Equals(y.X) && x.Y.Equals(y.Y) && x.Z.Equals(y.Z);
+        }
+
+        public int GetHashCode(Point3d obj)
+        {
+            return obj.X.GetHashCode() + obj.Y.GetHashCode() + obj.Z.GetHashCode();
+        }
+    }
+
     public sealed class PointComparer : IComparer<PointF>
     {
         public int Compare(PointF p1, PointF p2)

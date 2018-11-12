@@ -8,8 +8,7 @@ namespace lab6
 {
     public partial class Form1 : Form
     {
-        
-
+        Color fill_color = Color.MediumVioletRed;
         Pen new_fig = Pens.Black;
         Pen old_fig = Pens.LightGray;
         Graphics g, g_camera, g_fake_camera;
@@ -44,6 +43,9 @@ namespace lab6
             camera_axis_picker.SelectedIndex = 0;
             create_camera();
             radioButton1.Checked = true;
+            colorDialog1.FullOpen = true;
+            colorDialog1.Color = fill_color;
+            label_color.BackColor = fill_color;
         }
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
@@ -226,8 +228,10 @@ namespace lab6
 
                 if (radioButton1.Checked)
                     figure_camera.show_camera(g_camera, camera, new_fig);
-                else
+                else if (radioButton2.Checked)
                     show_z_buff();
+                else if (radioButton3.Checked)
+                    show_gouraud();
 
                 label10.Text = figure.Center.X.ToString() + ", " + figure.Center.Y.ToString() + ", " + figure.Center.Z.ToString();
             }
@@ -247,6 +251,30 @@ namespace lab6
                 for (int j = 0; j < pictureBox3.Height; ++j)
                 {
                     Color c = Color.FromArgb(buff[i * pictureBox3.Height + j], buff[i * pictureBox3.Height + j], buff[i * pictureBox3.Height + j]);
+                    bmp.SetPixel(i, j, c);
+                    //g_fake_camera.DrawRectangle(new Pen(c), i - pictureBox3.Width / 2, pictureBox3.Height / 2 - j, 1, 1);
+                }
+
+            pictureBox3.Refresh();
+        }
+
+        private void show_gouraud()
+        {
+            int[] buff = new int[pictureBox3.Width * pictureBox3.Height];
+            int[] colors = new int[pictureBox3.Width * pictureBox3.Height];
+
+            figure_camera.calc_z_buff(camera.view, pictureBox3.Width, pictureBox3.Height, out buff, out colors);
+            Bitmap bmp = pictureBox3.Image as Bitmap;
+            g_fake_camera.Clear(Color.White);
+
+            for (int i = 0; i < pictureBox3.Width; ++i)
+                for (int j = 0; j < pictureBox3.Height; ++j)
+                {
+                    Color c;
+                    if (buff[i * pictureBox3.Height + j] == 255)
+                        c = Color.White;
+                    else
+                        c = Color.FromArgb(fill_color.R, buff[i * pictureBox3.Height + j], fill_color.B);
                     bmp.SetPixel(i, j, c);
                     //g_fake_camera.DrawRectangle(new Pen(c), i - pictureBox3.Width / 2, pictureBox3.Height / 2 - j, 1, 1);
                 }
@@ -325,8 +353,10 @@ namespace lab6
             g_camera.Clear(Color.White);
             if (radioButton1.Checked)
                 figure_camera.show_camera(g_camera, camera, new_fig);
-            else
+            else if (radioButton2.Checked)
                 show_z_buff();
+            else if (radioButton3.Checked)
+                show_gouraud();
         }
         
 
@@ -394,8 +424,10 @@ namespace lab6
                 //camera.translate(-camera.view.P1.X, -camera.view.P1.Y, -camera.view.P1.Z);
                 if (radioButton1.Checked)
                     figure_camera.show_camera(g_camera, camera, new_fig);
-                else
+                else if (radioButton2.Checked)
                     show_z_buff();
+                else if (radioButton3.Checked)
+                    show_gouraud();
             }
 
             camera.show(g, pr);
@@ -475,8 +507,10 @@ namespace lab6
             g_camera.Clear(Color.White);
             if (radioButton1.Checked)
                 figure_camera.show_camera(g_camera, camera, new_fig);
-            else
+            else if (radioButton2.Checked)
                 show_z_buff();
+            else if (radioButton3.Checked)
+                show_gouraud();
 
             label10.Text = figure.Center.X.ToString() + ", " + figure.Center.Y.ToString() + ", " + figure.Center.Z.ToString();
         }
@@ -495,8 +529,10 @@ namespace lab6
             g_camera.Clear(Color.White);
             if (radioButton1.Checked)
                 figure_camera.show_camera(g_camera, camera, new_fig);
-            else
+            else if (radioButton2.Checked)
                 show_z_buff();
+            else if (radioButton3.Checked)
+                show_gouraud();
 
             label10.Text = figure.Center.X.ToString() + ", " + figure.Center.Y.ToString() + ", " + figure.Center.Z.ToString();
         }
@@ -521,8 +557,10 @@ namespace lab6
             g_camera.Clear(Color.White);
             if (radioButton1.Checked)
                 figure_camera.show_camera(g_camera, camera, new_fig);
-            else
+            else if (radioButton2.Checked)
                 show_z_buff();
+            else if (radioButton3.Checked)
+                show_gouraud();
 
             label10.Text = figure.Center.X.ToString() + ", " + figure.Center.Y.ToString() + ", " + figure.Center.Z.ToString();
         }
@@ -546,15 +584,47 @@ namespace lab6
             {
                 if (radioButton2.Checked)
                 {
-                //    pictureBox3.Visible = false;
-                //    figure_camera.show_camera(g_camera, camera.view, new_fig);
-                //}
-                //else
-                //{
                     pictureBox3.Visible = true;
                     show_z_buff();
                 }
             }
+        }
+
+        private void label_color_Click(object sender, EventArgs e)
+        {
+            if (colorDialog1.ShowDialog() == DialogResult.Cancel)
+                return;
+            fill_color = colorDialog1.Color;
+            label_color.BackColor = fill_color;
+            if (fill_color.ToArgb() == Color.Black.ToArgb())
+                label_color.ForeColor = Color.White;
+            else label_color.ForeColor = Color.Black;
+            if (radioButton3.Checked)
+                show_gouraud();
+        }
+
+        private void radioButton3_CheckedChanged(object sender, EventArgs e)
+        {
+            if (figure != null)
+            {
+                if (radioButton3.Checked)
+                {
+                    pictureBox3.Visible = true;
+                    show_gouraud();
+                }
+            }
+        }
+
+        private void light_TextChanged(object sender, EventArgs e)
+        {
+            Polyhedron light = new Polyhedron();
+            light.make_hexahedron(5);
+            check_all_textboxes();
+            light.translate(Int32.Parse(light_x.Text), Int32.Parse(light_y.Text), Int32.Parse(light_z.Text));
+            g.Clear(Color.White);
+            figure.show(g, pr);
+            camera.show(g, pr);
+            light.show(g, pr, new Pen(Color.YellowGreen));
         }
 
         private void radioButton1_CheckedChanged(object sender, EventArgs e)
@@ -566,11 +636,6 @@ namespace lab6
                     pictureBox3.Visible = false;
                     figure_camera.show_camera(g_camera, camera, new_fig);
                 }
-                //else
-                //{
-                //    pictureBox3.Visible = true;
-                //    show_z_buff();
-                //}
             }
         }
 
