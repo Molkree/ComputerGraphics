@@ -848,11 +848,12 @@ namespace lab6
                 colors[i] = 255;
 
             Random r = new Random();
-
+            int color = 0;
             foreach (var f in Faces)
             {
 
-                int color = r.Next(200);
+                //color = r.Next(200);
+                color = (color+ 30) % 255;
                 //треугольник
                 Point3d P0 = new Point3d(f.Points[0]);
                 Point3d P1 = new Point3d(f.Points[1]);
@@ -1511,7 +1512,7 @@ namespace lab6
 
     public class Camera
     {
-        public Edge view = new Edge(new Point3d(0, 0, 500), new Point3d(0, 0, 450));
+        public Edge view = new Edge(new Point3d(0, 0, 300), new Point3d(0, 0, 250));
         Polyhedron small_cube = new Polyhedron();
         public Edge rot_line { get; set; }
         public int Width { get; set; }
@@ -1554,21 +1555,21 @@ namespace lab6
         public void show(Graphics g, Projection pr = 0, int x = 0, int y = 0, int z = 0, Pen pen = null)
         {
             pen = Pens.Red;
-            view.translate(x, y, z);
+            //view.translate(x, y, z);
             view.show(g, pr, pen);
-            view.translate(-x, -y, -z);
+            //view.translate(-x, -y, -z);
 
-            small_cube.translate(x, y, z);
+            //small_cube.translate(x, y, z);
             small_cube.show(g, pr, pen);
-            small_cube.translate(-x, -y, -z);
+            //small_cube.translate(-x, -y, -z);
         }
         
 
         public void translate(float x, float y, float z)
         {
-            view.translate(x, y, z);
+            //view.translate(x, y, z);
             small_cube.translate(x, y, z);
-            rot_line.translate(x, y, z);
+            //rot_line.translate(x, y, z);
         }
 
         public void rotate(double angle, Axis a, Edge line = null)
