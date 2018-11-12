@@ -453,7 +453,7 @@ namespace lab6
             }
 
             // we move scene, not camera, so our point of view is always in (0,0,0)
-            Point3d E = new Point3d(0, 0, 0); // point of view
+            Point3d E = camera.P1; // point of view
             List<float> EC = new List<float> { E.X - Center.X, E.Y - Center.Y, E.Z - Center.Z };
             // these two options are stored here for the history so that everyone can see how stupid I am
             //List<float> EC = new List<float> { camera.P1.X - Center.X, camera.P1.Y - Center.Y, camera.P1.Z - Center.Z };

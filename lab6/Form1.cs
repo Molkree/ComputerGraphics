@@ -228,6 +228,8 @@ namespace lab6
                     figure_camera.show_camera(g_camera, camera, new_fig);
                 else
                     show_z_buff();
+
+                label10.Text = figure.Center.X.ToString() + ", " + figure.Center.Y.ToString() + ", " + figure.Center.Z.ToString();
             }
         }
 
@@ -317,7 +319,9 @@ namespace lab6
 
             camera.show(g, pr);
             figure.show(g, pr);
-
+            camera_x.Text = ((int)camera.view.P1.X).ToString(CultureInfo.CurrentCulture);
+            camera_y.Text = ((int)camera.view.P1.Y).ToString(CultureInfo.CurrentCulture);
+            camera_z.Text = ((int)camera.view.P1.Z).ToString(CultureInfo.CurrentCulture);
             g_camera.Clear(Color.White);
             if (radioButton1.Checked)
                 figure_camera.show_camera(g_camera, camera, new_fig);
@@ -407,6 +411,7 @@ namespace lab6
             figure.show(g, pr);
 
             create_camera();
+            label10.Text = figure.Center.X.ToString() + ", " + figure.Center.Y.ToString() + ", " + figure.Center.Z.ToString();
         }
 
         // Create tetrahedron
@@ -418,6 +423,7 @@ namespace lab6
             figure.show(g, pr);
 
             create_camera();
+            label10.Text = figure.Center.X.ToString() + ", " + figure.Center.Y.ToString() + ", " + figure.Center.Z.ToString();
         }
 
         // Create octahedron
@@ -429,6 +435,7 @@ namespace lab6
             figure.show(g, pr);
 
             create_camera();
+            label10.Text = figure.Center.X.ToString() + ", " + figure.Center.Y.ToString() + ", " + figure.Center.Z.ToString();
         }
 
         // Create icosahedron
@@ -440,6 +447,7 @@ namespace lab6
             figure.show(g, pr);
 
             create_camera();
+            label10.Text = figure.Center.X.ToString() + ", " + figure.Center.Y.ToString() + ", " + figure.Center.Z.ToString();
         }
 
         // Create dodecahedron
@@ -451,6 +459,7 @@ namespace lab6
             figure.show(g, pr);
 
             create_camera();
+            label10.Text = figure.Center.X.ToString() + ", " + figure.Center.Y.ToString() + ", " + figure.Center.Z.ToString();
         }
 
         // отражение по х
@@ -468,6 +477,8 @@ namespace lab6
                 figure_camera.show_camera(g_camera, camera, new_fig);
             else
                 show_z_buff();
+
+            label10.Text = figure.Center.X.ToString() + ", " + figure.Center.Y.ToString() + ", " + figure.Center.Z.ToString();
         }
 
         // отражение по y
@@ -486,6 +497,8 @@ namespace lab6
                 figure_camera.show_camera(g_camera, camera, new_fig);
             else
                 show_z_buff();
+
+            label10.Text = figure.Center.X.ToString() + ", " + figure.Center.Y.ToString() + ", " + figure.Center.Z.ToString();
         }
 
         // отражение по z
@@ -510,6 +523,8 @@ namespace lab6
                 figure_camera.show_camera(g_camera, camera, new_fig);
             else
                 show_z_buff();
+
+            label10.Text = figure.Center.X.ToString() + ", " + figure.Center.Y.ToString() + ", " + figure.Center.Z.ToString();
         }
 
 
@@ -572,6 +587,8 @@ namespace lab6
             figure.show(g, pr);
 
             create_camera();
+
+            label10.Text = figure.Center.X.ToString() + ", " + figure.Center.Y.ToString() + ", " + figure.Center.Z.ToString();
         }
 
         // rotation_figure
@@ -587,6 +604,8 @@ namespace lab6
             figure.show(g, pr);
 
             create_camera();
+
+            label10.Text = figure.Center.X.ToString() + ", " + figure.Center.Y.ToString() + ", " + figure.Center.Z.ToString();
         }
 
         //// graphic
