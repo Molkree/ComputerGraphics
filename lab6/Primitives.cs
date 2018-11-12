@@ -1088,44 +1088,46 @@ namespace lab6
 
         /* ------ Figures ------- */
 
-        public void make_hexahedron(Face f = null)
+        public void make_hexahedron(float cube_half_size = 50)
         {
-            if (f == null)
-            {
-                f = new Face(
-                    new List<Point3d>
-                    {
-                        new Point3d(-50, -50, 0),
-                        new Point3d(50, -50, 0),
-                        new Point3d(50, 50, 0),
-                        new Point3d(-50, 50, 0)
-                    }
-               );
-            }
+            Face f = new Face(
+                new List<Point3d>
+                {
+                    new Point3d(-cube_half_size, cube_half_size, cube_half_size),
+                    new Point3d(cube_half_size, cube_half_size, cube_half_size),
+                    new Point3d(cube_half_size, -cube_half_size, cube_half_size),
+                    new Point3d(-cube_half_size, -cube_half_size, cube_half_size)
+                }
+            );
+            
 
-            Faces = new List<Face>
-            {
-                // back face
-                f
-            };
+            Faces = new List<Face>{ f }; // front face
 
-            float cube_size = Math.Abs(f.Points[0].X - f.Points[1].X);
+            
             List<Point3d> l1 = new List<Point3d>();
-            // front face
+            // back face
             foreach (var point in f.Points)
             {
-                l1.Add(new Point3d(point.X, point.Y, point.Z + cube_size));
+                l1.Add(new Point3d(point.X, point.Y, point.Z - 2*cube_half_size));
             }
-            Face f1 = new Face(l1);
+            Face f1 = new Face(
+                    new List<Point3d>
+                    {
+                        new Point3d(-cube_half_size, cube_half_size, -cube_half_size),
+                        new Point3d(-cube_half_size, -cube_half_size, -cube_half_size),
+                        new Point3d(cube_half_size, -cube_half_size, -cube_half_size),
+                        new Point3d(cube_half_size, cube_half_size, -cube_half_size)
+                    });
+
             Faces.Add(f1);
 
             // down face
             List<Point3d> l2 = new List<Point3d>
             {
-                new Point3d(f.Points[0]),   // left back
-                new Point3d(f.Points[1]),   // right back
-                new Point3d(f1.Points[1]),  // right front
-                new Point3d(f1.Points[0]),  // left front
+                new Point3d(f.Points[2]),  
+                new Point3d(f1.Points[2]), 
+                new Point3d(f1.Points[1]), 
+                new Point3d(f.Points[3]),  
             };
             Face f2 = new Face(l2);
             Faces.Add(f2);
@@ -1133,10 +1135,10 @@ namespace lab6
             // up face
             List<Point3d> l3 = new List<Point3d>
             {
-                new Point3d(f.Points[3]),
-                new Point3d(f.Points[2]),
-                new Point3d(f1.Points[2]),
-                new Point3d(f1.Points[3]),  
+                new Point3d(f1.Points[0]),
+                new Point3d(f1.Points[3]),
+                new Point3d(f.Points[1]),
+                new Point3d(f.Points[0]),  
             };
             Face f3 = new Face(l3);
             Faces.Add(f3);
@@ -1144,10 +1146,10 @@ namespace lab6
             // left face
             List<Point3d> l4 = new List<Point3d>
             {
-                new Point3d(f.Points[0]),
                 new Point3d(f1.Points[0]),
-                new Point3d(f1.Points[3]),
-                new Point3d(f.Points[3])
+                new Point3d(f.Points[0]),
+                new Point3d(f.Points[3]),
+                new Point3d(f1.Points[1])
             };
             Face f4 = new Face(l4);
             Faces.Add(f4);
@@ -1155,15 +1157,15 @@ namespace lab6
             // right face
             List<Point3d> l5 = new List<Point3d>
             {
-                new Point3d(f1.Points[1]),
-                new Point3d(f.Points[1]),
+                new Point3d(f1.Points[3]),
+                new Point3d(f1.Points[2]),
                 new Point3d(f.Points[2]),
-                new Point3d(f1.Points[2])
+                new Point3d(f.Points[1])
             };
             Face f5 = new Face(l5);
             Faces.Add(f5);
 
-            Cube_size = cube_size;
+            Cube_size = 2*cube_half_size;
             find_center();
         }
 
@@ -1520,14 +1522,9 @@ namespace lab6
 
         public Camera(int w, int h)
         {
-            int camera_halfsize = 5;
-            small_cube.make_hexahedron(new Face(new List<Point3d>()
-            {
-                new Point3d(view.P1.X - camera_halfsize, view.P1.Y + camera_halfsize, view.P1.Z),
-                new Point3d(view.P1.X + camera_halfsize, view.P1.Y + camera_halfsize, view.P1.Z),
-                new Point3d(view.P1.X + camera_halfsize, view.P1.Y - camera_halfsize, view.P1.Z),
-                new Point3d(view.P1.X - camera_halfsize, view.P1.Y - camera_halfsize, view.P1.Z),
-            }));
+            int camera_half_size = 5;
+            small_cube.make_hexahedron(camera_half_size);
+            small_cube.translate(view.P1.X, view.P1.Y, view.P1.Z);
             set_rot_line();
             Width = w;
             Height = h;
