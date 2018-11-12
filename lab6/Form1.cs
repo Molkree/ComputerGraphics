@@ -235,8 +235,9 @@ namespace lab6
         {
             int[] buff = new int[pictureBox3.Width * pictureBox3.Height];
             int[] colors = new int[pictureBox3.Width * pictureBox3.Height];
-            
-            figure_camera.calc_z_buff(camera.view, pictureBox3.Width, pictureBox3.Height, out buff, out colors);
+
+            //figure_camera.calc_z_buff(camera.view, pictureBox3.Width, pictureBox3.Height, out buff, out colors);
+            figure_camera.calc_z_buff(camera.view, pictureBox3.Width, pictureBox3.Height, out colors, out buff);
             Bitmap bmp = pictureBox3.Image as Bitmap;
             g_fake_camera.Clear(Color.White);
             
@@ -262,8 +263,7 @@ namespace lab6
                 check_all_textboxes();
                 // масштабируем и переносим относительно начала координат (сдвигом центра в начало)
                 //
-                if (trans_x_camera.Text != "0" || trans_y_camera.Text != "0" || trans_z_camera.Text != "0"
-                    || rot_angle_camera.Text != "0")
+                /*if (trans_x_camera.Text != "0" || trans_y_camera.Text != "0" || trans_z_camera.Text != "0")
                 {
                     // сначала переносим в начало
                     float old_x = figure_camera.Center.X, old_y = figure_camera.Center.Y, old_z = figure_camera.Center.Z;
@@ -291,39 +291,54 @@ namespace lab6
                     // переносим обратно
                     figure_camera.translate(old_x, old_y, old_z);
                     
-
+                    */
                     // поворачиваем относительно нужной прямой
                     if (rot_angle_camera.Text != "0")
                     {
 
-                        float Ax = camera.rot_line.P1.X, Ay = camera.rot_line.P1.Y, Az = camera.rot_line.P1.Z;
-                        figure_camera.translate(-Ax, -Ay, -Az);
-                        figure_camera.rotate(-double.Parse(rot_angle_camera.Text, CultureInfo.CurrentCulture), camera_mode, camera.rot_line);
-                        figure_camera.translate(Ax, Ay, Az);
+                    /*float Ax = camera.rot_line.P1.X, Ay = camera.rot_line.P1.Y, Az = camera.rot_line.P1.Z;
+                    figure_camera.translate(-Ax, -Ay, -Az);
+                    figure_camera.rotate(-double.Parse(rot_angle_camera.Text, CultureInfo.CurrentCulture), camera_mode, camera.rot_line);
+                    figure_camera.translate(Ax, Ay, Az);
 
-                        // try to move camera
-                        camera.rotate(double.Parse(rot_angle_camera.Text, CultureInfo.CurrentCulture), camera_mode);
-                    }
                     // try to move camera
-                    camera.translate(cam_x, cam_y, cam_z);
+                    camera.rotate(double.Parse(rot_angle_camera.Text, CultureInfo.CurrentCulture), camera_mode);*/
+                    float old_x_camera = figure_camera.Center.X,
+                        old_y_camera = figure_camera.Center.Y,
+                        old_z_camera = figure_camera.Center.Z;
+                    figure_camera.translate(-old_x_camera, -old_y_camera, -old_z_camera);
+                    camera.translate(-old_x_camera, -old_y_camera, -old_z_camera);
+
+                    double angle = double.Parse(rot_angle_camera.Text, CultureInfo.CurrentCulture);
+                    figure_camera.rotate(-angle, camera_mode);
+                    camera.rotate(angle, camera_mode);
 
 
+                    // camera
+                    //camera.rotate(angle, line_mode);
+
+                    figure_camera.translate(old_x_camera, old_y_camera, old_z_camera);
+                    camera.translate(old_x_camera, old_y_camera, old_z_camera);
                 }
+                // try to move camera
+                //camera.translate(cam_x, cam_y, cam_z);
+
+
+            }
 
                 // draw camera, draw figure
                 g.Clear(Color.White);
 
                 camera.show(g, pr, int.Parse(camera_x.Text), int.Parse(camera_y.Text), int.Parse(camera_z.Text));
                 figure.show(g, pr);
-
-
+            
                 g_camera.Clear(Color.White);
                 if (radioButton1.Checked)
                     figure_camera.show_camera(g_camera, camera, new_fig);
                 else
                     show_z_buff();
             }
-        }
+        
 
         private void comboBox2_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -385,8 +400,8 @@ namespace lab6
             if (figure != null)
             {
                 figure_camera = new Polyhedron(figure);
-                figure_camera.translate(-camera.view.P1.X, -camera.view.P1.Y, -camera.view.P1.Z);
-                camera.translate(-camera.view.P1.X, -camera.view.P1.Y, -camera.view.P1.Z);
+                //figure_camera.translate(-camera.view.P1.X, -camera.view.P1.Y, -camera.view.P1.Z);
+                //camera.translate(-camera.view.P1.X, -camera.view.P1.Y, -camera.view.P1.Z);
                 if (radioButton1.Checked)
                     figure_camera.show_camera(g_camera, camera, new_fig);
                 else

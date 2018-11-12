@@ -536,6 +536,7 @@
             // 
             // trans_z_camera
             // 
+            this.trans_z_camera.Enabled = false;
             this.trans_z_camera.Location = new System.Drawing.Point(1456, 743);
             this.trans_z_camera.Margin = new System.Windows.Forms.Padding(4);
             this.trans_z_camera.Name = "trans_z_camera";
@@ -545,6 +546,7 @@
             // 
             // trans_y_camera
             // 
+            this.trans_y_camera.Enabled = false;
             this.trans_y_camera.Location = new System.Drawing.Point(1407, 743);
             this.trans_y_camera.Margin = new System.Windows.Forms.Padding(4);
             this.trans_y_camera.Name = "trans_y_camera";
@@ -554,6 +556,7 @@
             // 
             // trans_x_camera
             // 
+            this.trans_x_camera.Enabled = false;
             this.trans_x_camera.Location = new System.Drawing.Point(1357, 743);
             this.trans_x_camera.Margin = new System.Windows.Forms.Padding(4);
             this.trans_x_camera.Name = "trans_x_camera";
