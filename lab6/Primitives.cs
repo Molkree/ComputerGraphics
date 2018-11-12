@@ -700,29 +700,6 @@ namespace lab6
                     f.show(g, pr, pen);
         }
 
-        private float from_det(Face f, int x, int y)
-        {
-            float res = 0;
-            float a1 = x - f.Points[0].X;
-            float a2 = f.Points[1].X - f.Points[0].X;
-            float a3 = f.Points[2].X - f.Points[0].X;
-            float b1 = y - f.Points[0].Y;
-            float b2 = f.Points[1].Y - f.Points[0].Y;
-            float b3 = f.Points[2].Y - f.Points[0].Y;
-            float c2 = f.Points[1].Z - f.Points[0].Z;
-            float c3 = f.Points[2].Z - f.Points[0].Z;
-
-            res = a1 * b2 * c3 + a3 * b2 * c3 - a1 * b3 * c2 - a2 * b1 * c3;
-            res /= a2 * b3 - a3 * b2;
-
-            return res;
-        }
-
-        private float distance(float x, float y, float z, Point3d p)
-        {
-            return (float)Math.Sqrt((double)((p.X - x) * (p.X - x)) + (double)((p.Y - y) * (p.Y - y)) + (double)((p.Z - z) * (p.Z - z)));
-        }
-
         private int[] Interpolate(int i0, int d0, int i1, int d1)
         {
             if (i0 == i1)
@@ -741,13 +718,17 @@ namespace lab6
             }
             return values;
         }
-        
+
         private void DrawFilledTriangle(Edge camera, Point3d P0, Point3d P1, Point3d P2, int[] buff, int width, int height, int[] colors, int color)
         {
+            PointF p0 = P0.make_perspective();
+            PointF p1 = P1.make_perspective();
+            PointF p2 = P2.make_perspective();
+
             //y0 <= y1 <= y2
-            int y0 = (int)P0.Y; int x0 = (int)P0.X; int z0 = (int)P0.Z;
-            int y1 = (int)P1.Y; int x1 = (int)P1.X; int z1 = (int)P1.Z;
-            int y2  = (int)P2.Y; int x2 = (int)P2.X; int z2 = (int)P2.Z;
+            int y0 = (int)p0.Y; int x0 = (int)p0.X; int z0 = (int)P0.Z;
+            int y1 = (int)p1.Y; int x1 = (int)p1.X; int z1 = (int)P1.Z;
+            int y2 = (int)p2.Y; int x2 = (int)p2.X; int z2 = (int)P2.Z;
 
             var x01 = Interpolate(y0, x0, y1, x1);
             var x12 = Interpolate(y1, x1, y2, x2);
@@ -798,17 +779,14 @@ namespace lab6
                     h_segment = Interpolate(x_l, h_left[y - y0], x_r, h_right[y - y0]);
                 for (int x = x_l; x <= x_r; ++x)
                 {
-                    //float z = from_det(f, x, y);
                     int z = h_segment[x - x_l];
                     //i, j, z - координаты в пространстве, в пикчербоксе x, y
-                    int xx = (x + width / 2) % width;
-                    int yy = (-y + height / 2) % height;
-                    /*float dist = distance(x, y, z, camera.P1);
-                    if (dist < buff[xx * height + yy])
-                    {
-                        buff[xx * height + yy] = (int)(dist + 0.5);
-                        colors[xx * height + yy] = color;
-                    }*/
+                    //int xx = (x + width / 2) % width;
+                    //int yy = (-y + height / 2) % height;
+                    int xx = x + width / 2;
+                    int yy = -y + height / 2;
+                    if (xx < 0 || xx > width || yy < 0 || yy > height || (xx * height + yy) < 0 || (xx * height + yy) > (buff.Length - 1))
+                        continue;
                     if (z > buff[xx * height + yy])
                     {
                         buff[xx * height + yy] = (int)(z + 0.5);
@@ -823,23 +801,36 @@ namespace lab6
         private void magic(Edge camera, Point3d P0, Point3d P1, Point3d P2, int[] buff, int width, int height, int[] colors, int color)
         {
             //сортируем p0, p1, p2: y0 <= y1 <= y2
-            if (P1.Y < P0.Y)
+            PointF p0 = P0.make_perspective();
+            PointF p1 = P1.make_perspective();
+            PointF p2 = P2.make_perspective();
+
+            if (p1.Y < p0.Y)
             {
                 Point3d tmpp = new Point3d(P0);
                 P0.X = P1.X; P0.Y = P1.Y; P0.Z = P1.Z;
                 P1.X = tmpp.X; P1.Y = tmpp.Y; P1.Z = tmpp.Z;
+                PointF tmppp = new PointF(p0.X, p0.Y);
+                p0.X = p1.X; p0.Y = p1.Y;
+                p1.X = tmppp.X; p1.Y = tmppp.Y;
             }
-            if (P2.Y < P0.Y)
+            if (p2.Y < p0.Y)
             {
                 Point3d tmpp = new Point3d(P0);
                 P0.X = P2.X; P0.Y = P2.Y; P0.Z = P2.Z;
                 P2.X = tmpp.X; P2.Y = tmpp.Y; P2.Z = tmpp.Z;
+                PointF tmppp = new PointF(p0.X, p0.Y);
+                p0.X = p2.X; p0.Y = p2.Y;
+                p2.X = tmppp.X; p2.Y = tmppp.Y;
             }
-            if (P2.Y < P1.Y)
+            if (p2.Y < p1.Y)
             {
                 Point3d tmpp = new Point3d(P1);
                 P1.X = P2.X; P1.Y = P2.Y; P1.Z = P2.Z;
                 P2.X = tmpp.X; P2.Y = tmpp.Y; P2.Z = tmpp.Z;
+                PointF tmppp = new PointF(p1.X, p1.Y);
+                p1.X = p2.X; p1.Y = p2.Y;
+                p2.X = tmppp.X; p2.Y = tmppp.Y;
             }
 
             DrawFilledTriangle(camera, P0, P1, P2, buff, width, height, colors, color);
@@ -904,7 +895,7 @@ namespace lab6
             for (int i = 0; i < width * height; ++i)
                 if (buf[i] == int.MinValue)
                     buf[i] = 255;
-                else if (max_v != 0) buf[i] = buf[i] * 254 / max_v;
+                else if (max_v != 0) buf[i] = buf[i] * 225 / max_v;
             
         }
 
