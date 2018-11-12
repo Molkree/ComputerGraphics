@@ -989,8 +989,21 @@ namespace lab6
             foreach (var p in horMin)
                 down_pts.Add(new PointF((float)p.Key, (float)p.Value));
 
-
-
+            Pen[] pens = { Pens.Red, Pens.Green, Pens.Blue, Pens.Black, Pens.Orange };
+            int ind = 0;
+            foreach (var list in pts)
+            {
+                List<PointF> ps = new List<PointF>();
+                foreach (var p in list.Value)
+                {
+                    Point3d p3d = new Point3d(p.X, p.Y, list.Key);
+                    ps.Add(p3d.make_perspective());
+                }
+                if (ps.Count > 1)
+                    g.DrawLines(pens[ind], ps.ToArray());
+                else g.DrawRectangle(pens[ind], ps[0].X, ps[0].Y, 1, 1);
+                ind = (ind + 1) % 5;
+            }
 
             /*       foreach (var point in graph_function)
                    {
@@ -1019,8 +1032,8 @@ namespace lab6
                        }
                    }*/
 
-            g.DrawLines(Pens.Red, up_pts.ToArray());
-            g.DrawLines(Pens.Green, down_pts.ToArray());
+        //    g.DrawLines(Pens.Red, up_pts.ToArray());
+//            g.DrawLines(Pens.Green, down_pts.ToArray());
 
 
         }
