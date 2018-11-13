@@ -293,35 +293,29 @@ namespace lab6
                 check_all_textboxes();
                 // масштабируем и переносим относительно начала координат (сдвигом центра в начало)
                 //
-               /* if (trans_x_camera.Text != "0" || trans_y_camera.Text != "0" || trans_z_camera.Text != "0")
+                /* if (trans_x_camera.Text != "0" || trans_y_camera.Text != "0" || trans_z_camera.Text != "0")
+                 {
+                     // сначала переносим в начало
+                     float old_x = figure_camera.Center.X, old_y = figure_camera.Center.Y, old_z = figure_camera.Center.Z;
+                     figure_camera.translate(-old_x, -old_y, -old_z);
+
+                     // try to move camera
+                     float cam_x = camera.view.P1.X, cam_y = camera.view.P1.Y, cam_z = camera.view.P1.Z;
+                     camera.translate(-cam_x, -cam_y, -cam_z);
+                     */
+                // делаем, что нужно
+                if (trans_x_camera.Text != "0" || trans_y_camera.Text != "0" || trans_z_camera.Text != "0")
                 {
-                    // сначала переносим в начало
-                    float old_x = figure_camera.Center.X, old_y = figure_camera.Center.Y, old_z = figure_camera.Center.Z;
-                    figure_camera.translate(-old_x, -old_y, -old_z);
+                    int dx = int.Parse(trans_x_camera.Text, CultureInfo.CurrentCulture),
+                        dy = int.Parse(trans_y_camera.Text, CultureInfo.CurrentCulture),
+                        dz = int.Parse(trans_z_camera.Text, CultureInfo.CurrentCulture);
+                    figure_camera.translate(-dx, -dy, -dz);
 
                     // try to move camera
-                    float cam_x = camera.view.P1.X, cam_y = camera.view.P1.Y, cam_z = camera.view.P1.Z;
-                    camera.translate(-cam_x, -cam_y, -cam_z);
-                    */
-                    // делаем, что нужно
-                    if (trans_x_camera.Text != "0" || trans_y_camera.Text != "0" || trans_z_camera.Text != "0")
-                    {
-                        int dx = int.Parse(trans_x_camera.Text, CultureInfo.CurrentCulture),
-                            dy = int.Parse(trans_y_camera.Text, CultureInfo.CurrentCulture),
-                            dz = int.Parse(trans_z_camera.Text, CultureInfo.CurrentCulture);
-                        figure_camera.translate(-dx, -dy, -dz);
-
-                        // try to move camera
-                        camera.translate(dx, dy, dz);
-
-                        camera_x.Text = (int.Parse(camera_x.Text, CultureInfo.CurrentCulture) + dx).ToString(CultureInfo.CurrentCulture);
-                        camera_y.Text = (int.Parse(camera_y.Text, CultureInfo.CurrentCulture) + dy).ToString(CultureInfo.CurrentCulture);
-                        camera_z.Text = (int.Parse(camera_z.Text, CultureInfo.CurrentCulture) + dz).ToString(CultureInfo.CurrentCulture);
-/*                    }
-                    // переносим обратно
-                    figure_camera.translate(old_x, old_y, old_z);
-                    */
-                }   
+                    camera.translate(dx, dy, dz);
+                }
+                               
+                   
                 // поворачиваем относительно нужной прямой
                 if (rot_angle_camera.Text != "0")
                 {

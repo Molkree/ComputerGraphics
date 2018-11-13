@@ -1542,11 +1542,11 @@ namespace lab6
         {
             pen = Pens.Red;
             //view.translate(x, y, z);
-            view.show(g, pr, pen);
+            //view.show(g, pr, pen);
             //view.translate(-x, -y, -z);
 
             //small_cube.translate(x, y, z);
-            small_cube.show(g, pr, pen);
+            //small_cube.show(g, pr, pen);
             //small_cube.translate(-x, -y, -z);
         }
         
