@@ -603,6 +603,8 @@ namespace lab6
 
         //    public SortedDictionary<float, PointF> graph_function = null;
         private Dictionary<Point3d, List<int>> map = null;
+        private Dictionary<Point3d, List<float>> point_to_normal = null;
+        private Dictionary<Point3d, float> point_to_intensive = null;
 
         public Polyhedron(List<Face> fs = null)
         {
@@ -610,7 +612,6 @@ namespace lab6
             {
                 Faces = fs.Select(face => new Face(face)).ToList();
                 find_center();
-                create_map();
             }
         }
 
@@ -621,7 +622,6 @@ namespace lab6
             Cube_size = polyhedron.Cube_size;
             is_graph = polyhedron.is_graph;
             graph_function = polyhedron.graph_function;
-            create_map();
         }
 
         public Polyhedron(string s, int mode = MODE_POL)
@@ -657,19 +657,6 @@ namespace lab6
                     break;
                 default: break;
             }
-            create_map();
-        }
-
-        private void create_map()
-        {
-            map = new Dictionary<Point3d, List<int>>(new Point3dComparer());
-            for (int i = 0; i < Faces.Count; ++i)
-                foreach (var p in Faces[i].Points)
-                {
-                    if (!map.ContainsKey(p))
-                        map[p] = new List<int>();
-                    map[p].Add(i);
-                }    
         }
 
         public string to_string()
@@ -702,6 +689,61 @@ namespace lab6
             //{
             //    f.find_normal(Center);
             //}
+        }
+
+        private void create_map(Edge camera, Point3d light)
+        {
+            map = new Dictionary<Point3d, List<int>>(new Point3dComparer());
+            point_to_normal = new Dictionary<Point3d, List<float>>(new Point3dComparer());
+            point_to_intensive = new Dictionary<Point3d, float>(new Point3dComparer());
+            for (int i = 0; i < Faces.Count; ++i)
+            {
+                Faces[i].find_normal(Center, camera);
+                var n = Faces[i].Normal;
+                foreach (var p in Faces[i].Points)
+                {
+                    if (!map.ContainsKey(p))
+                        map[p] = new List<int>();
+                    map[p].Add(i);
+                    if (!point_to_normal.ContainsKey(p))
+                        point_to_normal[p] = new List<float>() { 0, 0, 0 };
+                    point_to_normal[p][0] += n[0];
+                    point_to_normal[p][1] += n[1];
+                    point_to_normal[p][2] += n[2];
+                }
+            }
+            float max = 0;
+            foreach (var el in map)
+            {
+                var p = el.Key;
+                var lenght = (float)Math.Sqrt(point_to_normal[p][0] * point_to_normal[p][0] + point_to_normal[p][1] * point_to_normal[p][1] + point_to_normal[p][2] * point_to_normal[p][2]);
+                point_to_normal[p][0] /= lenght;
+                point_to_normal[p][1] /= lenght;
+                point_to_normal[p][2] /= lenght;
+
+                List<float> to_light = new List<float>() { light.X - p.X, light.Y - p.Y, light.Z - p.Z };
+                lenght = (float)Math.Sqrt(to_light[0] * to_light[0] + to_light[1] * to_light[1] + to_light[2] * to_light[2]);
+                to_light[0] /= lenght; to_light[1] /= lenght; to_light[2] /= lenght;
+
+                //ka - свойство материала воспринимать фоновое освещение, ia - мощность фонового освещения
+                float ka = 1; float ia = 0.3f;
+                float Ia = ka * ia;
+                //kd - свойство материала воспринимать рассеянное освещение, id - мощность рассеянного освещения
+                float kd = 0.7f; float id = 1f;
+                float Id = kd * id * (point_to_normal[p][0] * to_light[0] + point_to_normal[p][1] * to_light[1] + point_to_normal[p][2] * to_light[2]);
+                point_to_intensive[p] = Ia + Id;
+                if (point_to_intensive[p] > max)
+                    max = point_to_intensive[p];
+            }
+            //может ли быть больше 1?
+            if (max != 0)
+                foreach (var el in point_to_normal)
+                {
+                    point_to_intensive[el.Key] /= max;
+                    if (point_to_intensive[el.Key] < 0)
+                        point_to_intensive[el.Key] = 0;
+                }
+
         }
 
         public void show(Graphics g, Projection pr = 0, Pen pen = null)
@@ -909,6 +951,187 @@ namespace lab6
                 else if (max_v != 0) buf[i] = buf[i] * 225 / max_v;
             
         }
+
+        private void G_DrawFilledTriangle(Edge camera, Point3d P0, Point3d P1, Point3d P2, int[] buff, int width, int height, float[] colors, float c_P0, float c_P1, float c_P2)
+        {
+            PointF p0 = P0.make_perspective();
+            PointF p1 = P1.make_perspective();
+            PointF p2 = P2.make_perspective();
+
+            //y0 <= y1 <= y2
+            int y0 = (int)p0.Y; int x0 = (int)p0.X; int z0 = (int)P0.Z;
+            int y1 = (int)p1.Y; int x1 = (int)p1.X; int z1 = (int)P1.Z;
+            int y2 = (int)p2.Y; int x2 = (int)p2.X; int z2 = (int)P2.Z;
+
+            var x01 = Interpolate(y0, x0, y1, x1);
+            var x12 = Interpolate(y1, x1, y2, x2);
+            var x02 = Interpolate(y0, x0, y2, x2);
+
+            var h01 = Interpolate(y0, z0, y1, z1);
+            var h12 = Interpolate(y1, z1, y2, z2);
+            var h02 = Interpolate(y0, z0, y2, z2);
+
+            var c01 = Interpolate(y0, (int)(c_P0*100), y1, (int)(c_P1 * 100));
+            var c12 = Interpolate(y1, (int)(c_P1 * 100), y2, (int)(c_P2 * 100));
+            var c02 = Interpolate(y0, (int)(c_P0 * 100), y2, (int)(c_P2 * 100));
+            // Конкатенация коротких сторон
+            int[] x012 = x01.Take(x01.Length - 1).Concat(x12).ToArray();
+            int[] h012 = h01.Take(h01.Length - 1).Concat(h12).ToArray();
+            int[] c012 = c01.Take(c01.Length - 1).Concat(c12).ToArray();
+
+            //Определяем, какая из сторон левая и правая
+            int m = x012.Length / 2;
+            int[] x_left, x_right, h_left, h_right, c_left, c_right;
+            if (x02[m] < x012[m])
+            {
+                x_left = x02;
+                x_right = x012;
+
+                h_left = h02;
+                h_right = h012;
+
+                c_left = c02;
+                c_right = c012;
+            }
+            else
+            {
+                x_left = x012;
+                x_right = x02;
+
+                h_left = h012;
+                h_right = h02;
+
+                c_left = c012;
+                c_right = c02;
+            }
+           
+            //Отрисовка горизонтальных отрезков
+            for (int y = y0; y <= y2; ++y)
+            {
+                int x_l = x_left[y - y0];
+                int x_r = x_right[y - y0];
+                int[] h_segment;
+                int[] c_segment;
+                //interpolation
+                if (x_l > x_r)
+                    continue;
+                h_segment = Interpolate(x_l, h_left[y - y0], x_r, h_right[y - y0]);
+                c_segment = Interpolate(x_l, c_left[y - y0], x_r, c_right[y - y0]);
+                for (int x = x_l; x <= x_r; ++x)
+                {
+                    int z = h_segment[x - x_l];
+                    float color = c_segment[x - x_l] / 100f;
+                    //i, j, z - координаты в пространстве, в пикчербоксе x, y
+                    //int xx = (x + width / 2) % width;
+                    //int yy = (-y + height / 2) % height;
+                    int xx = x + width / 2;
+                    int yy = -y + height / 2;
+                    if (xx < 0 || xx > width || yy < 0 || yy > height || (xx * height + yy) < 0 || (xx * height + yy) > (buff.Length - 1))
+                        continue;
+                    if (z > buff[xx * height + yy])
+                    {
+                        buff[xx * height + yy] = (int)(z + 0.5);
+                        colors[xx * height + yy] = color;
+                    }
+                }
+            }
+
+        }
+
+
+        private void G_magic(Edge camera, Point3d P0, Point3d P1, Point3d P2, int[] buff, int width, int height, float[] colors, float c_P0, float c_P1, float c_P2)
+        {
+            //сортируем p0, p1, p2: y0 <= y1 <= y2
+            PointF p0 = P0.make_perspective();
+            PointF p1 = P1.make_perspective();
+            PointF p2 = P2.make_perspective();
+
+            if (p1.Y < p0.Y)
+            {
+                Point3d tmpp = new Point3d(P0);
+                P0.X = P1.X; P0.Y = P1.Y; P0.Z = P1.Z;
+                P1.X = tmpp.X; P1.Y = tmpp.Y; P1.Z = tmpp.Z;
+                PointF tmppp = new PointF(p0.X, p0.Y);
+                p0.X = p1.X; p0.Y = p1.Y;
+                p1.X = tmppp.X; p1.Y = tmppp.Y;
+                var tmpc = c_P1;
+                c_P1 = c_P0;
+                c_P0 = tmpc;
+            }
+            if (p2.Y < p0.Y)
+            {
+                Point3d tmpp = new Point3d(P0);
+                P0.X = P2.X; P0.Y = P2.Y; P0.Z = P2.Z;
+                P2.X = tmpp.X; P2.Y = tmpp.Y; P2.Z = tmpp.Z;
+                PointF tmppp = new PointF(p0.X, p0.Y);
+                p0.X = p2.X; p0.Y = p2.Y;
+                p2.X = tmppp.X; p2.Y = tmppp.Y;
+                var tmpc = c_P2;
+                c_P2 = c_P0;
+                c_P0 = tmpc;
+            }
+            if (p2.Y < p1.Y)
+            {
+                Point3d tmpp = new Point3d(P1);
+                P1.X = P2.X; P1.Y = P2.Y; P1.Z = P2.Z;
+                P2.X = tmpp.X; P2.Y = tmpp.Y; P2.Z = tmpp.Z;
+                PointF tmppp = new PointF(p1.X, p1.Y);
+                p1.X = p2.X; p1.Y = p2.Y;
+                p2.X = tmppp.X; p2.Y = tmppp.Y;
+                var tmpc = c_P1;
+                c_P1 = c_P2;
+                c_P2 = tmpc;
+            }
+
+            G_DrawFilledTriangle(camera, P0, P1, P2, buff, width, height, colors, c_P0, c_P1, c_P2);
+        }
+
+
+        public void calc_gouraud(Edge camera, int width, int height, out float[] intensive, Point3d light)
+        {
+            int[] buf = new int[width * height];
+            for (int i = 0; i < width * height; ++i)
+                buf[i] = int.MinValue;
+            intensive = new float[width * height];
+            for (int i = 0; i < width * height; ++i)
+                intensive[i] = 0;
+
+            create_map(camera, light);
+            foreach (var f in Faces)
+            {
+                //треугольник
+                Point3d P0 = new Point3d(f.Points[0]);
+                Point3d P1 = new Point3d(f.Points[1]);
+                Point3d P2 = new Point3d(f.Points[2]);
+                float i_p0 = point_to_intensive[P0], i_p1 = point_to_intensive[P1], i_p2 = point_to_intensive[P2];
+                G_magic(camera, P0, P1, P2, buf, width, height, intensive, i_p0, i_p1, i_p2);
+                //4
+                if (f.Points.Count > 3)
+                {
+                    P0 = new Point3d(f.Points[2]);
+                    P1 = new Point3d(f.Points[3]);
+                    P2 = new Point3d(f.Points[0]);
+                    i_p0 = point_to_intensive[P0]; i_p1 = point_to_intensive[P1]; i_p2 = point_to_intensive[P2];
+                    G_magic(camera, P0, P1, P2, buf, width, height, intensive, i_p0, i_p1, i_p2);
+                }
+                //5
+                if (f.Points.Count > 4)
+                {
+                    P0 = new Point3d(f.Points[3]);
+                    P1 = new Point3d(f.Points[4]);
+                    P2 = new Point3d(f.Points[0]);
+                    i_p0 = point_to_intensive[P0]; i_p1 = point_to_intensive[P1]; i_p2 = point_to_intensive[P2];
+                    G_magic(camera, P0, P1, P2, buf, width, height, intensive, i_p0, i_p1, i_p2);
+                }
+            }
+
+            SortedSet<float> test = new SortedSet<float>();
+            for (int i = 0; i < width * height; ++i)
+                test.Add(intensive[i]);
+
+            int max = 0;
+        }
+
 
         public void show_camera(Graphics g, Camera camera, Pen pen = null)
         {
