@@ -262,7 +262,7 @@ namespace lab6
         {
             float[] intensive = new float[pictureBox3.Width * pictureBox3.Height];
             
-            figure_camera.calc_gouraud(camera.view, pictureBox3.Width, pictureBox3.Height, out intensive, new Point3d(-1*Int32.Parse(light_x.Text), -1*Int32.Parse(light_y.Text), -1*Int32.Parse(light_z.Text)));
+            figure_camera.calc_gouraud(camera.view, pictureBox3.Width, pictureBox3.Height, out intensive, new Point3d(-Int32.Parse(light_x.Text), -Int32.Parse(light_y.Text), -Int32.Parse(light_z.Text)));
             Bitmap bmp = pictureBox3.Image as Bitmap;
             g_fake_camera.Clear(Color.White);
 
@@ -616,7 +616,7 @@ namespace lab6
             Polyhedron light = new Polyhedron();
             light.make_hexahedron(5);
             check_all_textboxes();
-            light.translate(-1*Int32.Parse(light_x.Text), -1 * Int32.Parse(light_y.Text), -1 * Int32.Parse(light_z.Text));
+            light.translate(Int32.Parse(light_x.Text), Int32.Parse(light_y.Text), Int32.Parse(light_z.Text));
             g.Clear(Color.White);
             figure.show(g, pr);
             camera.show(g, pr);

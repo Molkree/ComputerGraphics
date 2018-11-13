@@ -726,7 +726,7 @@ namespace lab6
                 to_light[0] /= lenght; to_light[1] /= lenght; to_light[2] /= lenght;
 
                 //ka - свойство материала воспринимать фоновое освещение, ia - мощность фонового освещения
-                float ka = 1; float ia = 0.3f;
+                float ka = 1; float ia = 0.7f;
                 float Ia = ka * ia;
                 //kd - свойство материала воспринимать рассеянное освещение, id - мощность рассеянного освещения
                 float kd = 0.7f; float id = 1f;
