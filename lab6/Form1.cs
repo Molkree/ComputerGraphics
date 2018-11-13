@@ -260,10 +260,9 @@ namespace lab6
 
         private void show_gouraud()
         {
-            int[] buff = new int[pictureBox3.Width * pictureBox3.Height];
-            int[] colors = new int[pictureBox3.Width * pictureBox3.Height];
-
-            figure_camera.calc_z_buff(camera.view, pictureBox3.Width, pictureBox3.Height, out buff, out colors);
+            float[] intensive = new float[pictureBox3.Width * pictureBox3.Height];
+            
+            figure_camera.calc_gouraud(camera.view, pictureBox3.Width, pictureBox3.Height, out intensive, new Point3d(-Int32.Parse(light_x.Text), -Int32.Parse(light_y.Text), -Int32.Parse(light_z.Text)));
             Bitmap bmp = pictureBox3.Image as Bitmap;
             g_fake_camera.Clear(Color.White);
 
@@ -271,10 +270,13 @@ namespace lab6
                 for (int j = 0; j < pictureBox3.Height; ++j)
                 {
                     Color c;
-                    if (buff[i * pictureBox3.Height + j] == 255)
-                        c = Color.White;
+                    if (intensive[i * pictureBox3.Height + j] < 1E-6f)
+                        c = Color.Black;
                     else
-                        c = Color.FromArgb(fill_color.R, buff[i * pictureBox3.Height + j], fill_color.B);
+                    {
+                        float intsv = intensive[i * pictureBox3.Height + j];
+                        c = Color.FromArgb((int)(fill_color.R*intsv), (int)(fill_color.G * intsv), (int)(fill_color.B * intsv));
+                    }
                     bmp.SetPixel(i, j, c);
                     //g_fake_camera.DrawRectangle(new Pen(c), i - pictureBox3.Width / 2, pictureBox3.Height / 2 - j, 1, 1);
                 }
@@ -619,6 +621,8 @@ namespace lab6
             figure.show(g, pr);
             camera.show(g, pr);
             light.show(g, pr, new Pen(Color.YellowGreen));
+            if (radioButton3.Checked)
+                show_gouraud();
         }
 
         private void radioButton1_CheckedChanged(object sender, EventArgs e)

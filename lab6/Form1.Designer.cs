@@ -565,6 +565,7 @@
             // 
             // trans_x_camera
             // 
+            this.trans_x_camera.Enabled = false;
             this.trans_x_camera.Location = new System.Drawing.Point(1336, 732);
             this.trans_x_camera.Margin = new System.Windows.Forms.Padding(4);
             this.trans_x_camera.Name = "trans_x_camera";
