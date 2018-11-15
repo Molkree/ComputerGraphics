@@ -262,7 +262,7 @@ namespace lab6
         {
             float[] intensive = new float[pictureBox3.Width * pictureBox3.Height];
             
-            figure_camera.calc_gouraud(camera.view, pictureBox3.Width, pictureBox3.Height, out intensive, new Point3d(-Int32.Parse(light_x.Text), -Int32.Parse(light_y.Text), -Int32.Parse(light_z.Text)));
+            figure_camera.calc_gouraud(camera.view, pictureBox3.Width, pictureBox3.Height, out intensive, new Point3d(Int32.Parse(light_x.Text), Int32.Parse(light_y.Text), Int32.Parse(light_z.Text)));
             Bitmap bmp = pictureBox3.Image as Bitmap;
             g_fake_camera.Clear(Color.White);
 
@@ -275,7 +275,9 @@ namespace lab6
                     else
                     {
                         float intsv = intensive[i * pictureBox3.Height + j];
-                        c = Color.FromArgb((int)(fill_color.R*intsv), (int)(fill_color.G * intsv), (int)(fill_color.B * intsv));
+                        if (intsv > 1)
+                            intsv = 1;
+                        c = Color.FromArgb((int)(fill_color.R*intsv)%256, (int)(fill_color.G * intsv)%256, (int)(fill_color.B * intsv)%256);
                     }
                     bmp.SetPixel(i, j, c);
                     //g_fake_camera.DrawRectangle(new Pen(c), i - pictureBox3.Width / 2, pictureBox3.Height / 2 - j, 1, 1);
@@ -305,8 +307,8 @@ namespace lab6
                      float cam_x = camera.view.P1.X, cam_y = camera.view.P1.Y, cam_z = camera.view.P1.Z;
                      camera.translate(-cam_x, -cam_y, -cam_z);
                      */
-                // делаем, что нужно
-                if (trans_x_camera.Text != "0" || trans_y_camera.Text != "0" || trans_z_camera.Text != "0")
+                        // делаем, что нужно
+                        if (trans_x_camera.Text != "0" || trans_y_camera.Text != "0" || trans_z_camera.Text != "0")
                 {
                     int dx = int.Parse(trans_x_camera.Text, CultureInfo.CurrentCulture),
                         dy = int.Parse(trans_y_camera.Text, CultureInfo.CurrentCulture),

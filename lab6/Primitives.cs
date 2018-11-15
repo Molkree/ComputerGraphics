@@ -721,7 +721,7 @@ namespace lab6
                 point_to_normal[p][1] /= lenght;
                 point_to_normal[p][2] /= lenght;
 
-                List<float> to_light = new List<float>() { light.X - p.X, light.Y - p.Y, light.Z - p.Z };
+                List<float> to_light = new List<float>() { - light.X + p.X, - light.Y + p.Y, - light.Z + p.Z };
                 lenght = (float)Math.Sqrt(to_light[0] * to_light[0] + to_light[1] * to_light[1] + to_light[2] * to_light[2]);
                 to_light[0] /= lenght; to_light[1] /= lenght; to_light[2] /= lenght;
 
