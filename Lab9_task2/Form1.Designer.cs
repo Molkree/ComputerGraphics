@@ -407,6 +407,7 @@
             this.Controls.Add(this.label2);
             this.Controls.Add(this.button_cube);
             this.Controls.Add(this.pictureBox1);
+            this.DoubleBuffered = true;
             this.Name = "Form1";
             this.Text = "Form1";
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();

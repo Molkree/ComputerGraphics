@@ -1008,6 +1008,9 @@ namespace Lab9_task2
                     new Point3d(cube.Faces[1].Points[3])
                 }
             );
+            f0.Points[0].TextureCoordinates = new PointF(0.5f, 0);
+            f0.Points[1].TextureCoordinates = new PointF(0, 1);
+            f0.Points[2].TextureCoordinates = new PointF(1, 1);
 
             Face f1 = new Face(
                 new List<Point3d>
@@ -1017,6 +1020,9 @@ namespace Lab9_task2
                     new Point3d(cube.Faces[0].Points[2])
                 }
             );
+            f1.Points[0].TextureCoordinates = new PointF(0.5f, 0);
+            f1.Points[1].TextureCoordinates = new PointF(0, 1);
+            f1.Points[2].TextureCoordinates = new PointF(1, 1);
 
             Face f2 = new Face(
                 new List<Point3d>
@@ -1026,6 +1032,9 @@ namespace Lab9_task2
                     new Point3d(cube.Faces[0].Points[0])
                 }
             );
+            f2.Points[0].TextureCoordinates = new PointF(0.5f, 0);
+            f2.Points[1].TextureCoordinates = new PointF(0, 1);
+            f2.Points[2].TextureCoordinates = new PointF(1, 1);
 
             Face f3 = new Face(
                 new List<Point3d>
@@ -1035,6 +1044,9 @@ namespace Lab9_task2
                     new Point3d(cube.Faces[1].Points[3])
                 }
             );
+            f3.Points[0].TextureCoordinates = new PointF(0.5f, 0);
+            f3.Points[1].TextureCoordinates = new PointF(0, 1);
+            f3.Points[2].TextureCoordinates = new PointF(1, 1);
 
             Faces = new List<Face> { f0, f1, f2, f3 };
             find_center();
@@ -1057,6 +1069,9 @@ namespace Lab9_task2
                     new Point3d(cube.Faces[4].Center)
                 }
             );
+            f0.Points[0].TextureCoordinates = new PointF(0.5f, 0);
+            f0.Points[1].TextureCoordinates = new PointF(0, 1);
+            f0.Points[2].TextureCoordinates = new PointF(1, 1);
 
             Face f1 = new Face(
                 new List<Point3d>
@@ -1066,6 +1081,9 @@ namespace Lab9_task2
                     new Point3d(cube.Faces[5].Center)
                 }
             );
+            f1.Points[0].TextureCoordinates = new PointF(0.5f, 0);
+            f1.Points[1].TextureCoordinates = new PointF(0, 1);
+            f1.Points[2].TextureCoordinates = new PointF(1, 1);
 
             Face f2 = new Face(
                 new List<Point3d>
@@ -1075,6 +1093,9 @@ namespace Lab9_task2
                     new Point3d(cube.Faces[0].Center)
                 }
             );
+            f2.Points[0].TextureCoordinates = new PointF(0.5f, 0);
+            f2.Points[1].TextureCoordinates = new PointF(0, 1);
+            f2.Points[2].TextureCoordinates = new PointF(1, 1);
 
             Face f3 = new Face(
                 new List<Point3d>
@@ -1084,6 +1105,9 @@ namespace Lab9_task2
                     new Point3d(cube.Faces[4].Center)
                 }
             );
+            f3.Points[0].TextureCoordinates = new PointF(0.5f, 0);
+            f3.Points[1].TextureCoordinates = new PointF(0, 1);
+            f3.Points[2].TextureCoordinates = new PointF(1, 1);
 
             // down
             Face f4 = new Face(
@@ -1094,6 +1118,9 @@ namespace Lab9_task2
                     new Point3d(cube.Faces[4].Center)
                 }
             );
+            f4.Points[0].TextureCoordinates = new PointF(0.5f, 0);
+            f4.Points[1].TextureCoordinates = new PointF(0, 1);
+            f4.Points[2].TextureCoordinates = new PointF(1, 1);
 
             Face f5 = new Face(
                 new List<Point3d>
@@ -1103,6 +1130,9 @@ namespace Lab9_task2
                     new Point3d(cube.Faces[5].Center)
                 }
             );
+            f5.Points[0].TextureCoordinates = new PointF(0.5f, 0);
+            f5.Points[1].TextureCoordinates = new PointF(0, 1);
+            f5.Points[2].TextureCoordinates = new PointF(1, 1);
 
             Face f6 = new Face(
                 new List<Point3d>
@@ -1112,6 +1142,9 @@ namespace Lab9_task2
                     new Point3d(cube.Faces[0].Center)
                 }
             );
+            f6.Points[0].TextureCoordinates = new PointF(0.5f, 0);
+            f6.Points[1].TextureCoordinates = new PointF(0, 1);
+            f6.Points[2].TextureCoordinates = new PointF(1, 1);
 
             Face f7 = new Face(
                 new List<Point3d>
@@ -1121,6 +1154,9 @@ namespace Lab9_task2
                     new Point3d(cube.Faces[4].Center)
                 }
             );
+            f7.Points[0].TextureCoordinates = new PointF(0.5f, 0);
+            f7.Points[1].TextureCoordinates = new PointF(0, 1);
+            f7.Points[2].TextureCoordinates = new PointF(1, 1);
 
             Faces = new List<Face> { f0, f1, f2, f3, f4, f5, f6, f7 };
             find_center();
