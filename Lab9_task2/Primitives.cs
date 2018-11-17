@@ -727,7 +727,7 @@ namespace Lab9_task2
             return points;
         }
 
-        private void DrawTexture(Point3d P0, Point3d P1, Point3d P2, Bitmap bmp, int width, int height, Bitmap texture)
+        private void DrawTexture(Point3d P0, Point3d P1, Point3d P2, Bitmap bmp, Bitmap texture)
         {
             // Sort the points so that y0 <= y1 <= y2
             var points = SortTriangleVertices(P0, P1, P2);
@@ -777,6 +777,12 @@ namespace Lab9_task2
             // Draw the horizontal segments
             for (int y = (int)SortedP0.Y; y < (int)SortedP2.Y; ++y)
             {
+                int screen_y = -y + bmp.Height / 2;
+                if (screen_y < 0)
+                    break;
+                if (bmp.Height <= screen_y)
+                    continue;
+
                 var x_l = x_left[y - (int)SortedP0.Y];
                 var x_r = x_right[y - (int)SortedP0.Y];
 
@@ -784,14 +790,20 @@ namespace Lab9_task2
                 var v_segment = Interpolate((int)x_l, v_left[y - (int)SortedP0.Y], (int)x_r, v_right[y - (int)SortedP0.Y]);
                 for (int x = (int)x_l; x < (int)x_r; ++x)
                 {
+                    int screen_x = x + bmp.Width / 2;
+                    if (screen_x < 0)
+                        continue;
+                    if (bmp.Width <= screen_x)
+                        break;
+
                     int texture_u = (int)(u_segment[x - (int)x_l] * (texture.Width - 1));
                     int texture_v = (int)(v_segment[x - (int)x_l] * (texture.Height - 1));
-                    bmp.SetPixel(x + width / 2, -y + height / 2, texture.GetPixel(texture_u, texture_v));
+                    bmp.SetPixel(screen_x, screen_y, texture.GetPixel(texture_u, texture_v));
                 }
             }
         }
 
-        public void ApplyTexture(Bitmap bmp, int width, int height, Bitmap texture)
+        public void ApplyTexture(Bitmap bmp, Bitmap texture)
         {
             foreach (var f in Faces)
             {
@@ -803,7 +815,7 @@ namespace Lab9_task2
                 Point3d P0 = new Point3d(f.Points[0]);
                 Point3d P1 = new Point3d(f.Points[1]);
                 Point3d P2 = new Point3d(f.Points[2]);
-                DrawTexture(P0, P1, P2, bmp, width, height, texture);
+                DrawTexture(P0, P1, P2, bmp, texture);
 
                 // 4 vertices
                 if (f.Points.Count == 4)
@@ -811,7 +823,7 @@ namespace Lab9_task2
                     P0 = new Point3d(f.Points[2]);
                     P1 = new Point3d(f.Points[3]);
                     P2 = new Point3d(f.Points[0]);
-                    DrawTexture(P0, P1, P2, bmp, width, height, texture);
+                    DrawTexture(P0, P1, P2, bmp, texture);
                 }
             }
         }
