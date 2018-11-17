@@ -133,10 +133,10 @@ namespace Lab9_task2
                     }
                 }
 
-                g.Clear(Color.White);
                 bmp = new Bitmap(pictureBox1.ClientSize.Width, pictureBox1.ClientSize.Height);
-                pictureBox1.Image = bmp;
                 figure.ApplyTexture(bmp, texture);
+                g.Clear(Color.White);
+                pictureBox1.Image = bmp;
             }
         }
 
@@ -182,37 +182,37 @@ namespace Lab9_task2
         // Create hexahedron
         private void button1_Click(object sender, EventArgs e)
         {
-            g.Clear(Color.White);
             figure = new Polyhedron();
             figure.make_hexahedron();
 
             bmp = new Bitmap(pictureBox1.ClientSize.Width, pictureBox1.ClientSize.Height);
-            pictureBox1.Image = bmp;
             figure.ApplyTexture(bmp, texture);
+            g.Clear(Color.White);
+            pictureBox1.Image = bmp;
         }
 
         // Create tetrahedron
         private void button2_Click(object sender, EventArgs e)
         {
-            g.Clear(Color.White);
             figure = new Polyhedron();
             figure.make_tetrahedron();
 
             bmp = new Bitmap(pictureBox1.ClientSize.Width, pictureBox1.ClientSize.Height);
-            pictureBox1.Image = bmp;
             figure.ApplyTexture(bmp, texture);
+            g.Clear(Color.White);
+            pictureBox1.Image = bmp;
         }
 
         // Create octahedron
         private void button3_Click(object sender, EventArgs e)
         {
-            g.Clear(Color.White);
             figure = new Polyhedron();
             figure.make_octahedron();
 
             bmp = new Bitmap(pictureBox1.ClientSize.Width, pictureBox1.ClientSize.Height);
-            pictureBox1.Image = bmp;
             figure.ApplyTexture(bmp, texture);
+            g.Clear(Color.White);
+            pictureBox1.Image = bmp;
         }
 
         // отражение по х
@@ -221,11 +221,11 @@ namespace Lab9_task2
             if (figure != null)
             {
                 figure.reflectX();
-                g.Clear(Color.White);
 
                 bmp = new Bitmap(pictureBox1.ClientSize.Width, pictureBox1.ClientSize.Height);
-                pictureBox1.Image = bmp;
                 figure.ApplyTexture(bmp, texture);
+                g.Clear(Color.White);
+                pictureBox1.Image = bmp;
             }
         }
 
@@ -235,11 +235,11 @@ namespace Lab9_task2
             if (figure != null)
             {
                 figure.reflectY();
-                g.Clear(Color.White);
 
                 bmp = new Bitmap(pictureBox1.ClientSize.Width, pictureBox1.ClientSize.Height);
-                pictureBox1.Image = bmp;
                 figure.ApplyTexture(bmp, texture);
+                g.Clear(Color.White);
+                pictureBox1.Image = bmp;
             }
         }
 
@@ -249,11 +249,11 @@ namespace Lab9_task2
             if (figure != null)
             {
                 figure.reflectZ();
-                g.Clear(Color.White);
 
                 bmp = new Bitmap(pictureBox1.ClientSize.Width, pictureBox1.ClientSize.Height);
-                pictureBox1.Image = bmp;
                 figure.ApplyTexture(bmp, texture);
+                g.Clear(Color.White);
+                pictureBox1.Image = bmp;
             }
         }
 
@@ -264,19 +264,8 @@ namespace Lab9_task2
             {
                 texture = Image.FromFile(openFileDialog1.FileName) as Bitmap;
                 bmp = new Bitmap(pictureBox1.ClientSize.Width, pictureBox1.ClientSize.Height);
-                pictureBox1.Image = bmp;
                 figure.ApplyTexture(bmp, texture);
-                //Rectangle rectFlood = new Rectangle(0, 0, floodImage.Width, floodImage.Height);
-                //bmp_dataFlood =
-                //    floodImage.LockBits(rectFlood, ImageLockMode.ReadWrite,
-                //    floodImage.PixelFormat);
-                //ptrFlood = bmp_dataFlood.Scan0;
-                //bytesFlood = Math.Abs(bmp_dataFlood.Stride) * floodImage.Height;
-                //rgb_valuesFlood = new byte[bytesFlood];
-                //System.Runtime.InteropServices.Marshal.Copy(ptrFlood, rgb_valuesFlood, 0, bytesFlood);
-
-                //half_width_flood = floodImage.Width / 2;
-                //half_height_flood = floodImage.Height / 2;
+                pictureBox1.Image = bmp;
             }
         }
     }
