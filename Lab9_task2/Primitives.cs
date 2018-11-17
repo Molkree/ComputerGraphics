@@ -699,23 +699,27 @@ namespace Lab9_task2
         /// <summary>
         /// Sort triangle vertices by Y from min to max
         /// </summary>
-        private PointF[] SortTriangleVertices(Point3d P0, Point3d P1, Point3d P2)
+        private Point3d[] SortTriangleVertices(Point3d P0, Point3d P1, Point3d P2)
         {
-            PointF[] points = new PointF[3] { P0.make_perspective(), P1.make_perspective(), P2.make_perspective() };
+            Point3d p0 = new Point3d(P0), p1 = new Point3d(P1), p2 = new Point3d(P2);
+            p0.X = P0.make_perspective().X; p0.Y = P0.make_perspective().Y;
+            p1.X = P1.make_perspective().X; p1.Y = P1.make_perspective().Y;
+            p2.X = P2.make_perspective().X; p2.Y = P2.make_perspective().Y;
+            Point3d[] points = new Point3d[3] { p0, p1, p2 };
 
             if (points[1].Y < points[0].Y)
             {
-                points[0] = P1.make_perspective();
-                points[1] = P0.make_perspective();
+                points[0] = p1;
+                points[1] = p0;
             }
             if (points[2].Y < points[0].Y)
             {
                 points[2] = points[0];
-                points[0] = P2.make_perspective();
+                points[0] = p2;
             }
             if (points[2].Y < points[1].Y)
             {
-                PointF temp = points[1];
+                Point3d temp = points[1];
                 points[1] = points[2];
                 points[2] = temp;
             }
@@ -723,54 +727,83 @@ namespace Lab9_task2
             return points;
         }
 
-        private void DrawFilledTriangle(Point3d P0, Point3d P1, Point3d P2, Bitmap bmp, int width, int height)
+        private void DrawTexture(Point3d P0, Point3d P1, Point3d P2, Bitmap bmp, int width, int height, Bitmap texture)
         {
             // Sort the points so that y0 <= y1 <= y2
             var points = SortTriangleVertices(P0, P1, P2);
-            PointF SortedP0 = points[0], SortedP1 = points[1], SortedP2 = points[2];
+            Point3d SortedP0 = points[0], SortedP1 = points[1], SortedP2 = points[2];
 
-            // Compute the x coordinates of the triangle edges
+            // Compute the x coordinates and h values of the triangle edges
             var x01 = Interpolate((int)SortedP0.Y, SortedP0.X, (int)SortedP1.Y, SortedP1.X);
+            var u01 = Interpolate((int)SortedP0.Y, SortedP0.TextureCoordinates.X, (int)SortedP1.Y, SortedP1.TextureCoordinates.X);
+            var v01 = Interpolate((int)SortedP0.Y, SortedP0.TextureCoordinates.Y, (int)SortedP1.Y, SortedP1.TextureCoordinates.Y);
             var x12 = Interpolate((int)SortedP1.Y, SortedP1.X, (int)SortedP2.Y, SortedP2.X);
+            var u12 = Interpolate((int)SortedP1.Y, SortedP1.TextureCoordinates.X, (int)SortedP2.Y, SortedP2.TextureCoordinates.X);
+            var v12 = Interpolate((int)SortedP1.Y, SortedP1.TextureCoordinates.Y, (int)SortedP2.Y, SortedP2.TextureCoordinates.Y);
             var x02 = Interpolate((int)SortedP0.Y, SortedP0.X, (int)SortedP2.Y, SortedP2.X);
+            var u02 = Interpolate((int)SortedP0.Y, SortedP0.TextureCoordinates.X, (int)SortedP2.Y, SortedP2.TextureCoordinates.X);
+            var v02 = Interpolate((int)SortedP0.Y, SortedP0.TextureCoordinates.Y, (int)SortedP2.Y, SortedP2.TextureCoordinates.Y);
 
             // Concatenate the short sides
             x01 = x01.Take(x01.Length - 1).ToArray(); // remove last element, it's the first in x12
             var x012 = x01.Concat(x12).ToArray();
+            u01 = u01.Take(u01.Length - 1).ToArray(); // remove last element, it's the first in u12
+            var u012 = u01.Concat(u12).ToArray();
+            v01 = v01.Take(v01.Length - 1).ToArray(); // remove last element, it's the first in v12
+            var v012 = v01.Concat(v12).ToArray();
 
             // Determine which is left and which is right
             int m = x012.Length / 2;
-            double[] x_left, x_right;
+            double[] x_left, x_right, u_left, u_right, v_left, v_right;
             if (x02[m] < x012[m])
             {
                 x_left = x02;
                 x_right = x012;
+                u_left = u02;
+                u_right = u012;
+                v_left = v02;
+                v_right = v012;
             }
             else
             {
                 x_left = x012;
                 x_right = x02;
+                u_left = u012;
+                u_right = u02;
+                v_left = v012;
+                v_right = v02;
             }
 
             // Draw the horizontal segments
             for (int y = (int)SortedP0.Y; y < (int)SortedP2.Y; ++y)
             {
-                for (int x = (int)x_left[y - (int)SortedP0.Y]; x < (int)x_right[y - (int)SortedP0.Y]; ++x)
+                var x_l = x_left[y - (int)SortedP0.Y];
+                var x_r = x_right[y - (int)SortedP0.Y];
+
+                var u_segment = Interpolate((int)x_l, u_left[y - (int)SortedP0.Y], (int)x_r, u_right[y - (int)SortedP0.Y]);
+                var v_segment = Interpolate((int)x_l, v_left[y - (int)SortedP0.Y], (int)x_r, v_right[y - (int)SortedP0.Y]);
+                for (int x = (int)x_l; x < (int)x_r; ++x)
                 {
-                    bmp.SetPixel(x + width / 2, -y + height / 2, Color.Blue);
+                    int texture_u = (int)(u_segment[x - (int)x_l] * (texture.Width - 1));
+                    int texture_v = (int)(v_segment[x - (int)x_l] * (texture.Height - 1));
+                    bmp.SetPixel(x + width / 2, -y + height / 2, texture.GetPixel(texture_u, texture_v));
                 }
             }
         }
 
-        public void ApplyTexture(Bitmap bmp, int width, int height)
+        public void ApplyTexture(Bitmap bmp, int width, int height, Bitmap texture)
         {
             foreach (var f in Faces)
             {
+                f.find_normal(Center);
+                if (!f.IsVisible)
+                    continue;
+
                 // 3 vertices
                 Point3d P0 = new Point3d(f.Points[0]);
                 Point3d P1 = new Point3d(f.Points[1]);
                 Point3d P2 = new Point3d(f.Points[2]);
-                DrawFilledTriangle(P0, P1, P2, bmp, width, height);
+                DrawTexture(P0, P1, P2, bmp, width, height, texture);
 
                 // 4 vertices
                 if (f.Points.Count == 4)
@@ -778,7 +811,7 @@ namespace Lab9_task2
                     P0 = new Point3d(f.Points[2]);
                     P1 = new Point3d(f.Points[3]);
                     P2 = new Point3d(f.Points[0]);
-                    DrawFilledTriangle(P0, P1, P2, bmp, width, height);
+                    DrawTexture(P0, P1, P2, bmp, width, height, texture);
                 }
             }
         }

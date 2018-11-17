@@ -21,6 +21,7 @@ namespace Lab9_task2
             g.TranslateTransform(pictureBox1.ClientSize.Width / 2, pictureBox1.ClientSize.Height / 2);
             g.ScaleTransform(1, -1);
             comboBox2.SelectedIndex = 0;
+            texture = Image.FromFile("../../crate-texture.jpg") as Bitmap;
         }
 
         // контроль вводимых символов
@@ -135,7 +136,7 @@ namespace Lab9_task2
                 g.Clear(Color.White);
                 bmp = new Bitmap(pictureBox1.ClientSize.Width, pictureBox1.ClientSize.Height);
                 pictureBox1.Image = bmp;
-                figure.ApplyTexture(bmp, pictureBox1.Width, pictureBox1.Height);
+                figure.ApplyTexture(bmp, pictureBox1.Width, pictureBox1.Height, texture);
             }
         }
 
@@ -187,7 +188,7 @@ namespace Lab9_task2
 
             bmp = new Bitmap(pictureBox1.ClientSize.Width, pictureBox1.ClientSize.Height);
             pictureBox1.Image = bmp;
-            figure.ApplyTexture(bmp, pictureBox1.Width, pictureBox1.Height);
+            figure.ApplyTexture(bmp, pictureBox1.Width, pictureBox1.Height, texture);
         }
 
         // Create tetrahedron
@@ -199,7 +200,7 @@ namespace Lab9_task2
 
             bmp = new Bitmap(pictureBox1.ClientSize.Width, pictureBox1.ClientSize.Height);
             pictureBox1.Image = bmp;
-            figure.ApplyTexture(bmp, pictureBox1.Width, pictureBox1.Height);
+            figure.ApplyTexture(bmp, pictureBox1.Width, pictureBox1.Height, texture);
         }
 
         // Create octahedron
@@ -211,7 +212,7 @@ namespace Lab9_task2
 
             bmp = new Bitmap(pictureBox1.ClientSize.Width, pictureBox1.ClientSize.Height);
             pictureBox1.Image = bmp;
-            figure.ApplyTexture(bmp, pictureBox1.Width, pictureBox1.Height);
+            figure.ApplyTexture(bmp, pictureBox1.Width, pictureBox1.Height, texture);
         }
 
         // отражение по х
@@ -224,7 +225,7 @@ namespace Lab9_task2
 
                 bmp = new Bitmap(pictureBox1.ClientSize.Width, pictureBox1.ClientSize.Height);
                 pictureBox1.Image = bmp;
-                figure.ApplyTexture(bmp, pictureBox1.Width, pictureBox1.Height);
+                figure.ApplyTexture(bmp, pictureBox1.Width, pictureBox1.Height, texture);
             }
         }
 
@@ -238,7 +239,7 @@ namespace Lab9_task2
 
                 bmp = new Bitmap(pictureBox1.ClientSize.Width, pictureBox1.ClientSize.Height);
                 pictureBox1.Image = bmp;
-                figure.ApplyTexture(bmp, pictureBox1.Width, pictureBox1.Height);
+                figure.ApplyTexture(bmp, pictureBox1.Width, pictureBox1.Height, texture);
             }
         }
 
@@ -252,7 +253,7 @@ namespace Lab9_task2
 
                 bmp = new Bitmap(pictureBox1.ClientSize.Width, pictureBox1.ClientSize.Height);
                 pictureBox1.Image = bmp;
-                figure.ApplyTexture(bmp, pictureBox1.Width, pictureBox1.Height);
+                figure.ApplyTexture(bmp, pictureBox1.Width, pictureBox1.Height, texture);
             }
         }
 
