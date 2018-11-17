@@ -57,6 +57,8 @@
             this.label_translation = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.button_cube = new System.Windows.Forms.Button();
+            this.button1 = new System.Windows.Forms.Button();
+            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -355,11 +357,27 @@
             this.button_cube.UseVisualStyleBackColor = true;
             this.button_cube.Click += new System.EventHandler(this.button1_Click);
             // 
+            // button1
+            // 
+            this.button1.Font = new System.Drawing.Font("Microsoft Sans Serif", 13F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.button1.Location = new System.Drawing.Point(120, 586);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(131, 43);
+            this.button1.TabIndex = 84;
+            this.button1.Text = "Open file";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click_1);
+            // 
+            // openFileDialog1
+            // 
+            this.openFileDialog1.FileName = "openFileDialog1";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1253, 737);
+            this.Controls.Add(this.button1);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.button_refl_z);
             this.Controls.Add(this.button_refl_y);
@@ -428,6 +446,8 @@
         private System.Windows.Forms.Label label_translation;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button button_cube;
+        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.OpenFileDialog openFileDialog1;
     }
 }
 

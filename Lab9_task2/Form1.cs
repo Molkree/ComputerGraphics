@@ -1,12 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Lab9_task2
@@ -18,6 +12,7 @@ namespace Lab9_task2
         Projection pr = 0;
         Axis line_mode = 0;
         Polyhedron figure = null;
+        Bitmap bmp, texture;
 
         public Form1()
         {
@@ -136,8 +131,11 @@ namespace Lab9_task2
                         figure.translate(Ax, Ay, Az);
                     }
                 }
+
                 g.Clear(Color.White);
-                figure.show(g, pr, new_fig);
+                bmp = new Bitmap(pictureBox1.ClientSize.Width, pictureBox1.ClientSize.Height);
+                pictureBox1.Image = bmp;
+                figure.ApplyTexture(bmp, pictureBox1.Width, pictureBox1.Height);
             }
         }
 
@@ -178,8 +176,6 @@ namespace Lab9_task2
 
                 }
             }
-            g.Clear(Color.White);
-            figure.show(g, pr, new_fig);
         }
 
         // Create hexahedron
@@ -188,7 +184,10 @@ namespace Lab9_task2
             g.Clear(Color.White);
             figure = new Polyhedron();
             figure.make_hexahedron();
-            figure.show(g, pr);
+
+            bmp = new Bitmap(pictureBox1.ClientSize.Width, pictureBox1.ClientSize.Height);
+            pictureBox1.Image = bmp;
+            figure.ApplyTexture(bmp, pictureBox1.Width, pictureBox1.Height);
         }
 
         // Create tetrahedron
@@ -197,7 +196,10 @@ namespace Lab9_task2
             g.Clear(Color.White);
             figure = new Polyhedron();
             figure.make_tetrahedron();
-            figure.show(g, pr);
+
+            bmp = new Bitmap(pictureBox1.ClientSize.Width, pictureBox1.ClientSize.Height);
+            pictureBox1.Image = bmp;
+            figure.ApplyTexture(bmp, pictureBox1.Width, pictureBox1.Height);
         }
 
         // Create octahedron
@@ -206,31 +208,72 @@ namespace Lab9_task2
             g.Clear(Color.White);
             figure = new Polyhedron();
             figure.make_octahedron();
-            figure.show(g, pr);
+
+            bmp = new Bitmap(pictureBox1.ClientSize.Width, pictureBox1.ClientSize.Height);
+            pictureBox1.Image = bmp;
+            figure.ApplyTexture(bmp, pictureBox1.Width, pictureBox1.Height);
         }
 
         // отражение по х
         private void button6_Click(object sender, EventArgs e)
         {
-            figure.reflectX();
-            g.Clear(Color.White);
-            figure.show(g, pr);
+            if (figure != null)
+            {
+                figure.reflectX();
+                g.Clear(Color.White);
+
+                bmp = new Bitmap(pictureBox1.ClientSize.Width, pictureBox1.ClientSize.Height);
+                pictureBox1.Image = bmp;
+                figure.ApplyTexture(bmp, pictureBox1.Width, pictureBox1.Height);
+            }
         }
 
         // отражение по y
         private void button7_Click(object sender, EventArgs e)
         {
-            figure.reflectY();
-            g.Clear(Color.White);
-            figure.show(g, pr);
+            if (figure != null)
+            {
+                figure.reflectY();
+                g.Clear(Color.White);
+
+                bmp = new Bitmap(pictureBox1.ClientSize.Width, pictureBox1.ClientSize.Height);
+                pictureBox1.Image = bmp;
+                figure.ApplyTexture(bmp, pictureBox1.Width, pictureBox1.Height);
+            }
         }
 
         // отражение по z
         private void button8_Click(object sender, EventArgs e)
         {
-            figure.reflectZ();
-            g.Clear(Color.White);
-            figure.show(g, pr);
+            if (figure != null)
+            {
+                figure.reflectZ();
+                g.Clear(Color.White);
+
+                bmp = new Bitmap(pictureBox1.ClientSize.Width, pictureBox1.ClientSize.Height);
+                pictureBox1.Image = bmp;
+                figure.ApplyTexture(bmp, pictureBox1.Width, pictureBox1.Height);
+            }
+        }
+
+        // load texture
+        private void button1_Click_1(object sender, EventArgs e)
+        {
+            if (openFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                texture = Image.FromFile(openFileDialog1.FileName) as Bitmap;
+                //Rectangle rectFlood = new Rectangle(0, 0, floodImage.Width, floodImage.Height);
+                //bmp_dataFlood =
+                //    floodImage.LockBits(rectFlood, ImageLockMode.ReadWrite,
+                //    floodImage.PixelFormat);
+                //ptrFlood = bmp_dataFlood.Scan0;
+                //bytesFlood = Math.Abs(bmp_dataFlood.Stride) * floodImage.Height;
+                //rgb_valuesFlood = new byte[bytesFlood];
+                //System.Runtime.InteropServices.Marshal.Copy(ptrFlood, rgb_valuesFlood, 0, bytesFlood);
+
+                //half_width_flood = floodImage.Width / 2;
+                //half_height_flood = floodImage.Height / 2;
+            }
         }
     }
 }

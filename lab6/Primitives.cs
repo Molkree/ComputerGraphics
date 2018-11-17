@@ -41,10 +41,12 @@ namespace lab6
         {
             X = -X;
         }
+
         public void reflectY()
         {
             Y = -Y;
         }
+
         public void reflectZ()
         {
             Z = -Z;
@@ -255,7 +257,6 @@ namespace lab6
         }
     }
 
-
     public class Edge
     {
         public Point3d P1 { get; set; }
@@ -309,7 +310,6 @@ namespace lab6
             };
             return res;
         }
-
 
         private void show_perspective(Graphics g, Pen pen)
         {
@@ -601,7 +601,7 @@ namespace lab6
         public bool is_graph = false;
         public Function graph_function = null;
 
-        //    public SortedDictionary<float, PointF> graph_function = null;
+        //public SortedDictionary<float, PointF> graph_function = null;
         private Dictionary<Point3d, List<int>> map = null;
         private Dictionary<Point3d, List<float>> point_to_normal = null;
         private Dictionary<Point3d, float> point_to_intensive = null;
@@ -685,10 +685,6 @@ namespace lab6
             Center.X /= Faces.Count;
             Center.Y /= Faces.Count;
             Center.Z /= Faces.Count;
-            //foreach (Face f in Faces)
-            //{
-            //    f.find_normal(Center);
-            //}
         }
 
         private void create_map(Edge camera, Point3d light)
@@ -778,7 +774,7 @@ namespace lab6
             PointF p1 = P1.make_perspective();
             PointF p2 = P2.make_perspective();
 
-            //y0 <= y1 <= y2
+            // y0 <= y1 <= y2
             int y0 = (int)p0.Y; int x0 = (int)p0.X; int z0 = (int)P0.Z;
             int y1 = (int)p1.Y; int x1 = (int)p1.X; int z1 = (int)P1.Z;
             int y2 = (int)p2.Y; int x2 = (int)p2.X; int z2 = (int)P2.Z;
@@ -790,11 +786,12 @@ namespace lab6
             var h01 = Interpolate(y0, z0, y1, z1);
             var h12 = Interpolate(y1, z1, y2, z2);
             var h02 = Interpolate(y0, z0, y2, z2);
+
             // Конкатенация коротких сторон
             int[] x012 = x01.Take(x01.Length - 1).Concat(x12).ToArray();
             int[] h012 = h01.Take(h01.Length - 1).Concat(h12).ToArray();
 
-            //Определяем, какая из сторон левая и правая
+            // Определяем, какая из сторон левая и правая
             int m = x012.Length / 2;
             int[] x_left, x_right, h_left, h_right;
             if (x02[m] < x012[m])
@@ -816,13 +813,15 @@ namespace lab6
             }
             
             Face f = new Face(new List<Point3d>() { P0, P1, P2});
-            //Отрисовка горизонтальных отрезков
+
+            // Отрисовка горизонтальных отрезков
             for (int y = y0; y <= y2; ++y)
             {
                 int x_l = x_left[y - y0];
                 int x_r = x_right[y - y0];
                 int[] h_segment;
-                //interpolation
+
+                // interpolation
                 if (x_l > x_r)
                 {
                     continue;
@@ -833,7 +832,7 @@ namespace lab6
                 for (int x = x_l; x <= x_r; ++x)
                 {
                     int z = h_segment[x - x_l];
-                    //i, j, z - координаты в пространстве, в пикчербоксе x, y
+                    // i, j, z - координаты в пространстве, в пикчербоксе x, y
                     //int xx = (x + width / 2) % width;
                     //int yy = (-y + height / 2) % height;
                     int xx = x + width / 2;
@@ -847,13 +846,12 @@ namespace lab6
                     }
                 }
             }
-
         }
 
 
         private void magic(Edge camera, Point3d P0, Point3d P1, Point3d P2, int[] buff, int width, int height, int[] colors, int color)
         {
-            //сортируем p0, p1, p2: y0 <= y1 <= y2
+            // сортируем p0, p1, p2: y0 <= y1 <= y2
             PointF p0 = P0.make_perspective();
             PointF p1 = P1.make_perspective();
             PointF p2 = P2.make_perspective();
@@ -905,12 +903,12 @@ namespace lab6
 
                 //color = r.Next(200);
                 color = (color+ 30) % 255;
-                //треугольник
+                // треугольник
                 Point3d P0 = new Point3d(f.Points[0]);
                 Point3d P1 = new Point3d(f.Points[1]);
                 Point3d P2 = new Point3d(f.Points[2]);
                 magic(camera, P0, P1, P2, buf, width, height, colors, color);
-                //4
+                // 4
                 if (f.Points.Count > 3)
                 {
                     P0 = new Point3d(f.Points[2]);
@@ -918,7 +916,7 @@ namespace lab6
                     P2 = new Point3d(f.Points[0]);
                     magic(camera, P0, P1, P2, buf, width, height, colors, color);
                 }
-                //5  убейте додекаэдр,пожалуйста
+                // 5  убейте додекаэдр,пожалуйста
                 if (f.Points.Count > 4)
                 {
                     P0 = new Point3d(f.Points[3]);
@@ -979,7 +977,7 @@ namespace lab6
             int[] h012 = h01.Take(h01.Length - 1).Concat(h12).ToArray();
             int[] c012 = c01.Take(c01.Length - 1).Concat(c12).ToArray();
 
-            //Определяем, какая из сторон левая и правая
+            // Определяем, какая из сторон левая и правая
             int m = x012.Length / 2;
             int[] x_left, x_right, h_left, h_right, c_left, c_right;
             if (x02[m] < x012[m])
@@ -1005,14 +1003,14 @@ namespace lab6
                 c_right = c02;
             }
            
-            //Отрисовка горизонтальных отрезков
+            // Отрисовка горизонтальных отрезков
             for (int y = y0; y <= y2; ++y)
             {
                 int x_l = x_left[y - y0];
                 int x_r = x_right[y - y0];
                 int[] h_segment;
                 int[] c_segment;
-                //interpolation
+                // interpolation
                 if (x_l > x_r)
                     continue;
                 h_segment = Interpolate(x_l, h_left[y - y0], x_r, h_right[y - y0]);
@@ -1021,7 +1019,7 @@ namespace lab6
                 {
                     int z = h_segment[x - x_l];
                     float color = c_segment[x - x_l] / 100f;
-                    //i, j, z - координаты в пространстве, в пикчербоксе x, y
+                    // i, j, z - координаты в пространстве, в пикчербоксе x, y
                     //int xx = (x + width / 2) % width;
                     //int yy = (-y + height / 2) % height;
                     int xx = x + width / 2;
@@ -1035,13 +1033,11 @@ namespace lab6
                     }
                 }
             }
-
         }
-
 
         private void G_magic(Edge camera, Point3d P0, Point3d P1, Point3d P2, int[] buff, int width, int height, float[] colors, float c_P0, float c_P1, float c_P2)
         {
-            //сортируем p0, p1, p2: y0 <= y1 <= y2
+            // сортируем p0, p1, p2: y0 <= y1 <= y2
             PointF p0 = P0.make_perspective();
             PointF p1 = P1.make_perspective();
             PointF p2 = P2.make_perspective();
@@ -1086,7 +1082,6 @@ namespace lab6
             G_DrawFilledTriangle(camera, P0, P1, P2, buff, width, height, colors, c_P0, c_P1, c_P2);
         }
 
-
         public void calc_gouraud(Edge camera, int width, int height, out float[] intensive, Point3d light)
         {
             int[] buf = new int[width * height];
@@ -1099,13 +1094,13 @@ namespace lab6
             create_map(camera, light);
             foreach (var f in Faces)
             {
-                //треугольник
+                // треугольник
                 Point3d P0 = new Point3d(f.Points[0]);
                 Point3d P1 = new Point3d(f.Points[1]);
                 Point3d P2 = new Point3d(f.Points[2]);
                 float i_p0 = point_to_intensive[P0], i_p1 = point_to_intensive[P1], i_p2 = point_to_intensive[P2];
                 G_magic(camera, P0, P1, P2, buf, width, height, intensive, i_p0, i_p1, i_p2);
-                //4
+                // 4
                 if (f.Points.Count > 3)
                 {
                     P0 = new Point3d(f.Points[2]);
@@ -1114,7 +1109,7 @@ namespace lab6
                     i_p0 = point_to_intensive[P0]; i_p1 = point_to_intensive[P1]; i_p2 = point_to_intensive[P2];
                     G_magic(camera, P0, P1, P2, buf, width, height, intensive, i_p0, i_p1, i_p2);
                 }
-                //5
+                // 5
                 if (f.Points.Count > 4)
                 {
                     P0 = new Point3d(f.Points[3]);
@@ -1131,7 +1126,6 @@ namespace lab6
 
             int max = 0;
         }
-
 
         public void show_camera(Graphics g, Camera camera, Pen pen = null)
         {
@@ -1277,11 +1271,6 @@ namespace lab6
 
 
         }
-
-
-
-
-
 
         /* ------ Affine transformation ------ */
 

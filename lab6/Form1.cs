@@ -122,7 +122,6 @@ namespace lab6
                     //float cam_x = camera.P1.X, cam_y = camera.P1.Y, cam_z = camera.P1.Z;
                     //camera.translate(-cam_x, -cam_y, -cam_z);
                     
-
                     // делаем, что нужно
                     if (scaling_x.Text != "1" || scaling_y.Text != "1" || scaling_z.Text != "1")
                     {
@@ -144,7 +143,7 @@ namespace lab6
                         figure_camera.translate(dx, dy, dz);
 
                         // camera
-                    //    camera.translate(dx, dy, dz);
+                        //camera.translate(dx, dy, dz);
                     }
                     // переносим обратно
                     figure.translate(old_x, old_y, old_z);
@@ -152,7 +151,6 @@ namespace lab6
 
                     // camera
                     //camera.translate(cam_x, cam_y, cam_z);
-                    
                 }
 
                 // поворачиваем относительно нужной прямой
@@ -243,7 +241,6 @@ namespace lab6
             int[] colors = new int[pictureBox3.Width * pictureBox3.Height];
 
             figure_camera.calc_z_buff(camera.view, pictureBox3.Width, pictureBox3.Height, out buff, out colors);
-            //figure_camera.calc_z_buff(camera.view, pictureBox3.Width, pictureBox3.Height, out colors, out buff);
             Bitmap bmp = pictureBox3.Image as Bitmap;
             g_fake_camera.Clear(Color.White);
             
@@ -252,7 +249,6 @@ namespace lab6
                 {
                     Color c = Color.FromArgb(buff[i * pictureBox3.Height + j], buff[i * pictureBox3.Height + j], buff[i * pictureBox3.Height + j]);
                     bmp.SetPixel(i, j, c);
-                    //g_fake_camera.DrawRectangle(new Pen(c), i - pictureBox3.Width / 2, pictureBox3.Height / 2 - j, 1, 1);
                 }
 
             pictureBox3.Refresh();
@@ -262,7 +258,7 @@ namespace lab6
         {
             float[] intensive = new float[pictureBox3.Width * pictureBox3.Height];
             
-            figure_camera.calc_gouraud(camera.view, pictureBox3.Width, pictureBox3.Height, out intensive, new Point3d(Int32.Parse(light_x.Text), Int32.Parse(light_y.Text), Int32.Parse(light_z.Text)));
+            figure_camera.calc_gouraud(camera.view, pictureBox3.Width, pictureBox3.Height, out intensive, new Point3d(int.Parse(light_x.Text), int.Parse(light_y.Text), int.Parse(light_z.Text)));
             Bitmap bmp = pictureBox3.Image as Bitmap;
             g_fake_camera.Clear(Color.White);
 
@@ -277,10 +273,9 @@ namespace lab6
                         float intsv = intensive[i * pictureBox3.Height + j];
                         if (intsv > 1)
                             intsv = 1;
-                        c = Color.FromArgb((int)(fill_color.R*intsv)%256, (int)(fill_color.G * intsv)%256, (int)(fill_color.B * intsv)%256);
+                        c = Color.FromArgb((int)(fill_color.R * intsv) % 256, (int)(fill_color.G * intsv) % 256, (int)(fill_color.B * intsv) % 256);
                     }
                     bmp.SetPixel(i, j, c);
-                    //g_fake_camera.DrawRectangle(new Pen(c), i - pictureBox3.Width / 2, pictureBox3.Height / 2 - j, 1, 1);
                 }
 
             pictureBox3.Refresh();
@@ -297,18 +292,18 @@ namespace lab6
                 check_all_textboxes();
                 // масштабируем и переносим относительно начала координат (сдвигом центра в начало)
                 //
-                /* if (trans_x_camera.Text != "0" || trans_y_camera.Text != "0" || trans_z_camera.Text != "0")
-                 {
-                     // сначала переносим в начало
-                     float old_x = figure_camera.Center.X, old_y = figure_camera.Center.Y, old_z = figure_camera.Center.Z;
-                     figure_camera.translate(-old_x, -old_y, -old_z);
+                //if (trans_x_camera.Text != "0" || trans_y_camera.Text != "0" || trans_z_camera.Text != "0")
+                //{
+                //    сначала переносим в начало
+                //     float old_x = figure_camera.Center.X, old_y = figure_camera.Center.Y, old_z = figure_camera.Center.Z;
+                //    figure_camera.translate(-old_x, -old_y, -old_z);
 
-                     // try to move camera
-                     float cam_x = camera.view.P1.X, cam_y = camera.view.P1.Y, cam_z = camera.view.P1.Z;
-                     camera.translate(-cam_x, -cam_y, -cam_z);
-                     */
-                        // делаем, что нужно
-                        if (trans_x_camera.Text != "0" || trans_y_camera.Text != "0" || trans_z_camera.Text != "0")
+                //    try to move camera
+                //     float cam_x = camera.view.P1.X, cam_y = camera.view.P1.Y, cam_z = camera.view.P1.Z;
+                //    camera.translate(-cam_x, -cam_y, -cam_z);
+
+                // делаем, что нужно
+                if (trans_x_camera.Text != "0" || trans_y_camera.Text != "0" || trans_z_camera.Text != "0")
                 {
                     int dx = int.Parse(trans_x_camera.Text, CultureInfo.CurrentCulture),
                         dy = int.Parse(trans_y_camera.Text, CultureInfo.CurrentCulture),
@@ -318,8 +313,7 @@ namespace lab6
                     // try to move camera
                     camera.translate(dx, dy, dz);
                 }
-                               
-                   
+
                 // поворачиваем относительно нужной прямой
                 if (rot_angle_camera.Text != "0")
                 {
@@ -337,7 +331,6 @@ namespace lab6
                     figure_camera.translate(old_x_camera, old_y_camera, old_z_camera);
                     camera.translate(old_x_camera, old_y_camera, old_z_camera);
                 }
-
             }
 
             // draw camera, draw figure
@@ -357,7 +350,6 @@ namespace lab6
                 show_gouraud();
         }
         
-
         private void comboBox2_SelectedIndexChanged(object sender, EventArgs e)
         {
             line_mode = (Axis)comboBox2.SelectedIndex;
@@ -563,7 +555,6 @@ namespace lab6
             label10.Text = figure.Center.X.ToString() + ", " + figure.Center.Y.ToString() + ", " + figure.Center.Z.ToString();
         }
 
-
         // save_file_dialog
         private void button2_Click_1(object sender, EventArgs e)
         {
@@ -618,7 +609,7 @@ namespace lab6
             Polyhedron light = new Polyhedron();
             light.make_hexahedron(5);
             check_all_textboxes();
-            light.translate(Int32.Parse(light_x.Text), Int32.Parse(light_y.Text), Int32.Parse(light_z.Text));
+            light.translate(int.Parse(light_x.Text), int.Parse(light_y.Text), int.Parse(light_z.Text));
             g.Clear(Color.White);
             figure.show(g, pr);
             camera.show(g, pr);
@@ -722,9 +713,6 @@ namespace lab6
         //}
 
         // graphic
-    
-        
-        // graphic
         private void button4_Click_1(object sender, EventArgs e)
         {
             Form2 form2 = new Form2();
@@ -741,7 +729,6 @@ namespace lab6
 
             ReverseFloatComparer fcmp = new ReverseFloatComparer();
 
-
             float dx = (Math.Abs(x0) + Math.Abs(x1)) / cnt_of_breaks;
             float dy = (Math.Abs(y0) + Math.Abs(y1)) / cnt_of_breaks;
 
@@ -749,17 +736,14 @@ namespace lab6
             List<Point3d> pts0 = new List<Point3d>();
             List<Point3d> pts1 = new List<Point3d>();
 
-
-
-       //    SortedDictionary<float, PointF> graph_function = new SortedDictionary<float, PointF>(fcmp); // z, (x, y)
-
+            //SortedDictionary<float, PointF> graph_function = new SortedDictionary<float, PointF>(fcmp); // z, (x, y)
 
             for (float x = x0; x < x1; x += dx)
             {
                 for (float y = y0; y < y1; y += dy)
                 {
                     float z = f(x, y);
-                 //   graph_function.Add(z, new PointF(x, y));
+                    //graph_function.Add(z, new PointF(x, y));
                     pts1.Add(new Point3d(x, y, z));
                 }
                 // make faces
@@ -781,13 +765,10 @@ namespace lab6
             figure.is_graph = true;
             figure.graph_function = f;
 
-       //     figure.graph_function = graph_function;
+            //figure.graph_function = graph_function;
             figure.show(g, pr, new_fig);
-            //          figure.show_camera(g_camera, camera.view, new_fig);
+            //figure.show_camera(g_camera, camera.view, new_fig);
             create_camera();
         }
-        
-
     }
-
 }

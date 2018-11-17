@@ -264,7 +264,6 @@ namespace Lab9_task2
         }
     }
 
-
     public class Edge
     {
         public Point3d P1 { get; set; }
@@ -658,7 +657,6 @@ namespace Lab9_task2
                     break;
                 default: break;
             }
-
         }
 
         public string to_string()
@@ -671,6 +669,118 @@ namespace Lab9_task2
             }
 
             return res;
+        }
+
+        /// <summary>
+        /// Linear interpolation from i0 to i1
+        /// </summary>
+        /// <param name="i0">First independent variable</param>
+        /// <param name="d0">First dependent variable</param>
+        /// <param name="i1">Last independent variable</param>
+        /// <param name="d1">Last dependent variable</param>
+        private double[] Interpolate(int i0, double d0, int i1, double d1)
+        {
+            if (i0 == i1)
+                return new double[] { d0 };
+            double[] values = new double[i1 - i0 + 1];
+            double a = (d1 - d0) / (i1 - i0);
+            double d = d0;
+
+            int ind = 0;
+            for (int i = i0; i <= i1; ++i)
+            {
+                values[ind++] = d;
+                d += a;
+            }
+
+            return values;
+        }
+
+        /// <summary>
+        /// Sort triangle vertices by Y from min to max
+        /// </summary>
+        private PointF[] SortTriangleVertices(Point3d P0, Point3d P1, Point3d P2)
+        {
+            PointF[] points = new PointF[3] { P0.make_perspective(), P1.make_perspective(), P2.make_perspective() };
+
+            if (points[1].Y < points[0].Y)
+            {
+                points[0] = P1.make_perspective();
+                points[1] = P0.make_perspective();
+            }
+            if (points[2].Y < points[0].Y)
+            {
+                points[2] = points[0];
+                points[0] = P2.make_perspective();
+            }
+            if (points[2].Y < points[1].Y)
+            {
+                PointF temp = points[1];
+                points[1] = points[2];
+                points[2] = temp;
+            }
+
+            return points;
+        }
+
+        private void DrawFilledTriangle(Point3d P0, Point3d P1, Point3d P2, Bitmap bmp, int width, int height)
+        {
+            // Sort the points so that y0 <= y1 <= y2
+            var points = SortTriangleVertices(P0, P1, P2);
+            PointF SortedP0 = points[0], SortedP1 = points[1], SortedP2 = points[2];
+
+            // Compute the x coordinates of the triangle edges
+            var x01 = Interpolate((int)SortedP0.Y, SortedP0.X, (int)SortedP1.Y, SortedP1.X);
+            var x12 = Interpolate((int)SortedP1.Y, SortedP1.X, (int)SortedP2.Y, SortedP2.X);
+            var x02 = Interpolate((int)SortedP0.Y, SortedP0.X, (int)SortedP2.Y, SortedP2.X);
+
+            // Concatenate the short sides
+            x01 = x01.Take(x01.Length - 1).ToArray(); // remove last element, it's the first in x12
+            var x012 = x01.Concat(x12).ToArray();
+
+            // Determine which is left and which is right
+            int m = x012.Length / 2;
+            double[] x_left, x_right;
+            if (x02[m] < x012[m])
+            {
+                x_left = x02;
+                x_right = x012;
+            }
+            else
+            {
+                x_left = x012;
+                x_right = x02;
+            }
+
+            // Draw the horizontal segments
+            for (int y = (int)SortedP0.Y; y < (int)SortedP2.Y; ++y)
+            {
+                for (int x = (int)x_left[y - (int)SortedP0.Y]; x < (int)x_right[y - (int)SortedP0.Y]; ++x)
+                {
+                    bmp.SetPixel(x + width / 2, -y + height / 2, Color.Blue);
+                }
+            }
+        }
+
+        public void ApplyTexture(Bitmap bmp, int width, int height)
+        {
+            foreach (var f in Faces)
+            {
+                // 3 vertices
+                Point3d P0 = new Point3d(f.Points[0]);
+                Point3d P1 = new Point3d(f.Points[1]);
+                Point3d P2 = new Point3d(f.Points[2]);
+                DrawFilledTriangle(P0, P1, P2, bmp, width, height);
+
+                // 4 vertices
+                if (f.Points.Count == 4)
+                {
+                    P0 = new Point3d(f.Points[2]);
+                    P1 = new Point3d(f.Points[3]);
+                    P2 = new Point3d(f.Points[0]);
+                    DrawFilledTriangle(P0, P1, P2, bmp, width, height);
+                }
+            }
         }
 
         private void find_center()
@@ -981,6 +1091,7 @@ namespace Lab9_task2
             else return p1.X.CompareTo(p2.X);
         }
     }
+
     public sealed class ReverseFloatComparer : IComparer<float>
     {
         public int Compare(float x, float y)
