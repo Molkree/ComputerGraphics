@@ -1349,7 +1349,7 @@ namespace lab6
 
         }
 
-        public void floating_horizon(Graphics g, Camera camera, Pen pen = null)
+  /*      public void floating_horizon(Graphics g, Camera camera, Pen pen = null)
         { 
             if (pen == null)
                 pen = Pens.Black;
@@ -1438,7 +1438,7 @@ namespace lab6
                 for (int i = 0; i < w - 1; i++)
                 {
                     if (horMax[i] >= 0 && horMax[i] < h && horMax[i + 1] >= 0 && horMax[i + 1] < h)
-                        g.DrawLine(pen, new Point(i, horMax[i]), new Point(i + 1, horMax[i + 1]));
+                        g.DrawLine(pen, new Point(i - w/2, horMax[i] - h/2), new Point(i + 1 - w/2, horMax[i + 1] - h/2));
                 }
 
 
@@ -1447,9 +1447,9 @@ namespace lab6
 
 
 
-        }
+        }*/
         
-  /*      public void floating_horizon(Camera camera, ref Bitmap bmp, Pen pen = null)
+        public void floating_horizon(Camera camera, ref Bitmap bmp, Pen pen = null)
         {
             if (pen == null)
                 pen = Pens.Black;
@@ -1531,7 +1531,7 @@ namespace lab6
 
             }
 
-        }*/
+        }
 
         private void DrawPlotLine(Point first, Point second, ref int[] horMax, ref int[] horMin, ref Bitmap bmp, Pen p, Camera camera)
         {

@@ -244,15 +244,15 @@ namespace lab6
 
         private void show_horizon()
         {
-            figure.floating_horizon(g_camera, camera);
+            //figure.floating_horizon(g_camera, camera);
 
-            //Bitmap bmp = pictureBox3.Image as Bitmap;
-            //g_fake_camera.Clear(Color.White);
-            //figure.reflectY();
-            //figure.floating_horizon(camera, ref bmp);
-            //figure.reflectY();
-            //pictureBox3.Visible = true;
-            //pictureBox3.Refresh();
+            Bitmap bmp = pictureBox3.Image as Bitmap;
+            g_fake_camera.Clear(Color.White);
+            figure.reflectY();
+            figure.floating_horizon(camera, ref bmp);
+            figure.reflectY();
+            pictureBox3.Visible = true;
+            pictureBox3.Refresh();
         }
 
         private void show_horizon1()
