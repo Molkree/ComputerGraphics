@@ -1349,7 +1349,8 @@ namespace lab6
 
         }
 
-  /*      public void floating_horizon(Graphics g, Camera camera, Pen pen = null)
+        // вариант 1
+        public void floating_horizon(Graphics g, Camera camera, Pen pen = null)
         { 
             if (pen == null)
                 pen = Pens.Black;
@@ -1447,9 +1448,10 @@ namespace lab6
 
 
 
-        }*/
+        }
         
-        public void floating_horizon(Camera camera, ref Bitmap bmp, Pen pen = null)
+            // вариант 2
+ /*       public void floating_horizon(Camera camera, ref Bitmap bmp, Pen pen = null)
         {
             if (pen == null)
                 pen = Pens.Black;
@@ -1531,7 +1533,7 @@ namespace lab6
 
             }
 
-        }
+        }*/
 
         private void DrawPlotLine(Point first, Point second, ref int[] horMax, ref int[] horMin, ref Bitmap bmp, Pen p, Camera camera)
         {
