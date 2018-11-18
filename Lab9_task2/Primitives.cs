@@ -14,7 +14,7 @@ namespace Lab9_task2
         public float X { get; set; }
         public float Y { get; set; }
         public float Z { get; set; }
-        public PointF TextureCoordinates = new PointF();
+        public PointF TextureCoordinates { get; set; } = new PointF();
 
         public Point3d(float x, float y, float z)
         {
@@ -497,7 +497,7 @@ namespace Lab9_task2
         /* ------ Projections ------ */
 
         // get points for central (perspective) projection
-        public List<PointF> make_perspective(float k = 1000, float z_camera = 1000)
+        public List<PointF> make_perspective(float k = 1000)
         {
             List<PointF> res = new List<PointF>();
 
@@ -553,7 +553,7 @@ namespace Lab9_task2
                     break;
                 default:
                     if (camera != null)
-                        pts = make_perspective(k, camera.P1.Z);
+                        pts = make_perspective(k);
                     else pts = make_perspective(k);
                     break;
             }
@@ -589,25 +589,6 @@ namespace Lab9_task2
                 p.scale(kx, ky, kz);
             find_center();
         }
-
-        /* ------ Texturing ------ */
-        PointF TextureCoordinates()
-        {
-            Point3d a = Points[0];
-            Point3d e_1 = new Point3d(Points[1].X - Points[0].X, Points[1].Y - Points[0].Y, Points[1].Z - Points[0].Z);
-            Point3d e_2 = new Point3d(Points[3].X - Points[0].X, Points[3].Y - Points[0].Y, Points[3].Z - Points[0].Z);
-
-            List<float> normal = Point3d.mul_matrix(new List<float> { e_1.X, e_1.Y, e_1.Z }, 1, 3, new List<float> { e_2.X, e_2.Y, e_2.Z }, 3, 1);
-            Point3d n = new Point3d(normal[0], normal[1], normal[2]);
-
-            normal = Point3d.mul_matrix(new List<float> { e_2.X, e_2.Y, e_2.Z }, 1, 3, new List<float> { a.X, a.Y, a.Z }, 3, 1);
-            Point3d m = new Point3d(normal[0], normal[1], normal[2]);
-
-            normal = Point3d.mul_matrix(new List<float> { a.X, a.Y, a.Z }, 1, 3, new List<float> { e_1.X, e_1.Y, e_1.Z }, 3, 1);
-            Point3d l = new Point3d(normal[0], normal[1], normal[2]);
-
-            return new PointF();
-        }
     }
 
     // многогранник
@@ -618,9 +599,6 @@ namespace Lab9_task2
         public List<Face> Faces { get; set; } = null;
         public Point3d Center { get; set; } = new Point3d(0, 0, 0);
         public float Cube_size { get; set; }
-
-        // костыли
-        public bool is_graph = false;
 
         public Polyhedron(List<Face> fs = null)
         {
@@ -636,7 +614,6 @@ namespace Lab9_task2
             Faces = polyhedron.Faces.Select(face => new Face(face)).ToList();
             Center = new Point3d(polyhedron.Center);
             Cube_size = polyhedron.Cube_size;
-            is_graph = polyhedron.is_graph;
         }
 
         public Polyhedron(string s, int mode = MODE_POL)
@@ -678,7 +655,7 @@ namespace Lab9_task2
         /// <param name="d0">First dependent variable</param>
         /// <param name="i1">Last independent variable</param>
         /// <param name="d1">Last dependent variable</param>
-        private double[] Interpolate(int i0, double d0, int i1, double d1)
+        private static double[] Interpolate(int i0, double d0, int i1, double d1)
         {
             if (i0 == i1)
                 return new double[] { d0 };
@@ -699,12 +676,23 @@ namespace Lab9_task2
         /// <summary>
         /// Sort triangle vertices by Y from min to max
         /// </summary>
-        private Point3d[] SortTriangleVertices(Point3d P0, Point3d P1, Point3d P2)
+        private static Point3d[] SortTriangleVertices(Point3d P0, Point3d P1, Point3d P2)
         {
-            Point3d p0 = new Point3d(P0), p1 = new Point3d(P1), p2 = new Point3d(P2);
-            p0.X = P0.make_perspective().X; p0.Y = P0.make_perspective().Y;
-            p1.X = P1.make_perspective().X; p1.Y = P1.make_perspective().Y;
-            p2.X = P2.make_perspective().X; p2.Y = P2.make_perspective().Y;
+            Point3d p0 = new Point3d(P0)
+            {
+                X = P0.make_perspective().X,
+                Y = P0.make_perspective().Y
+            },
+            p1 = new Point3d(P1)
+            {
+                X = P1.make_perspective().X,
+                Y = P1.make_perspective().Y
+            },
+            p2 = new Point3d(P2)
+            {
+                X = P2.make_perspective().X,
+                Y = P2.make_perspective().Y
+            };
             Point3d[] points = new Point3d[3] { p0, p1, p2 };
 
             if (points[1].Y < points[0].Y)
@@ -727,7 +715,7 @@ namespace Lab9_task2
             return points;
         }
 
-        private void DrawTexture(Point3d P0, Point3d P1, Point3d P2, Bitmap bmp, Bitmap texture)
+        private static void DrawTexture(Point3d P0, Point3d P1, Point3d P2, Bitmap bmp, Bitmap texture)
         {
             // Sort the points so that y0 <= y1 <= y2
             var points = SortTriangleVertices(P0, P1, P2);

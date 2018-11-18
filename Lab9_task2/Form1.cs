@@ -9,7 +9,6 @@ namespace Lab9_task2
     {
         Pen new_fig = Pens.Black;
         Graphics g;
-        Projection pr = 0;
         Axis line_mode = 0;
         Polyhedron figure = null;
         Bitmap bmp, texture;
@@ -22,6 +21,7 @@ namespace Lab9_task2
             g.ScaleTransform(1, -1);
             comboBox2.SelectedIndex = 0;
             texture = Image.FromFile("../../crate-texture.jpg") as Bitmap;
+            SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
         }
 
         // контроль вводимых символов
@@ -133,6 +133,7 @@ namespace Lab9_task2
                     }
                 }
 
+                bmp.Dispose();
                 bmp = new Bitmap(pictureBox1.ClientSize.Width, pictureBox1.ClientSize.Height);
                 figure.ApplyTexture(bmp, texture);
                 g.Clear(Color.White);
@@ -222,6 +223,7 @@ namespace Lab9_task2
             {
                 figure.reflectX();
 
+                bmp.Dispose();
                 bmp = new Bitmap(pictureBox1.ClientSize.Width, pictureBox1.ClientSize.Height);
                 figure.ApplyTexture(bmp, texture);
                 g.Clear(Color.White);
@@ -236,6 +238,7 @@ namespace Lab9_task2
             {
                 figure.reflectY();
 
+                bmp.Dispose();
                 bmp = new Bitmap(pictureBox1.ClientSize.Width, pictureBox1.ClientSize.Height);
                 figure.ApplyTexture(bmp, texture);
                 g.Clear(Color.White);
@@ -250,6 +253,7 @@ namespace Lab9_task2
             {
                 figure.reflectZ();
 
+                bmp.Dispose();
                 bmp = new Bitmap(pictureBox1.ClientSize.Width, pictureBox1.ClientSize.Height);
                 figure.ApplyTexture(bmp, texture);
                 g.Clear(Color.White);
@@ -262,7 +266,9 @@ namespace Lab9_task2
         {
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
+                texture.Dispose();
                 texture = Image.FromFile(openFileDialog1.FileName) as Bitmap;
+                bmp.Dispose();
                 bmp = new Bitmap(pictureBox1.ClientSize.Width, pictureBox1.ClientSize.Height);
                 figure.ApplyTexture(bmp, texture);
                 pictureBox1.Image = bmp;
