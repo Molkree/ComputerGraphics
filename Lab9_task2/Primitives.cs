@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.Globalization;
 using System.Linq;
 
@@ -715,13 +716,13 @@ namespace Lab9_task2
             return points;
         }
 
-        private static void DrawTexture(Point3d P0, Point3d P1, Point3d P2, Bitmap bmp, Bitmap texture)
+        private static void DrawTexture(Point3d P0, Point3d P1, Point3d P2, Bitmap bmp, BitmapData bmpData, byte[] rgbValues, Bitmap texture, BitmapData bmpDataTexture, byte[] rgbValuesTexture)
         {
             // Sort the points so that y0 <= y1 <= y2
             var points = SortTriangleVertices(P0, P1, P2);
             Point3d SortedP0 = points[0], SortedP1 = points[1], SortedP2 = points[2];
 
-            // Compute the x coordinates and h values of the triangle edges
+            // Compute the x coordinates and u, v texture coordinates of the triangle edges
             var x01 = Interpolate((int)SortedP0.Y, SortedP0.X, (int)SortedP1.Y, SortedP1.X);
             var u01 = Interpolate((int)SortedP0.Y, SortedP0.TextureCoordinates.X, (int)SortedP1.Y, SortedP1.TextureCoordinates.X);
             var v01 = Interpolate((int)SortedP0.Y, SortedP0.TextureCoordinates.Y, (int)SortedP1.Y, SortedP1.TextureCoordinates.Y);
@@ -786,12 +787,15 @@ namespace Lab9_task2
 
                     int texture_u = (int)(u_segment[x - (int)x_l] * (texture.Width - 1));
                     int texture_v = (int)(v_segment[x - (int)x_l] * (texture.Height - 1));
-                    bmp.SetPixel(screen_x, screen_y, texture.GetPixel(texture_u, texture_v));
+
+                    rgbValues[screen_x * 3 + screen_y * bmpData.Stride] = rgbValuesTexture[texture_u * 3 + texture_v * bmpDataTexture.Stride];
+                    rgbValues[screen_x * 3 + 1 + screen_y * bmpData.Stride] = rgbValuesTexture[texture_u * 3 + 1 + texture_v * bmpDataTexture.Stride];
+                    rgbValues[screen_x * 3 + 2 + screen_y * bmpData.Stride] = rgbValuesTexture[texture_u * 3 + 2 + texture_v * bmpDataTexture.Stride];
                 }
             }
         }
 
-        public void ApplyTexture(Bitmap bmp, Bitmap texture)
+        public void ApplyTexture(Bitmap bmp, BitmapData bmpData, byte[] rgbValues, Bitmap texture, BitmapData bmpDataTexture, byte[] rgbValuesTexture)
         {
             foreach (var f in Faces)
             {
@@ -803,7 +807,7 @@ namespace Lab9_task2
                 Point3d P0 = new Point3d(f.Points[0]);
                 Point3d P1 = new Point3d(f.Points[1]);
                 Point3d P2 = new Point3d(f.Points[2]);
-                DrawTexture(P0, P1, P2, bmp, texture);
+                DrawTexture(P0, P1, P2, bmp, bmpData, rgbValues, texture, bmpDataTexture, rgbValuesTexture);
 
                 // 4 vertices
                 if (f.Points.Count == 4)
@@ -811,7 +815,7 @@ namespace Lab9_task2
                     P0 = new Point3d(f.Points[2]);
                     P1 = new Point3d(f.Points[3]);
                     P2 = new Point3d(f.Points[0]);
-                    DrawTexture(P0, P1, P2, bmp, texture);
+                    DrawTexture(P0, P1, P2, bmp, bmpData, rgbValues, texture, bmpDataTexture, rgbValuesTexture);
                 }
             }
         }

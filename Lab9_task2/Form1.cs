@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.Globalization;
 using System.Windows.Forms;
 
@@ -12,6 +13,10 @@ namespace Lab9_task2
         Axis line_mode = 0;
         Polyhedron figure = null;
         Bitmap bmp, texture;
+        BitmapData bmpData, bmpDataTexture; // for picturebox and texture
+        byte[] rgbValues, rgbValuesTexture; // for picturebox and texture
+        IntPtr ptr; // pointer to the rgbValues
+        int bytes; // length of rgbValues
 
         public Form1()
         {
@@ -20,7 +25,14 @@ namespace Lab9_task2
             g.TranslateTransform(pictureBox1.ClientSize.Width / 2, pictureBox1.ClientSize.Height / 2);
             g.ScaleTransform(1, -1);
             comboBox2.SelectedIndex = 0;
+
             texture = Image.FromFile("../../crate-texture.jpg") as Bitmap;
+            Rectangle rectTexture = new Rectangle(0, 0, texture.Width, texture.Height);
+            bmpDataTexture = texture.LockBits(rectTexture, ImageLockMode.ReadWrite, texture.PixelFormat);
+            int bytesTexture = Math.Abs(bmpDataTexture.Stride) * texture.Height;
+            rgbValuesTexture = new byte[bytesTexture];
+            System.Runtime.InteropServices.Marshal.Copy(bmpDataTexture.Scan0, rgbValuesTexture, 0, bytesTexture);
+
             SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
         }
 
@@ -134,8 +146,10 @@ namespace Lab9_task2
                 }
 
                 bmp.Dispose();
-                bmp = new Bitmap(pictureBox1.ClientSize.Width, pictureBox1.ClientSize.Height);
-                figure.ApplyTexture(bmp, texture);
+                rgbValues = getRGBValues(out bmp, out bmpData, out ptr, out bytes);
+                figure.ApplyTexture(bmp, bmpData, rgbValues, texture, bmpDataTexture, rgbValuesTexture);
+                System.Runtime.InteropServices.Marshal.Copy(rgbValues, 0, ptr, bytes);
+                bmp.UnlockBits(bmpData);
                 pictureBox1.Image = bmp;
             }
         }
@@ -179,6 +193,35 @@ namespace Lab9_task2
             }
         }
 
+        private byte[] getRGBValues(out Bitmap bmp, out BitmapData bmpData,
+    out IntPtr ptr, out int bytes)
+        {
+            bmp = new Bitmap(pictureBox1.ClientSize.Width, pictureBox1.ClientSize.Height, PixelFormat.Format24bppRgb);
+
+            // Lock the bitmap's bits.  
+            Rectangle rect = new Rectangle(0, 0, bmp.Width, bmp.Height);
+            bmpData =
+                bmp.LockBits(rect, ImageLockMode.ReadWrite,
+                bmp.PixelFormat);
+
+            // Get the address of the first line.
+            ptr = bmpData.Scan0;
+
+            // Declare an array to hold the bytes of the bitmap.
+            bytes = Math.Abs(bmpData.Stride) * bmp.Height;
+            byte[] rgb_values = new byte[bytes];
+
+            // Create rgb array with background color
+            for (int i = 0; i < bytes - 3; i += 3)
+            {
+                rgb_values[i] = pictureBox1.BackColor.R;
+                rgb_values[i + 1] = pictureBox1.BackColor.G;
+                rgb_values[i + 2] = pictureBox1.BackColor.B;
+            }
+
+            return rgb_values;
+        }
+
         // Create hexahedron
         private void button1_Click(object sender, EventArgs e)
         {
@@ -187,8 +230,10 @@ namespace Lab9_task2
 
             if (bmp != null)
                 bmp.Dispose();
-            bmp = new Bitmap(pictureBox1.ClientSize.Width, pictureBox1.ClientSize.Height);
-            figure.ApplyTexture(bmp, texture);
+            rgbValues = getRGBValues(out bmp, out bmpData, out ptr, out bytes);
+            figure.ApplyTexture(bmp, bmpData, rgbValues, texture, bmpDataTexture, rgbValuesTexture);
+            System.Runtime.InteropServices.Marshal.Copy(rgbValues, 0, ptr, bytes);
+            bmp.UnlockBits(bmpData);
             pictureBox1.Image = bmp;
         }
 
@@ -200,8 +245,10 @@ namespace Lab9_task2
 
             if (bmp != null)
                 bmp.Dispose();
-            bmp = new Bitmap(pictureBox1.ClientSize.Width, pictureBox1.ClientSize.Height);
-            figure.ApplyTexture(bmp, texture);
+            rgbValues = getRGBValues(out bmp, out bmpData, out ptr, out bytes);
+            figure.ApplyTexture(bmp, bmpData, rgbValues, texture, bmpDataTexture, rgbValuesTexture);
+            System.Runtime.InteropServices.Marshal.Copy(rgbValues, 0, ptr, bytes);
+            bmp.UnlockBits(bmpData);
             pictureBox1.Image = bmp;
         }
 
@@ -213,8 +260,10 @@ namespace Lab9_task2
 
             if (bmp != null)
                 bmp.Dispose();
-            bmp = new Bitmap(pictureBox1.ClientSize.Width, pictureBox1.ClientSize.Height);
-            figure.ApplyTexture(bmp, texture);
+            rgbValues = getRGBValues(out bmp, out bmpData, out ptr, out bytes);
+            figure.ApplyTexture(bmp, bmpData, rgbValues, texture, bmpDataTexture, rgbValuesTexture);
+            System.Runtime.InteropServices.Marshal.Copy(rgbValues, 0, ptr, bytes);
+            bmp.UnlockBits(bmpData);
             pictureBox1.Image = bmp;
         }
 
@@ -226,8 +275,10 @@ namespace Lab9_task2
                 figure.reflectX();
 
                 bmp.Dispose();
-                bmp = new Bitmap(pictureBox1.ClientSize.Width, pictureBox1.ClientSize.Height);
-                figure.ApplyTexture(bmp, texture);
+                rgbValues = getRGBValues(out bmp, out bmpData, out ptr, out bytes);
+                figure.ApplyTexture(bmp, bmpData, rgbValues, texture, bmpDataTexture, rgbValuesTexture);
+                System.Runtime.InteropServices.Marshal.Copy(rgbValues, 0, ptr, bytes);
+                bmp.UnlockBits(bmpData);
                 pictureBox1.Image = bmp;
             }
         }
@@ -240,8 +291,10 @@ namespace Lab9_task2
                 figure.reflectY();
 
                 bmp.Dispose();
-                bmp = new Bitmap(pictureBox1.ClientSize.Width, pictureBox1.ClientSize.Height);
-                figure.ApplyTexture(bmp, texture);
+                rgbValues = getRGBValues(out bmp, out bmpData, out ptr, out bytes);
+                figure.ApplyTexture(bmp, bmpData, rgbValues, texture, bmpDataTexture, rgbValuesTexture);
+                System.Runtime.InteropServices.Marshal.Copy(rgbValues, 0, ptr, bytes);
+                bmp.UnlockBits(bmpData);
                 pictureBox1.Image = bmp;
             }
         }
@@ -254,8 +307,10 @@ namespace Lab9_task2
                 figure.reflectZ();
 
                 bmp.Dispose();
-                bmp = new Bitmap(pictureBox1.ClientSize.Width, pictureBox1.ClientSize.Height);
-                figure.ApplyTexture(bmp, texture);
+                rgbValues = getRGBValues(out bmp, out bmpData, out ptr, out bytes);
+                figure.ApplyTexture(bmp, bmpData, rgbValues, texture, bmpDataTexture, rgbValuesTexture);
+                System.Runtime.InteropServices.Marshal.Copy(rgbValues, 0, ptr, bytes);
+                bmp.UnlockBits(bmpData);
                 pictureBox1.Image = bmp;
             }
         }
@@ -265,12 +320,25 @@ namespace Lab9_task2
         {
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
+                texture.UnlockBits(bmpDataTexture);
                 texture.Dispose();
+
                 texture = Image.FromFile(openFileDialog1.FileName) as Bitmap;
-                bmp.Dispose();
-                bmp = new Bitmap(pictureBox1.ClientSize.Width, pictureBox1.ClientSize.Height);
-                figure.ApplyTexture(bmp, texture);
-                pictureBox1.Image = bmp;
+                Rectangle rectTexture = new Rectangle(0, 0, texture.Width, texture.Height);
+                bmpDataTexture = texture.LockBits(rectTexture, ImageLockMode.ReadWrite, texture.PixelFormat);
+                int bytesTexture = Math.Abs(bmpDataTexture.Stride) * texture.Height;
+                rgbValuesTexture = new byte[bytesTexture];
+                System.Runtime.InteropServices.Marshal.Copy(bmpDataTexture.Scan0, rgbValuesTexture, 0, bytesTexture);
+
+                if (bmp != null)
+                {
+                    bmp.Dispose();
+                    rgbValues = getRGBValues(out bmp, out bmpData, out ptr, out bytes);
+                    figure.ApplyTexture(bmp, bmpData, rgbValues, texture, bmpDataTexture, rgbValuesTexture);
+                    System.Runtime.InteropServices.Marshal.Copy(rgbValues, 0, ptr, bytes);
+                    bmp.UnlockBits(bmpData);
+                    pictureBox1.Image = bmp;
+                }
             }
         }
     }
