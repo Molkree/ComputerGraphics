@@ -222,12 +222,17 @@ namespace lab6
                 figure.show(g, pr, new_fig);
 
                 // camera
-                camera.show(g, pr);
+               // camera.show(g, pr);
 
                 g_camera.Clear(Color.White);
 
                 if (radioButton1.Checked)
-                    figure_camera.show_camera(g_camera, camera, new_fig);
+                {
+                    if (figure.is_graph)
+                        show_horizon();
+                    else
+                        figure_camera.show_camera(g_camera, camera, new_fig);
+                }
                 else if (radioButton2.Checked)
                     show_z_buff();
                 else if (radioButton3.Checked)
@@ -235,6 +240,27 @@ namespace lab6
 
                 label10.Text = figure.Center.X.ToString() + ", " + figure.Center.Y.ToString() + ", " + figure.Center.Z.ToString();
             }
+        }
+
+        private void show_horizon()
+        {
+            //   figure.floating_horizon(g_camera, camera);
+
+            Bitmap bmp = pictureBox3.Image as Bitmap;
+            g_fake_camera.Clear(Color.White);
+            figure.reflectY();
+            figure.floating_horizon(camera, ref bmp);
+            figure.reflectY();
+            pictureBox3.Visible = true;
+            pictureBox3.Refresh();
+        }
+
+        private void show_horizon1()
+        {
+            int h = pictureBox3.Height;
+            int w = pictureBox3.Width;
+            int divs = 25;
+
         }
 
         private void show_z_buff()
@@ -348,7 +374,12 @@ namespace lab6
             camera_z.Text = ((int)camera.view.P1.Z).ToString(CultureInfo.CurrentCulture);
             g_camera.Clear(Color.White);
             if (radioButton1.Checked)
-                figure_camera.show_camera(g_camera, camera, new_fig);
+            {
+                if (figure.is_graph)
+                    show_horizon();
+                else
+                    figure_camera.show_camera(g_camera, camera, new_fig);
+            }
             else if (radioButton2.Checked)
                 show_z_buff();
             else if (radioButton3.Checked)
@@ -419,11 +450,17 @@ namespace lab6
                 //figure_camera.translate(-camera.view.P1.X, -camera.view.P1.Y, -camera.view.P1.Z);
                 //camera.translate(-camera.view.P1.X, -camera.view.P1.Y, -camera.view.P1.Z);
                 if (radioButton1.Checked)
-                    figure_camera.show_camera(g_camera, camera, new_fig);
+                {
+                    if (figure.is_graph)
+                        show_horizon();
+                    else
+                        figure_camera.show_camera(g_camera, camera, new_fig);
+                }
                 else if (radioButton2.Checked)
                     show_z_buff();
                 else if (radioButton3.Checked)
                     show_gouraud();
+
             }
 
             camera.show(g, pr);
@@ -502,7 +539,12 @@ namespace lab6
             figure_camera.reflectX();
             g_camera.Clear(Color.White);
             if (radioButton1.Checked)
-                figure_camera.show_camera(g_camera, camera, new_fig);
+            {
+                if (figure.is_graph)
+                    show_horizon();
+                else
+                    figure_camera.show_camera(g_camera, camera, new_fig);
+            }
             else if (radioButton2.Checked)
                 show_z_buff();
             else if (radioButton3.Checked)
@@ -524,7 +566,12 @@ namespace lab6
             figure_camera.reflectY();
             g_camera.Clear(Color.White);
             if (radioButton1.Checked)
-                figure_camera.show_camera(g_camera, camera, new_fig);
+            {
+                if (figure.is_graph)
+                    show_horizon();
+                else
+                    figure_camera.show_camera(g_camera, camera, new_fig);
+            }
             else if (radioButton2.Checked)
                 show_z_buff();
             else if (radioButton3.Checked)
@@ -670,56 +717,6 @@ namespace lab6
 
             label10.Text = figure.Center.X.ToString() + ", " + figure.Center.Y.ToString() + ", " + figure.Center.Z.ToString();
         }
-
-        //// graphic
-        //private void button4_Click_1(object sender, EventArgs e)
-        //{
-        //    Form2 form2 = new Form2();
-        //    form2.ShowDialog();
-
-        //    var f = form2.f;
-        //    float x0 = form2.X0;
-        //    float x1 = form2.X1;
-        //    float y0 = form2.Y0;
-        //    float y1 = form2.Y1;
-        //    int cnt_of_breaks = form2.Cnt_of_breaks;
-
-        //    form2.Dispose();
-
-        //    float dx = (Math.Abs(x0) + Math.Abs(x1)) / cnt_of_breaks;
-        //    float dy = (Math.Abs(y0) + Math.Abs(y1)) / cnt_of_breaks;
-
-        //    List<Face> faces = new List<Face>();
-        //    List<Point3d> pts0 = new List<Point3d>();
-        //    List<Point3d> pts1 = new List<Point3d>();
-
-        //    for (float x = x0; x < x1; x += dx)
-        //    {
-        //        for (float y = y0; y < y1; y += dy)
-        //        {
-        //            float z = f(x, y);
-        //            pts1.Add(new Point3d(x, y, z));
-        //        }
-        //        // make faces
-        //        if (pts0.Count != 0)
-        //            for (int i = 1; i < pts0.Count; ++i)
-        //            {
-        //                faces.Add(new Face(new List<Point3d>() {
-        //                    new Point3d(pts0[i - 1]), new Point3d(pts1[i - 1]),
-        //                    new Point3d(pts1[i]), new Point3d(pts0[i])
-        //                }));
-        //            }
-        //        pts0.Clear();
-        //        pts0 = pts1;
-        //        pts1 = new List<Point3d>();
-        //    }
-
-        //    g.Clear(Color.White);
-        //    figure = new Polyhedron(faces);
-        //    figure.show(g, pr, new_fig);
-        //}
-
-        // graphic
     
         
         // graphic

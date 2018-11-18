@@ -35,10 +35,10 @@
             this.label3 = new System.Windows.Forms.Label();
             this.textBox_x0 = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
-            this.breaks_cnt = new System.Windows.Forms.NumericUpDown();
             this.textBox_x1 = new System.Windows.Forms.TextBox();
             this.textBox_y0 = new System.Windows.Forms.TextBox();
             this.textBox_y1 = new System.Windows.Forms.TextBox();
+            this.breaks_cnt = new System.Windows.Forms.NumericUpDown();
             ((System.ComponentModel.ISupportInitialize)(this.breaks_cnt)).BeginInit();
             this.SuspendLayout();
             // 
@@ -99,7 +99,7 @@
             this.textBox_x0.Name = "textBox_x0";
             this.textBox_x0.Size = new System.Drawing.Size(44, 20);
             this.textBox_x0.TabIndex = 6;
-            this.textBox_x0.Text = "-10";
+            this.textBox_x0.Text = "-1";
             this.textBox_x0.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox_KeyPress_double);
             // 
             // label4
@@ -111,25 +111,13 @@
             this.label4.TabIndex = 8;
             this.label4.Text = "Число разбиений";
             // 
-            // breaks_cnt
-            // 
-            this.breaks_cnt.Location = new System.Drawing.Point(121, 127);
-            this.breaks_cnt.Name = "breaks_cnt";
-            this.breaks_cnt.Size = new System.Drawing.Size(41, 20);
-            this.breaks_cnt.TabIndex = 9;
-            this.breaks_cnt.Value = new decimal(new int[] {
-            10,
-            0,
-            0,
-            0});
-            // 
             // textBox_x1
             // 
             this.textBox_x1.Location = new System.Drawing.Point(174, 47);
             this.textBox_x1.Name = "textBox_x1";
             this.textBox_x1.Size = new System.Drawing.Size(44, 20);
             this.textBox_x1.TabIndex = 10;
-            this.textBox_x1.Text = "10";
+            this.textBox_x1.Text = "1";
             this.textBox_x1.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox_KeyPress_double);
             // 
             // textBox_y0
@@ -138,7 +126,7 @@
             this.textBox_y0.Name = "textBox_y0";
             this.textBox_y0.Size = new System.Drawing.Size(44, 20);
             this.textBox_y0.TabIndex = 11;
-            this.textBox_y0.Text = "-10";
+            this.textBox_y0.Text = "-1";
             this.textBox_y0.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox_KeyPress_double);
             // 
             // textBox_y1
@@ -147,8 +135,20 @@
             this.textBox_y1.Name = "textBox_y1";
             this.textBox_y1.Size = new System.Drawing.Size(44, 20);
             this.textBox_y1.TabIndex = 12;
-            this.textBox_y1.Text = "10";
+            this.textBox_y1.Text = "1";
             this.textBox_y1.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox_KeyPress_double);
+            // 
+            // breaks_cnt
+            // 
+            this.breaks_cnt.Location = new System.Drawing.Point(121, 127);
+            this.breaks_cnt.Name = "breaks_cnt";
+            this.breaks_cnt.Size = new System.Drawing.Size(41, 20);
+            this.breaks_cnt.TabIndex = 9;
+            this.breaks_cnt.Value = new decimal(new int[] {
+            3,
+            0,
+            0,
+            0});
             // 
             // Form2
             // 
@@ -183,9 +183,9 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox textBox_x0;
         private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.NumericUpDown breaks_cnt;
         private System.Windows.Forms.TextBox textBox_x1;
         private System.Windows.Forms.TextBox textBox_y0;
         private System.Windows.Forms.TextBox textBox_y1;
+        private System.Windows.Forms.NumericUpDown breaks_cnt;
     }
 }
