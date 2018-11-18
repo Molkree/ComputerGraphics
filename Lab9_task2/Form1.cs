@@ -136,7 +136,6 @@ namespace Lab9_task2
                 bmp.Dispose();
                 bmp = new Bitmap(pictureBox1.ClientSize.Width, pictureBox1.ClientSize.Height);
                 figure.ApplyTexture(bmp, texture);
-                g.Clear(Color.White);
                 pictureBox1.Image = bmp;
             }
         }
@@ -186,9 +185,10 @@ namespace Lab9_task2
             figure = new Polyhedron();
             figure.make_hexahedron();
 
+            if (bmp != null)
+                bmp.Dispose();
             bmp = new Bitmap(pictureBox1.ClientSize.Width, pictureBox1.ClientSize.Height);
             figure.ApplyTexture(bmp, texture);
-            g.Clear(Color.White);
             pictureBox1.Image = bmp;
         }
 
@@ -198,9 +198,10 @@ namespace Lab9_task2
             figure = new Polyhedron();
             figure.make_tetrahedron();
 
+            if (bmp != null)
+                bmp.Dispose();
             bmp = new Bitmap(pictureBox1.ClientSize.Width, pictureBox1.ClientSize.Height);
             figure.ApplyTexture(bmp, texture);
-            g.Clear(Color.White);
             pictureBox1.Image = bmp;
         }
 
@@ -210,9 +211,10 @@ namespace Lab9_task2
             figure = new Polyhedron();
             figure.make_octahedron();
 
+            if (bmp != null)
+                bmp.Dispose();
             bmp = new Bitmap(pictureBox1.ClientSize.Width, pictureBox1.ClientSize.Height);
             figure.ApplyTexture(bmp, texture);
-            g.Clear(Color.White);
             pictureBox1.Image = bmp;
         }
 
@@ -226,7 +228,6 @@ namespace Lab9_task2
                 bmp.Dispose();
                 bmp = new Bitmap(pictureBox1.ClientSize.Width, pictureBox1.ClientSize.Height);
                 figure.ApplyTexture(bmp, texture);
-                g.Clear(Color.White);
                 pictureBox1.Image = bmp;
             }
         }
@@ -241,7 +242,6 @@ namespace Lab9_task2
                 bmp.Dispose();
                 bmp = new Bitmap(pictureBox1.ClientSize.Width, pictureBox1.ClientSize.Height);
                 figure.ApplyTexture(bmp, texture);
-                g.Clear(Color.White);
                 pictureBox1.Image = bmp;
             }
         }
@@ -256,7 +256,6 @@ namespace Lab9_task2
                 bmp.Dispose();
                 bmp = new Bitmap(pictureBox1.ClientSize.Width, pictureBox1.ClientSize.Height);
                 figure.ApplyTexture(bmp, texture);
-                g.Clear(Color.White);
                 pictureBox1.Image = bmp;
             }
         }
