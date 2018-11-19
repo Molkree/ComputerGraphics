@@ -245,7 +245,7 @@ namespace lab6
         private void show_horizon()
         {
             // вариант 1
-            figure.floating_horizon(g_camera, camera);
+            figure.Floating_horizon(g_camera, camera);
 
             // вариант 2
           /*  Bitmap bmp = pictureBox3.Image as Bitmap;
@@ -257,13 +257,6 @@ namespace lab6
             pictureBox3.Refresh();*/
         }
 
-        private void show_horizon1()
-        {
-            int h = pictureBox3.Height;
-            int w = pictureBox3.Width;
-            int divs = 25;
-
-        }
 
         private void show_z_buff()
         {

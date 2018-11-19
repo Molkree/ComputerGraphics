@@ -759,7 +759,7 @@ namespace lab6
             {
                 return new int[] { d0 };
             }
-            int[] values = new int[i1 - i0 + 1];
+            int[] values = new int[Math.Abs(i1 - i0 + 1)];
             float a = (float)(d1 - d0) / (i1 - i0);
             float d = d0;
             int ind = 0;
@@ -1219,138 +1219,10 @@ namespace lab6
          //   return new PointF(float.MinValue, float.MinValue);
         }
 
-    //    private List<Point3d> interpolate_graph()
-        private SortedDictionary<float, List<PointF>> interpolate_graph()
-        {
-            //List<Point3d> points = new List<Point3d>();
-            List<Point3d> all_points = new List<Point3d>();
+    
 
-          //  HashSet<Point3d> start_pts = new HashSet<Point3d>(new Point3dEqComparer());
-
-            SortedDictionary<Point, float> start_pts = new SortedDictionary<Point, float>(new PointComparer()); // (x, y), z
-
-
-            SortedDictionary<float, List<PointF>> all_pts = new SortedDictionary<float, List<PointF>>(new ReverseFloatComparer()); // z, (x, y)
-
-
-            foreach (Face f in Faces)
-                foreach (Point3d p3d in f.Points)
-                {
-                 //   start_pts.Add(p3d); // idk do i need it
-
-                    Point p = new Point((int)Math.Round(p3d.X), (int)Math.Round(p3d.Y));
-                    if (!start_pts.ContainsKey(p))
-                        start_pts.Add(p, p3d.Z);
-
-                    //pts[p3d.X].Add(new PointF(p3d.Y, p3d.Z));
-                }
-
-            float dx = 2;
-            float dy = 1;
-
-
-            Point3d p_prev = null;
-
-            foreach (var curr in start_pts)
-            {
-                Point3d p_curr = new Point3d(curr.Key.X, curr.Key.Y, curr.Value);
-
-                all_points.Add(p_curr);  // option 1
-
-                // option 2
-                if (!all_pts.ContainsKey(curr.Value))
-                    all_pts.Add(curr.Value, new List<PointF>());
-                all_pts[curr.Value].Add(new PointF(p_curr.X, p_curr.Y));
-
-
-                if (p_prev == null)
-                    p_prev = p_curr;
-                else
-                {
-                    // fnm = f(xn, ym) 
-                    for (float x = p_prev.X; x <= p_curr.X; x += dx)
-                    {
-                        float y0 = p_prev.Y;
-                        float y1 = p_curr.Y;
-                        if (y0 > y1)
-                        {
-                            y0 = y1;
-                            y1 = p_prev.Y;
-                        }
-
-                        for (float y = y0; y <= y1; y += dy)
-                        {
-                            float z;
-
-                            // грусть
-                            var xn = (int)Math.Round(p_prev.X); // x_n
-                            var ym = (int)Math.Round(y0); // y_m
-                            var xn1 = (int)Math.Round(p_curr.X); // x_(n+1)
-                            var ym1 = (int)Math.Round(y1); // y_(m+1)
-
-                            if (xn == xn1) // interpolate on one line
-                            {
-                                var f1 = start_pts[new Point(xn, ym)];
-                                var f2 = start_pts[new Point(xn, ym1)];
-
-                                var a1 = (f2 - f1) / (ym1 - ym);
-                                var a0 = f1 - a1 * ym;
-
-                                z = a0 + a1 * y;
-
-
-                            }
-                            else
-                            {
-                                // there might be no values:(((
-                                //var p1 = new Point(xn, ym);
-                                //var p2 = new Point(xn1, ym);
-                                //var p3 = new Point(xn1, ym1);
-                                //var p4 = new Point(xn, ym1);
-                                
-                                var f1 = start_pts[new Point(xn, ym)]; // f_nm
-                                var f2 = start_pts[new Point(xn1, ym)]; // f_(n+1)m
-                                var f3 = start_pts[new Point(xn1, ym1)]; // f_(n+1)(m+1)
-                                var f4 = start_pts[new Point(xn, ym1)]; // f_n(m+1)
-
-                                f1 *= (x - xn1) * (y - ym1) / ((xn - xn1) * (ym - ym1)); // xn == xn1
-                                f2 *= (x - xn) * (y - ym1) / ((xn1 - xn) * (ym - ym1));
-                                f3 *= (x - xn) * (y - ym) / ((xn1 - xn) * (ym1 - ym));
-                                f4 *= (x - xn1) * (y - ym) / ((xn - xn1) * (ym1 - ym));
-
-                                z = f1 + f2 + f3 + f4;
-
-                                /*      float z = f1 * (x - xn1) * (y - ym1) / ((xn - xn1) * (ym - ym1)) +
-                                                f2 * (x - xn) * (y - ym1) / ((xn1 - xn) * (ym - ym1)) +
-                                                f3 * (x - xn) * (y - ym) / ((xn1 - xn) * (ym1 - ym)) +
-                                                f4 * (x - xn1) * (y - ym) / ((xn - xn1) * (ym1 - ym));
-                                                */
-                            }
-                            all_points.Add(new Point3d(x, y, z));  // option 1
-
-                            // option 2
-                            if (!all_pts.ContainsKey(z))
-                                all_pts.Add(z, new List<PointF>());
-                            all_pts[z].Add(new PointF(x, y));
-
-                        }
-                        
-                    }
-                    p_prev = p_curr;
-                }
-                
-            }
-
-
-            all_points.Sort(new Point3dComparer());
-
-            //  return all_points;
-            return all_pts;
-
-        }
-
-        // вариант 1
-        public void floating_horizon(Graphics g, Camera camera, Pen pen = null)
+        // вариант 1 - от Жени
+  /*      public void floating_horizon(Graphics g, Camera camera, Pen pen = null)*
         { 
             if (pen == null)
                 pen = Pens.Black;
@@ -1404,33 +1276,35 @@ namespace lab6
                 horMax[i] = -1;
             }
 
-            for (float x = xmin; x <= xmax; x += xstep)
+            for (float x = xmin; l_eq(x, xmax); x += xstep)
             {
                 var hor = new List<PointF>();
-                for (float y = ymin; y <= ymax; y += ystep)
+                for (float y = ymin; l_eq(y, ymax); y += ystep)
                 {
                     var tmp = new Point3d(x, y, graph_function(x, y));
                     hor.Add(tmp.make_perspective());
                 }
 
-                var cur_hor = new List<Point>();
+                var cur_hor = new List<PointF>();
                 foreach (PointF p in hor)
                 {
-                    Point tmp = new Point((int)Math.Round(p.X + w / 2), (int)Math.Round(p.Y + h / 2));
+                    //  Point tmp = new Point((int)Math.Round(p.X + w / 2), (int)Math.Round(p.Y + h / 2));
+                    PointF tmp = new PointF(p.X + w / 2, p.Y + h / 2);
                     cur_hor.Add(tmp);
                 }
-                cur_hor = cur_hor.OrderBy(p => p.X).ToList();
+
+                cur_hor.Sort(new PointFComparer());
 
                 for (int i = 0; i < cur_hor.Count - 1; i++)
                 {
-                    var line = Interpolate(cur_hor[i].X, cur_hor[i].Y, cur_hor[i + 1].X, cur_hor[i + 1].Y);
+                    var line = Interpolate((int)(cur_hor[i].X * 100f), (int)(cur_hor[i].Y*100f), (int)(cur_hor[i + 1].X*100f), (int)(cur_hor[i + 1].Y*100f));
                     int index = -1;
-                    for (int linex = cur_hor[i].X; linex <= cur_hor[i + 1].X; ++linex)
+                    for (int linex = (int)cur_hor[i].X; linex <= cur_hor[i + 1].X; ++linex)
                     {
                         index++;
-                        if (linex >= 0 && linex < w && line[index] > horMax[linex])
+                        if (linex >= 0 && linex < w && line[index] / 100f > horMax[linex])
                         {
-                            horMax[linex] = line[index];
+                            horMax[linex] = (int)(line[index] / 100f);
 
                         }
                     }
@@ -1448,9 +1322,9 @@ namespace lab6
 
 
 
-        }
+        }*/
         
-            // вариант 2
+            // вариант - от Насти
  /*       public void floating_horizon(Camera camera, ref Bitmap bmp, Pen pen = null)
         {
             if (pen == null)
@@ -1579,25 +1453,430 @@ namespace lab6
                 }
             }
         }
-    /*  public void floating_horizon(Graphics g, Camera camera, Pen pen = null)
+
+
+       private List<Point3d> Graph_help(Point3d PP0, Point3d PP1, Point3d PP2)
+        {
+            Point3d P0 = new Point3d(PP0);
+            Point3d P1 = new Point3d(PP1);
+            Point3d P2 = new Point3d(PP2);
+
+            if (P1.Y < P0.Y)
+            {
+                Point3d tmpp = new Point3d(P0);
+                P0.X = P1.X; P0.Y = P1.Y; P0.Z = P1.Z;
+                P1.X = tmpp.X; P1.Y = tmpp.Y; P1.Z = tmpp.Z;
+            }
+            if (P2.Y < P0.Y)
+            {
+                Point3d tmpp = new Point3d(P0);
+                P0.X = P2.X; P0.Y = P2.Y; P0.Z = P2.Z;
+                P2.X = tmpp.X; P2.Y = tmpp.Y; P2.Z = tmpp.Z;
+            }
+            if (P2.Y < P1.Y)
+            {
+                Point3d tmpp = new Point3d(P1);
+                P1.X = P2.X; P1.Y = P2.Y; P1.Z = P2.Z;
+                P2.X = tmpp.X; P2.Y = tmpp.Y; P2.Z = tmpp.Z;
+            }
+
+            PointF p0 = P0.make_perspective();
+            PointF p1 = P1.make_perspective();
+            PointF p2 = P2.make_perspective();
+
+            //y0 <= y1 <= y2
+            int y0 = (int)p0.Y; int x0 = (int)p0.X; int z0 = (int)P0.Z;
+            int y1 = (int)p1.Y; int x1 = (int)p1.X; int z1 = (int)P1.Z;
+            int y2 = (int)p2.Y; int x2 = (int)p2.X; int z2 = (int)P2.Z;
+
+            
+            var x01 = Interpolate(y0, x0, y1, x1);
+            var x12 = Interpolate(y1, x1, y2, x2);
+            var x02 = Interpolate(y0, x0, y2, x2);
+
+            var h01 = Interpolate(y0, z0, y1, z1);
+            var h12 = Interpolate(y1, z1, y2, z2);
+            var h02 = Interpolate(y0, z0, y2, z2);
+            // Конкатенация коротких сторон
+            int[] x012 = x01.Take(x01.Length - 1).Concat(x12).ToArray();
+            int[] h012 = h01.Take(h01.Length - 1).Concat(h12).ToArray();
+
+            //Определяем, какая из сторон левая и правая
+            int m = x012.Length / 2;
+            int[] x_left, x_right, h_left, h_right;
+            if (x02[m] < x012[m])
+            {
+                x_left = x02;
+                x_right = x012;
+
+                h_left = h02;
+                h_right = h012;
+            }
+            else
+            {
+                x_left = x012;
+                x_right = x02;
+
+
+                h_left = h012;
+                h_right = h02;
+            }
+
+            //  Face f = new Face(new List<Point3d>() { P0, P1, P2 });
+
+            List<Point3d> res = new List<Point3d>();
+            //Отрисовка горизонтальных отрезков
+            for (int y = y0; y <= y2; ++y)
+            {
+                int x_l = x_left[y - y0];
+                int x_r = x_right[y - y0];
+                int[] h_segment;
+                //interpolation
+                if (x_l > x_r)
+                {
+                    continue;
+                }
+                else
+                    h_segment = Interpolate(x_l, h_left[y - y0], x_r, h_right[y - y0]);
+                for (int x = x_l; x <= x_r; ++x)
+                {
+                    int z = h_segment[x - x_l];
+                    res.Add(new Point3d(x, y, z));
+                }
+            }
+            return res;
+        }
+
+        //    private List<Point3d> interpolate_graph()
+        private SortedDictionary<float, List<PointF>> Interpolate_graph()
+        {
+            //List<Point3d> points = new List<Point3d>();
+            List<Point3d> all_points = new List<Point3d>();
+
+            //  HashSet<Point3d> start_pts = new HashSet<Point3d>(new Point3dEqComparer());
+
+            SortedDictionary<Point, float> start_pts = new SortedDictionary<Point, float>(new PointComparer()); // (x, y), z
+
+
+            SortedDictionary<float, List<PointF>> all_pts = new SortedDictionary<float, List<PointF>>(new ReverseFloatComparer()); // z, (x, y)
+
+            List<List<Point3d>> grid = new List<List<Point3d>>();
+            // get start points 
+            int ind = -1;
+            foreach (Face f in Faces)
+            {
+                ++ind;
+                grid.Add(new List<Point3d>());
+                foreach (Point3d p3d in f.Points)
+                {
+                    Point p = new Point((int)Math.Round(p3d.X), (int)Math.Round(p3d.Y));
+                    if (!start_pts.ContainsKey(p))
+                        start_pts.Add(p, p3d.Z);
+
+                    grid[ind].Add(new Point3d(p3d));
+                }
+            }
+
+            
+   /*         grid.Add(new List<Point3d>());
+         //   int ind = 0;
+            foreach (var el in start_pts)
+            {
+                if (grid[ind].Count > 0)
+                    if (el.Key.X != grid[ind][0].X)
+                    {
+                        ++ind;
+                        grid.Add(new List<Point3d>());
+                    }
+                grid[ind].Add(new Point3d(el.Key.X, el.Key.Y, el.Value));
+                
+            }
+*/
+            int dx = 3;
+            int dy = 3;
+
+            foreach (var rect in grid)
+            {
+                var p0 = rect[0];
+                var p1 = rect[1];
+                var p2 = rect[2];
+                var p3 = rect[3];
+
+                var l1 = Graph_help(p0, p1, p3);
+                var l2 = Graph_help(p3, p1, p2);
+
+                for (int k = 0; k < l1.Count; k += dy)
+                {
+                    if (!all_pts.ContainsKey(l1[k].Z))
+                        all_pts.Add(l1[k].Z, new List<PointF>());
+                    all_pts[l1[k].Z].Add(new PointF(l1[k].X, l1[k].Y));
+                }
+                for (int k = 0; k < l2.Count; k += dy)
+                {
+                    if (!all_pts.ContainsKey(l2[k].Z))
+                        all_pts.Add(l2[k].Z, new List<PointF>());
+                    all_pts[l2[k].Z].Add(new PointF(l2[k].X, l2[k].Y));
+                }
+            }
+
+       /*     for (int i = 0; i < grid.Count - 1; ++i)
+                for (int j = 0; j < grid[i].Count - 1; ++j)
+                {
+                    var p0 = grid[i][j];
+                    var p1 = grid[i][j + 1];
+                    var p2 = grid[i + 1][j + 1];
+                    var p3 = grid[i + 1][j];
+
+                    var l1 = Graph_help(p0, p1, p3);
+                    var l2 = Graph_help(p3, p1, p2);
+
+                    for (int k = 0; k < l1.Count; k += dy)
+                    {
+                        if (!all_pts.ContainsKey(l1[k].Z))
+                            all_pts.Add(l1[k].Z, new List<PointF>());
+                        all_pts[l1[k].Z].Add(new PointF(l1[k].X, l1[k].Y));
+                    }
+                    for (int k = 0; k < l2.Count; k += dy)
+                    {
+                        if (!all_pts.ContainsKey(l2[k].Z))
+                            all_pts.Add(l2[k].Z, new List<PointF>());
+                        all_pts[l2[k].Z].Add(new PointF(l2[k].X, l2[k].Y));
+                    }
+
+                }
+                */
+           
+
+            /*            Point3d p_prev = null;
+
+                        foreach (var curr in start_pts)
+                        {
+                            Point3d p_curr = new Point3d(curr.Key.X, curr.Key.Y, curr.Value);
+
+                            all_points.Add(p_curr);  // option 1
+
+                            // option 2
+                            if (!all_pts.ContainsKey(curr.Value))
+                                all_pts.Add(curr.Value, new List<PointF>());
+                            all_pts[curr.Value].Add(new PointF(p_curr.X, p_curr.Y));
+
+
+                            if (p_prev == null)
+                                p_prev = p_curr;
+                            else
+                            {
+                                int index = -dy;
+                                float z;
+
+                                if (p_prev.X == p_curr.X) // interpolate on one line
+                                {
+                                    float y0 = (p_prev.Y < p_curr.Y) ? p_prev.Y : p_curr.Y;
+                                    float y1 = (p_curr.Y > p_prev.Y) ? p_curr.Y : p_prev.Y;
+                                    float x = p_prev.X;
+
+                                    int xn = (int)Math.Round(p_prev.X);
+                                    var ym = (int)Math.Round(y0); // y_m
+                                    var ym1 = (int)Math.Round(y1); // y_(m+1)
+
+                                    for (float y = y0; y < y1; y += dy)
+                                    {
+
+                                        var f1 = start_pts[new Point(xn, ym)];
+                                        var f2 = start_pts[new Point(xn, ym1)];
+
+                                        var a1 = (f2 - f1) / (ym1 - ym);
+                                        var a0 = f1 - a1 * ym;
+
+                                        z = a0 + a1 * y;
+
+                                        all_points.Add(new Point3d(x, y, z));  // option 1
+
+                                        // option 2
+                                        if (!all_pts.ContainsKey(z))
+                                            all_pts.Add(z, new List<PointF>());
+                                        all_pts[z].Add(new PointF(x, y));
+                                    }
+                                }
+                                else // work with rectangle
+                                {
+                                    index += dy;
+
+                                    int xn = (int)Math.Round(p_prev.X); // x_n
+                                    int ym = (int)Math.Round(p_prev.Y); // y_m
+                                    int xn1 = (int)Math.Round(p_curr.X); // x_(n+1)
+                                    int ym1 = (int)Math.Round(p_curr.Y); // y_(m+1)
+
+                                    // swap to make first num smaller than second
+                                    if (xn > xn1)
+                                    {
+                                        var t = xn1;
+                                        xn1 = xn;
+                                        xn = t;
+                                    }
+                                    if (ym > ym1)
+                                    {
+                                        var t = ym1;
+                                        ym1 = ym;
+                                        ym = t;
+                                    }
+
+                                    // rectangle to interpolate
+                                    Point[] rect = { new Point(xn, ym), new Point(xn1, ym), new Point(xn1, ym1), new Point(xn, ym1) };
+
+                                    // what we need is not really a rectangle - it's a parallelogram 
+                                    for (int i = 0; i < 4; ++i)
+                                    {
+                                        if (!start_pts.ContainsKey(rect[i]))
+                                            rect[i] = Find_nearest_point(rect[i], start_pts);
+                                    }
+
+                                    var f0 = start_pts[rect[0]]; // f_nm
+                                    var f1 = start_pts[rect[1]]; // f_(n+1)m
+                                    var f2 = start_pts[rect[2]]; // f_(n+1)(m+1)
+                                    var f3 = start_pts[rect[3]]; // f_n(m+1)
+
+                                    Point3d p0 = new Point3d(rect[0].X, rect[0].Y, f0);
+                                    Point3d p1 = new Point3d(rect[1].X, rect[1].Y, f1);
+                                    Point3d p2 = new Point3d(rect[2].X, rect[2].Y, f2);
+                                    Point3d p3 = new Point3d(rect[3].X, rect[3].Y, f3);
+
+
+                                    var l1 = Graph_help(p0, p1, p3);
+                                    var l2 = Graph_help(p3, p1, p2);
+
+                                    for (int i = 0; i < l1.Count; i+= dy)
+                                    {
+                                        if (!all_pts.ContainsKey(l1[i].Z))
+                                            all_pts.Add(l1[i].Z, new List<PointF>());
+                                        all_pts[l1[i].Z].Add(new PointF(l1[i].X, l1[i].Y));
+                                    }
+                                    for (int i = 0; i < l2.Count; i += dy)
+                                    {
+                                        if (!all_pts.ContainsKey(l2[i].Z))
+                                            all_pts.Add(l2[i].Z, new List<PointF>());
+                                        all_pts[l2[i].Z].Add(new PointF(l2[i].X, l2[i].Y));
+                                    }
+            /*
+                                    foreach (var el in l1)
+                                    {
+                                        if (!all_pts.ContainsKey(el.Z))
+                                            all_pts.Add(el.Z, new List<PointF>());
+                                        all_pts[el.Z].Add(new PointF(el.X, el.Y));
+                                    }
+
+                                    foreach (var el in l2)
+                                    {
+                                        if (!all_pts.ContainsKey(el.Z))
+                                            all_pts.Add(el.Z, new List<PointF>());
+                                        all_pts[el.Z].Add(new PointF(el.X, el.Y));
+                                    }*/
+
+            /*
+            for (float x = p_prev.X; x < p_curr.X; x += dx)
+            { 
+                // find y borders:
+                // for up line
+                var a1 = (rect[2].Y - rect[3].Y) / (rect[2].X - rect[3].X);
+                var a0 = rect[3].Y - a1 * rect[3].X;
+                var y1 = a0 + a1 * x;
+
+                // for down line
+                a1 = (rect[1].Y - rect[0].Y) / (rect[1].X - rect[0].X);
+                a0 = rect[0].Y - a1 * rect[0].X;
+                var y0 = a0 + a1 * x;
+
+                // just in case
+                if (y0 > y1)
+                {
+                    var t = y0;
+                    y0 = y1;
+                    y1 = t;
+                }
+
+                // interpolate in verticals
+                for (float y = y0; y <= y1; y += dy)
+                {
+                    // ищем f
+                    float[] f = { 0, 0, 0, 0 };
+                    for (int i = 0; i < 4; ++i)
+                        f[i] = start_pts[rect[i]];
+
+
+
+                    ////var f0 = start_pts[rect[0]]; // f_nm
+                    ////var f1 = start_pts[rect[1]]; // f_(n+1)m
+                    ////var f2 = start_pts[rect[2]]; // f_(n+1)(m+1)
+                    ////var f4 = start_pts[rect[3]]; // f_n(m+1)
+
+                    //// need to fix?
+                    //f[0] *= (x - xn1) * (y - ym1) / ((xn - xn1) * (ym - ym1));
+                    //f[1] *= (x - xn) * (y - ym1) / ((xn1 - xn) * (ym - ym1));
+                    //f[2] *= (x - xn) * (y - ym) / ((xn1 - xn) * (ym1 - ym));
+                    //f[3] *= (x - xn1) * (y - ym) / ((xn - xn1) * (ym1 - ym));
+
+                    //z = 0;
+                    //for (int i = 0; i < 4; ++i)
+                    //    z += f[i];
+
+
+
+                    all_points.Add(new Point3d(x, y, z));  // option 1
+
+                    // option 2
+                    if (!all_pts.ContainsKey(z))
+                        all_pts.Add(z, new List<PointF>());
+                    all_pts[z].Add(new PointF(x, y));
+                }
+            }
+        }
+
+        p_prev = p_curr;
+    }
+        }
+*/
+
+         //   all_points.Sort(new Point3dComparer());
+
+            //  return all_points;
+            return all_pts;
+
+        }
+
+        public Point Find_nearest_point(Point p, SortedDictionary<Point, float> pts)
+        {
+            Point best_p = pts.Keys.ToList()[0];
+
+            var mind = Math.Sqrt((best_p.X - p.X) * (best_p.X - p.X) + (best_p.Y - p.Y) * (best_p.Y - p.Y));
+
+            foreach (var f in pts)
+            {
+                var d = Math.Sqrt((p.X - f.Key.X) * (p.X - f.Key.X) + (p.Y - f.Key.Y) * (p.Y - f.Key.Y));
+
+                if (d < mind)
+                {
+                    best_p = f.Key;
+                    mind = d;
+                }
+            }
+            return best_p;
+        }
+
+        // вариант 3 - точки
+        public void Floating_horizon(Graphics g, Camera camera, Pen pen = null)
         {
             if (pen == null)
                 pen = Pens.Black;
             Pen down_pen = Pens.Gray;
 
-            SortedDictionary<float, List<PointF>> pts = interpolate_graph();
+            SortedDictionary<float, List<PointF>> pts = Interpolate_graph();
 
-            SortedDictionary<double, double> horMax = new SortedDictionary<double, double>(); // x, y
-            SortedDictionary<double, double> horMin = new SortedDictionary<double, double>(); // x, y
+            SortedDictionary<int, int> horMax = new SortedDictionary<int, int>(); // x, y
+            SortedDictionary<int, int> horMin = new SortedDictionary<int, int>(); // x, y
 
             //float xmin, xmax, ymin, ymax;
             //xmin = ymin = float.MaxValue;
             //xmax = ymax = float.MinValue;
-
-            List<PointF> upline1 = new List<PointF>();
-
-            List<PointF> downline1 = new List<PointF>();
-            bool first_line = true;
+            
 
             foreach (var p3 in pts)
             {
@@ -1608,11 +1887,16 @@ namespace lab6
                     Point3d p3d = new Point3d(p.X, p.Y, z);
                     PointF persp = p3d.make_perspective();
 
-                    double round_x = Math.Round(p3d.X);
-                    double round_y = Math.Round(p3d.Y);
+                    int round_x = (int)Math.Round(p3d.X);
+                    int round_y = (int)Math.Round(p3d.Y);
 
+                //    g.DrawEllipse(down_pen, persp.X, persp.Y, 1, 1);
+                  
                     if (!horMin.ContainsKey(round_x))
+                    {
                         horMin.Add(round_x, round_y);
+                        g.DrawEllipse(down_pen, persp.X, persp.Y, 1, 1);
+                    }
                     else if (round_y < horMin[round_x])
                     {
                         horMin[round_x] = round_y;
@@ -1620,19 +1904,22 @@ namespace lab6
                     }
 
                     if (!horMax.ContainsKey(round_x))
+                    {
                         horMax.Add(round_x, round_y);
+                        g.DrawEllipse(down_pen, persp.X, persp.Y, 1, 1);
+                    }
                     else if (round_y > horMax[round_x])
                     {
                         horMax[round_x] = round_y;
                         g.DrawEllipse(pen, persp.X, persp.Y, 1, 1);
                     }
-
                     
+
                 }
             }
 
         }
-        */
+        
         
         // without interpolation
         //public void floating_horizon(Graphics g, Camera camera, Pen pen = null)
