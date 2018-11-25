@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.102
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lab2_task1", "Lab2_task1\Lab2_task1.csproj", "{78553864-65E4-43C1-BA12-49738DDC9E93}"
 EndProject
@@ -22,6 +22,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lab5_task1", "Lab5_task1\Lab5_task1.csproj", "{5D6F307A-5CB4-4D33-BDE5-DB9525B33781}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "lab6", "lab6\lab6.csproj", "{DDE0A955-78D4-45CF-99E1-EC5283030AC3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "floating_horizon", "floating_horizon\floating_horizon.csproj", "{B9A84E80-F7EC-4876-9EE6-9AFD3B2F9F4A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -69,6 +71,10 @@ Global
 		{DDE0A955-78D4-45CF-99E1-EC5283030AC3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DDE0A955-78D4-45CF-99E1-EC5283030AC3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DDE0A955-78D4-45CF-99E1-EC5283030AC3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B9A84E80-F7EC-4876-9EE6-9AFD3B2F9F4A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B9A84E80-F7EC-4876-9EE6-9AFD3B2F9F4A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B9A84E80-F7EC-4876-9EE6-9AFD3B2F9F4A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B9A84E80-F7EC-4876-9EE6-9AFD3B2F9F4A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -142,16 +142,12 @@ namespace lab6
                             dz = int.Parse(trans_z.Text, CultureInfo.CurrentCulture);
                         figure.translate(dx, dy, dz);
                         figure_camera.translate(dx, dy, dz);
-
-                        // camera
-                    //    camera.translate(dx, dy, dz);
+                        
                     }
                     // переносим обратно
                     figure.translate(old_x, old_y, old_z);
                     figure_camera.translate(old_x_camera, old_y_camera, old_z_camera);
-
-                    // camera
-                    //camera.translate(cam_x, cam_y, cam_z);
+                    
                     
                 }
 
@@ -166,23 +162,16 @@ namespace lab6
                             old_y_camera = figure_camera.Center.Y,
                             old_z_camera = figure_camera.Center.Z;
                         figure_camera.translate(-old_x_camera, -old_y_camera, -old_z_camera);
-
-                        // camera
-                        //float cam_x = camera.P1.X, cam_y = camera.P1.Y, cam_z = camera.P1.Z;
-                        //camera.translate(-cam_x, -cam_y, -cam_z);
+                        
 
                         double angle = double.Parse(rot_angle.Text, CultureInfo.CurrentCulture);
                         figure.rotate(angle, line_mode);
                         figure_camera.rotate(angle, line_mode);
-
-                        // camera
-                        //camera.rotate(angle, line_mode);
+                        
 
                         figure.translate(old_x, old_y, old_z);
                         figure_camera.translate(old_x_camera, old_y_camera, old_z_camera);
-
-                        // camera
-                        //camera.translate(cam_x, cam_y, cam_z);
+                        
 
                     }
                     else
@@ -199,30 +188,21 @@ namespace lab6
                         float Ax = rot_line.P1.X, Ay = rot_line.P1.Y, Az = rot_line.P1.Z;
                         figure.translate(-Ax, -Ay, -Az);
                         figure_camera.translate(-Ax, -Ay, -Az);
-
-                        // camera
-                        //camera.translate(-Ax, -Ay, -Az);
+                        
 
                         double angle = double.Parse(rot_angle.Text, CultureInfo.CurrentCulture);
                         figure.rotate(angle, line_mode, rot_line);
                         figure_camera.rotate(angle, line_mode, rot_line);
-
-                        // camera
-                        //camera.rotate(angle, line_mode, rot_line);
+                        
 
                         figure.translate(Ax, Ay, Az);
                         figure_camera.translate(Ax, Ay, Az);
-
-                        // camera
-                        //camera.translate(Ax, Ay, Az);
+                        
                     }
                 }
-                //figure.show(g, pr, old_fig);
                 g.Clear(Color.White);
                 figure.show(g, pr, new_fig);
-
-                // camera
-               // camera.show(g, pr);
+                
 
                 g_camera.Clear(Color.White);
 
@@ -242,19 +222,15 @@ namespace lab6
             }
         }
 
+
         private void show_horizon()
         {
-            // вариант 1
-            figure.Floating_horizon(g_camera, camera);
 
-            // вариант 2
-          /*  Bitmap bmp = pictureBox3.Image as Bitmap;
+            Bitmap bmp = pictureBox3.Image as Bitmap;
             g_fake_camera.Clear(Color.White);
-            figure.reflectY();
-            figure.floating_horizon(camera, ref bmp);
-            figure.reflectY();
+            figure.PlotSurface(ref bmp);
             pictureBox3.Visible = true;
-            pictureBox3.Refresh();*/
+            pictureBox3.Refresh();
         }
 
 
@@ -739,11 +715,6 @@ namespace lab6
             List<Point3d> pts0 = new List<Point3d>();
             List<Point3d> pts1 = new List<Point3d>();
 
-
-
-       //    SortedDictionary<float, PointF> graph_function = new SortedDictionary<float, PointF>(fcmp); // z, (x, y)
-
-
             for (float x = x0; x < x1; x += dx)
             {
                 for (float y = y0; y < y1; y += dy)
@@ -770,6 +741,7 @@ namespace lab6
             figure = new Polyhedron(faces);
             figure.is_graph = true;
             figure.graph_function = f;
+            figure.graph_breaks = cnt_of_breaks;
 
        //     figure.graph_function = graph_function;
             figure.show(g, pr, new_fig);
