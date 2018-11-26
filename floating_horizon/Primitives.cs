@@ -695,14 +695,14 @@ namespace floating_horizon
 
         public Camera()
         {
-            position = new Point3d(0, 0, 10);
+            position = new Point3d(-5, 8, 85);
         }
 
         public void Reset()
         {
-            position.X = 0;
-            position.Y = 0;
-            position.Z = 10;
+            position.X = -5;
+            position.Y = 8;
+            position.Z = 85;
             angle_1 = 0;
             angle_2 = 0;
             angle_3 = 0;
@@ -713,7 +713,7 @@ namespace floating_horizon
             position.translate(dx, dy, dz);
         }
 
-        public void set_angles(float a1, float a2, float a3)
+        public void change_angles(float a1, float a2, float a3)
         {
             angle_1 += a1;// * Math.PI / 180;
             angle_2 += a2; // * Math.PI / 180;

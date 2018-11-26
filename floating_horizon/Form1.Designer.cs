@@ -43,7 +43,9 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.label7 = new System.Windows.Forms.Label();
             this.panel3 = new System.Windows.Forms.Panel();
+            this.label_angles = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
+            this.label_coords = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
             this.angle_1 = new System.Windows.Forms.TextBox();
             this.angle_2 = new System.Windows.Forms.TextBox();
@@ -55,8 +57,6 @@
             this.trans_y_camera = new System.Windows.Forms.TextBox();
             this.trans_z_camera = new System.Windows.Forms.TextBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.label_coords = new System.Windows.Forms.Label();
-            this.label_angles = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.breaks_cnt)).BeginInit();
             this.panel1.SuspendLayout();
             this.panel3.SuspendLayout();
@@ -230,6 +230,15 @@
             this.panel3.Size = new System.Drawing.Size(228, 222);
             this.panel3.TabIndex = 73;
             // 
+            // label_angles
+            // 
+            this.label_angles.AutoSize = true;
+            this.label_angles.Location = new System.Drawing.Point(139, 106);
+            this.label_angles.Name = "label_angles";
+            this.label_angles.Size = new System.Drawing.Size(56, 13);
+            this.label_angles.TabIndex = 75;
+            this.label_angles.Text = "cur angles";
+            // 
             // button1
             // 
             this.button1.Location = new System.Drawing.Point(24, 158);
@@ -239,6 +248,15 @@
             this.button1.Text = "Вернуть камеру в начальное положение";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // label_coords
+            // 
+            this.label_coords.AutoSize = true;
+            this.label_coords.Location = new System.Drawing.Point(139, 48);
+            this.label_coords.Name = "label_coords";
+            this.label_coords.Size = new System.Drawing.Size(54, 13);
+            this.label_coords.TabIndex = 74;
+            this.label_coords.Text = "cur coods";
             // 
             // label9
             // 
@@ -340,24 +358,6 @@
             this.pictureBox1.Size = new System.Drawing.Size(822, 499);
             this.pictureBox1.TabIndex = 69;
             this.pictureBox1.TabStop = false;
-            // 
-            // label_coords
-            // 
-            this.label_coords.AutoSize = true;
-            this.label_coords.Location = new System.Drawing.Point(139, 48);
-            this.label_coords.Name = "label_coords";
-            this.label_coords.Size = new System.Drawing.Size(54, 13);
-            this.label_coords.TabIndex = 74;
-            this.label_coords.Text = "cur coods";
-            // 
-            // label_angles
-            // 
-            this.label_angles.AutoSize = true;
-            this.label_angles.Location = new System.Drawing.Point(139, 106);
-            this.label_angles.Name = "label_angles";
-            this.label_angles.Size = new System.Drawing.Size(56, 13);
-            this.label_angles.TabIndex = 75;
-            this.label_angles.Text = "cur angles";
             // 
             // Form1
             // 

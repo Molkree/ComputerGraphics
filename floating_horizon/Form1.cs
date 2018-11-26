@@ -28,49 +28,7 @@ namespace floating_horizon
 
         //Axis line_mode = 0;
 
-        public Form1()
-        {
-            InitializeComponent();
-
-            //g = pictureBox1.CreateGraphics();
-            pictureBox1.Image = new Bitmap(pictureBox1.Width, pictureBox1.Height);
-            g = Graphics.FromImage(pictureBox1.Image);
-
-
-            g.ScaleTransform(1, -1);
-
-            g.TranslateTransform(pictureBox1.ClientSize.Width / 2, -pictureBox1.ClientSize.Height / 2);
-            
-            comboBox1.SelectedIndex = 0;
-            //comboBox2.SelectedIndex = 0;
-            //comboBox3.SelectedIndex = 2;
-
-            this.ActiveControl = button_gr;
-
-            check_all_textboxes();
-            label_coords.Text = camera.position.X + ", " + camera.position.Y + ", " + camera.position.Z;
-            label_angles.Text = camera.angle_1 + ", " + camera.angle_2 + ", " + camera.angle_3;
-        }
-
-
-        // контроль вводимых символов
-        private void textBox_KeyPress_int(object sender, KeyPressEventArgs e)
-        {
-            if (!(char.IsDigit(e.KeyChar) || e.KeyChar == '-') && e.KeyChar != Convert.ToChar(8))
-            {
-                e.Handled = true;
-            }
-        }
-
-        private void textBox_KeyPress_double(object sender, KeyPressEventArgs e)
-        {
-            if (!(char.IsDigit(e.KeyChar) || e.KeyChar == '.' || e.KeyChar == ',' || e.KeyChar == '-') && e.KeyChar != Convert.ToChar(8))
-            {
-                e.Handled = true;
-            }
-        }
-
-        private void button_gr_Click(object sender, EventArgs e)
+        private void define_f()
         {
             switch (comboBox1.SelectedIndex)
             {
@@ -93,6 +51,54 @@ namespace floating_horizon
                     f = (x, y) => 0;
                     break;
             }
+        }
+
+        public Form1()
+        {
+            InitializeComponent();
+
+            //g = pictureBox1.CreateGraphics();
+            pictureBox1.Image = new Bitmap(pictureBox1.Width, pictureBox1.Height);
+            g = Graphics.FromImage(pictureBox1.Image);
+
+
+            g.ScaleTransform(1, -1);
+
+            g.TranslateTransform(pictureBox1.ClientSize.Width / 2, -pictureBox1.ClientSize.Height / 2);
+            
+            comboBox1.SelectedIndex = 0;
+            //comboBox2.SelectedIndex = 0;
+            //comboBox3.SelectedIndex = 2;
+
+            this.ActiveControl = button_gr;
+
+            check_all_textboxes();
+            label_coords.Text = camera.position.X + ", " + camera.position.Y + ", " + camera.position.Z;
+            label_angles.Text = camera.angle_1 + ", " + camera.angle_2 + ", " + camera.angle_3;
+            define_f();
+        }
+
+
+        // контроль вводимых символов
+        private void textBox_KeyPress_int(object sender, KeyPressEventArgs e)
+        {
+            if (!(char.IsDigit(e.KeyChar) || e.KeyChar == '-') && e.KeyChar != Convert.ToChar(8))
+            {
+                e.Handled = true;
+            }
+        }
+
+        private void textBox_KeyPress_double(object sender, KeyPressEventArgs e)
+        {
+            if (!(char.IsDigit(e.KeyChar) || e.KeyChar == '.' || e.KeyChar == ',' || e.KeyChar == '-') && e.KeyChar != Convert.ToChar(8))
+            {
+                e.Handled = true;
+            }
+        }
+
+        private void button_gr_Click(object sender, EventArgs e)
+        {
+            define_f();
 
             int X0 = int.Parse(textBox_x0.Text);
             int X1 = int.Parse(textBox_x1.Text);
@@ -235,7 +241,7 @@ namespace floating_horizon
                 if (!string.IsNullOrEmpty(angle_3.Text))
                     a3 = float.Parse(angle_3.Text);
 
-                camera.set_angles(a1, a2, a3);
+                camera.change_angles(a1, a2, a3);
                 
             
             }
