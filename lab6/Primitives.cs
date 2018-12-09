@@ -606,6 +606,7 @@ namespace lab6
         private Dictionary<Point3d, List<float>> point_to_normal = null;
         private Dictionary<Point3d, float> point_to_intensive = null;
 
+        private Dictionary<Point3d, int> point_to_ind = null;
         public Polyhedron(List<Face> fs = null)
         {
             if (fs != null)
@@ -659,6 +660,37 @@ namespace lab6
             }
         }
 
+        public string save_obj()
+        {
+            string res = "";
+            point_to_ind = new Dictionary<Point3d, int>(new Point3dComparer());
+            int ind = 1;
+            foreach (Face f in Faces)
+                foreach (Point3d p in f.Points)
+                    if (!point_to_ind.ContainsKey(p))
+                    {
+                        point_to_ind[p] = ind;
+                        ++ind;
+                    }
+
+            foreach (var k in point_to_ind)
+            {
+                res += "v " + k.Key.to_string() + "\n";
+            }
+
+            res += "# " + point_to_ind.Count.ToString() + " vertices\n";
+
+            foreach (Face f in Faces)
+            {
+                res += "f ";
+                foreach (var p in f.Points)
+                    res += point_to_ind[p].ToString() + " ";
+                res += "\n";
+            }
+
+            res += "# " + Faces.Count.ToString() + " faces";
+            return res;
+        }
         public string to_string()
         {
             string res = "";

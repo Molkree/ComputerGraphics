@@ -563,7 +563,7 @@ namespace lab6
             string filename = saveFileDialog1.FileName;
             string text = "";
             if (figure != null)
-                text = figure.to_string();
+                text = figure.save_obj();
             System.IO.File.WriteAllText(filename, text);
         }
 
