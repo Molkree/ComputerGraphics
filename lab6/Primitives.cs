@@ -682,10 +682,20 @@ namespace lab6
 
             foreach (Face f in Faces)
             {
-                res += "f ";
-                foreach (var p in f.Points)
-                    res += point_to_ind[p].ToString() + " ";
-                res += "\n";
+                res += "f " + point_to_ind[f.Points[0]].ToString() + " " +
+                                  point_to_ind[f.Points[1]].ToString() + " " +
+                                  point_to_ind[f.Points[2]].ToString() + "\n";
+
+                if (f.Points.Count > 3)
+                    res += "f " + point_to_ind[f.Points[0]].ToString() + " " + 
+                                  point_to_ind[f.Points[2]].ToString() + " " + 
+                                  point_to_ind[f.Points[3]].ToString() + "\n";
+
+                if (f.Points.Count > 4)
+                    res += "f " + point_to_ind[f.Points[0]].ToString() + " " +
+                                  point_to_ind[f.Points[3]].ToString() + " " +
+                                  point_to_ind[f.Points[4]].ToString() + "\n";
+
             }
 
             res += "# " + Faces.Count.ToString() + " faces";
